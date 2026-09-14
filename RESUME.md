@@ -5,82 +5,81 @@ Paste this whole file as your first message in the new session to pick up exactl
 ---
 
 ## What this project is
-**Saarthi** (renamed from "AI Sarkari Saathi") — a personalized government scheme discovery platform for Indian citizens. Full docs already written and finalized:
-- `SRS.md` — the authoritative Software Requirements Specification (functional/non-functional requirements, 5 core algorithms including the eligibility matching engine, full DB schema, ER/use-case/activity diagrams in Mermaid). Also exported as `Saarthi_SRS.pdf` and `Saarthi_SRS.docx`.
-- `PLAN.md` — implementation plan: stack, environment, phased build order.
-- `DATASET_PLAN.md` — how the 80+ real scheme dataset (Central + Maharashtra) gets sourced, extracted, and verified against live government pages before seeding.
-- `Saarthi_Synopsis.md` — the original academic project synopsis, kept in sync with the above.
-
-All four documents are internally consistent (renamed to Saarthi, stack aligned) — do not re-derive requirements, just read `SRS.md` and `PLAN.md` for context.
+**Saarthi** — a personalized government scheme discovery platform for Indian citizens. Full docs already written and finalized: `SRS.md` (authoritative spec, 5 core algorithms, full DB schema), `PLAN.md` (stack, build order), `DATASET_PLAN.md` (dataset sourcing methodology), `Saarthi_Synopsis.md`. Don't re-derive requirements — read these first.
 
 ## Stack (locked in, do not re-ask)
-- **Backend:** Java, Servlets on **Tomcat 8.5.99** (`javax.servlet` namespace — NOT Jakarta), plain JDBC (no Hibernate), no Maven (JARs manually placed in `WEB-INF/lib`). Package root: `com.saarthi.*`.
-- **DB:** MySQL/MariaDB via **XAMPP** (`C:\xampp`) — database name `saarthi_db`, default port 3306, user `root`, no password (dev only).
-- **IDE:** Eclipse IDE for Enterprise Java and Web Developers, at `C:\Program Files (x86)\eclipse` (WTP confirmed installed).
-- **Tomcat location:** extracted (not yet registered as an Eclipse server runtime) at `C:\Users\mohit\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99`.
-- **Auth:** JWT via `jjwt-0.9.1` (old pre-0.11 API: `Jwts.builder()` / `Jwts.parser()` — NOT `Jwts.parserBuilder()`), password hashing via jBCrypt.
-- **JSON:** Gson.
-- **Frontend:** React + Vite (not started yet) — will be built by translating the Stitch-exported HTML/CSS in `stitch_screens/` into real components, not from scratch.
+- **Backend:** Java, Servlets on **Tomcat 8.5.99** (`javax.servlet`, not Jakarta), plain JDBC, no Maven (manual JARs in `WEB-INF/lib`). Package root: `com.saarthi.*`.
+- **DB:** MySQL/MariaDB via **XAMPP** — db `saarthi_db`, port 3306, user `root`, no password.
+- **JDK:** Use `C:\Program Files\Java\jdk-18.0.2.1` explicitly — NOT the `javapath` shim (`Common Files\Oracle\Java\javapath`), which isn't a real JDK and breaks things silently.
+- **Tomcat location:** `C:\Users\mohit\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99`, deployed as context `/saarthi` (manually copied into `webapps/saarthi/`, not via Eclipse in this session's workflow).
+- **Auth:** JWT via `jjwt-0.9.1` (old API — `Jwts.builder()`/`Jwts.parser()`). Needs `jaxb-api-2.3.1.jar` in `WEB-INF/lib` too — `javax.xml.bind.DatatypeConverter` was removed from the JDK in Java 9+, and jjwt 0.9.1 needs it.
+- **JSON:** Gson. **Gson cannot serialize `java.time.LocalDate`/`LocalDateTime`** on modern JDKs (module access restrictions) — every controller response MUST be a plain DTO with String/primitive fields, never a raw model object. Also: **Gson silently serializes anonymous/local Java classes as `"null"`** for both directions — always use a named static DTO class, never `new Object(){...}`.
+- **Frontend:** React 18 + Vite + Tailwind **v4** (CSS-first `@theme` config, no `tailwind.config.js`) + React Router + Axios. Dev proxy `/api` → `http://localhost:8080/saarthi`.
 
-## UI design — already done
-- `user onboarding/` — 10 markdown files: shared design system (`00-design-system-extension.md`... wait, it's `00-design-system.md`) + Login, Signup, Forgot Password, and 6 onboarding steps. Light theme: Primary green `#1F6E43`, Accent saffron/gold `#F2A93B`, Fraunces (headings) + General Sans (body), claymorphism illustrations of ordinary Indian citizens. Full anti-slop checklist embedded.
-- `app modules/` — 10 markdown files: design system extension (nav bar, scheme cards, tabs, filters, etc.) + Dashboard, Explorer, Scheme Detail, Checklist, Bookmarks, Notifications, Profile, Chatbot widget, and a deliberately utilitarian (non-illustrated, dense-table) Admin panel.
-- `stitch_screens/` — **all 33 screens already generated** in Google Stitch from those prompts, exported as HTML + PNG/JPG per screen (desktop + mobile variants), with a `README.md` index and `screens_manifest.json`. Spot-checked and confirmed high quality/on-spec (including a page-overlay CSS bug that was found and fixed mid-project — see git-less history in this conversation if needed, but the exported screens already reflect the fix).
+## How to bring the stack up in a new session
+```powershell
+# MySQL (if not already running)
+Start-Process -FilePath "C:\xampp\mysql_start.bat" -WorkingDirectory "C:\xampp"
 
-## Database — done
-`backend/db/schema.sql` contains the **complete** schema: all 15 tables from SRS §6 (users, user_profiles, password_reset_tokens, audit_log, scheme_categories, schemes, eligibility_rules, required_documents, admin_scheme_audit, scheme_match_snapshot, checklist_item_state, bookmarks, notifications, chat_sessions, chat_history) **plus** the SRS §11 database automation layer: 4 triggers (`trg_users_before_update`, `trg_user_profiles_before_update`, `trg_schemes_audit_on_update`, `trg_bookmarks_prevent_orphan`), 3 stored procedures (`sp_set_audit_actor`, `sp_prune_expired_reset_tokens`, `sp_get_dashboard_summary_counts`), 2 functions (`fn_calculate_age`, `fn_days_until_deadline`) — explicitly scoped to integrity/audit only, no eligibility business logic in the DB.
+# Tomcat — MUST set JAVA_HOME to the real JDK, not javapath
+$env:JAVA_HOME = "C:\Program Files\Java\jdk-18.0.2.1"
+$env:CATALINA_HOME = "C:\Users\mohit\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99"
+& "$env:CATALINA_HOME\bin\catalina.bat" start
+# (running this from git-bash directly, not through PowerShell's Start-Process, has been the
+# reliable path in this session — PowerShell's Start-Process sometimes silently hangs)
 
-**This has already been run against the live `saarthi_db` database** — all tables, triggers, procedures, and functions exist and were verified via `SHOW TRIGGERS` / `SHOW PROCEDURE STATUS` / `SHOW FUNCTION STATUS`. To restart MySQL in a new session: `Start-Process -FilePath "C:\xampp\mysql_start.bat" -WorkingDirectory "C:\xampp"` (PowerShell), then verify with `mysqld` process check.
-
-## Backend — in progress, here's exactly what exists
-Folder: `backend/` (mirrors an Eclipse Dynamic Web Project layout — not yet imported into Eclipse itself).
-
+# Frontend
+cd D:\Sarthi\frontend
+npm run dev   # picks a free port starting at 5173; check the log for which one
 ```
-backend/
-├── db/schema.sql                           ✅ done, applied to DB
-├── src/com/saarthi/
-│   ├── util/
-│   │   ├── DBUtil.java                     ✅ done — DriverManager-per-request, reads db.properties
-│   │   ├── PasswordUtil.java               ✅ done — jBCrypt wrapper
-│   │   ├── JsonUtil.java                   ✅ done — Gson wrapper, writeJson/writeError helpers
-│   │   └── JwtUtil.java                    ✅ done — issueToken/parseToken, jjwt 0.9.1 API
-│   ├── model/
-│   │   ├── User.java                       ✅ done
-│   │   └── UserProfile.java                ✅ done (includes getAge() derived from date_of_birth)
-│   ├── dao/
-│   │   ├── UserDAO.java                    ✅ done — insert, findByEmail, findById, recordFailedLogin, recordSuccessfulLogin, updatePassword
-│   │   └── ProfileDAO.java                 ✅ done — findByUserId, upsert (ON DUPLICATE KEY), touchMatchSnapshot
-│   ├── service/
-│   │   └── AuthService.java                ✅ done — register(), login() with FR1.8 lockout logic
-│   ├── controller/
-│   │   └── AuthController.java             ✅ done — @WebServlet /api/auth/register, /api/auth/login
-│   └── filter/
-│       └── AuthFilter.java                 ✅ done — @WebFilter /api/*, JWT validation + ADMIN route gating
-├── WebContent/WEB-INF/
-│   ├── web.xml                             ✅ done (minimal — servlets/filters are annotation-based)
-│   ├── classes/db.properties                ✅ done — jdbc:mysql://localhost:3306/saarthi_db, user root, no password
-│   └── lib/                                 ✅ all 7 JARs downloaded and present:
-│       mysql-connector-j-9.7.0.jar, gson-2.11.0.jar, jbcrypt-0.4.jar, jjwt-0.9.1.jar,
-│       jackson-databind-2.17.2.jar, jackson-core-2.17.2.jar, jackson-annotations-2.17.2.jar
-```
+To redeploy backend changes: recompile with `javac` (classpath = Tomcat's `servlet-api.jar` + everything in `backend/WebContent/WEB-INF/lib/*.jar`), copy `WebContent/WEB-INF/classes/com` into `webapps/saarthi/WEB-INF/classes/`, then `catalina.bat stop` + `catalina.bat start` (a plain reload isn't enough — classloader caches the old `db.properties`-triggered static-init failures etc).
 
-**NOT YET DONE (pick up here):**
-1. **Compile-check the backend.** None of the above has been compiled yet. Compile via javac using the servlet-api.jar from Tomcat (`.../apache-tomcat-8.5.99/lib/servlet-api.jar`) plus everything in `WebContent/WEB-INF/lib/*.jar` on the classpath, output to `WebContent/WEB-INF/classes`. Fix any real compile errors (IDE diagnostics seen so far were just "no classpath configured in the editor" noise, not necessarily real errors — verify for real with javac).
-2. **Register Tomcat 8.5.99 as an Eclipse server runtime**, import `backend/` as a Dynamic Web Project (or continue command-line: copy/symlink `backend/WebContent` into Tomcat's `webapps/ROOT` or a new context, start Tomcat, hit `/api/auth/register` with curl to prove the round trip end-to-end).
-3. **ProfileController + ProfileService** (Module 2 — Profile & Onboarding, FR2.1-FR2.5) — not started.
-4. **EligibilityService** (Section 5.1-5.3 — the actual matching engine: rule evaluation, confidence scoring, ranking) — not started. This is the core module (SRS Module 3) and the next most important thing after Auth+Profile work end-to-end.
-5. **SchemeDAO, EligibilityRuleDAO, RequiredDocumentDAO** — not started.
-6. **The actual scheme dataset** (80+ real, verified schemes per `DATASET_PLAN.md`) — not sourced yet. This blocks testing the matching engine with real data. Per `DATASET_PLAN.md`, I (Claude) do the live-page verification myself in batches of ~15-20, hand you the CSV to review before seeding.
-7. **Frontend** — no Vite project created yet. Plan: scaffold React+Vite, then port the Stitch-exported HTML/CSS from `stitch_screens/` into real components page by page, wiring Axios calls to the backend endpoints as they're built.
-8. **MatchController, SchemeController, and the rest of Modules 4-10** — not started (Explorer, Scheme Detail, Checklist, Bookmarks, Notifications, Admin — all speced in SRS and in `app modules/`, none implemented yet).
+**Gotcha:** `backend/WebContent/WEB-INF/classes/db.properties` lives in the compiled-output folder, not under `src/`. It's real (gitignored, `.example` committed) but a careless `rm -rf classes/*` during a rebuild will delete it — recreate from `db.properties.example` if `db.properties not found on classpath` errors reappear. Current `db.url` includes `?useUnicode=true&characterEncoding=UTF-8` — needed after we found the ₹ symbol getting mangled (see below).
 
-## Immediate next action when you resume
-Say something like: *"continue the backend build — compile what's there, get Tomcat serving it, verify register/login round-trip end to end, then build the Profile module and the eligibility matching engine."* That picks up exactly at step 1 above.
+## Backend — done (all modules except Chatbot)
+Every module in `PLAN.md`'s build order is implemented and compiles clean: Auth, Profile, **EligibilityService** (the core matching engine — SRS §5.1–5.3, rule evaluation/confidence scoring/ranking), Scheme Explorer + Detail, Dashboard/Match, Checklist (dedup algorithm §5.4), Bookmarks, Notifications (trigger algorithm §5.5, piggybacks on dashboard load since there's no cron/scheduler in this stack), and Admin (scheme/rule/document CRUD with full audit trail, FR9.x — including `GET /api/admin/schemes` list and `GET /api/admin/schemes/{id}` detail, added this session for the upcoming Admin frontend page).
+
+**Real bugs found and fixed this session (worth knowing about, not just historical):**
+1. `AuthFilter`'s admin-route gate used `getServletPath().startsWith("/api/admin/")` — for a wildcard servlet mapping (`/api/admin/*`), `getServletPath()` returns `/api/admin` with **no trailing slash**, so `startsWith` never matched and any authenticated user (not just admins) could hit admin endpoints. Fixed to `path.equals("/api/admin")`. If you add more wildcard-mapped controllers, check this pattern.
+2. `AdminController` returned raw model objects to Gson (see the `java.time` note above) — fixed with DTOs, same pattern every other controller uses.
+3. XAMPP's `mysql.exe` on Windows defaults to `cp850` client charset, silently mangling non-ASCII text (₹) on import via the CLI. Always import with `--default-character-set=utf8mb4`. The JDBC URL now also explicitly sets UTF-8.
+4. **CSV data-corruption bug** (see Dataset section below) — unquoted commas in research-agent-generated CSV fields silently misaligned columns on import.
+
+Chatbot (Module 8) is explicitly deferred per `PLAN.md` — don't build it unless asked.
+
+## Dataset — 52 real, verified schemes seeded
+Sourced via 4 parallel research agents (per `DATASET_PLAN.md`'s "batches of 15-20" pacing), each actually fetching live government/ministry pages (myscheme.gov.in's detail pages are a JS SPA that WebFetch can't read — agents fell back to ministry sites, PIB releases, official portals per the plan's own fallback rule). Central schemes across all 6 categories + Maharashtra state schemes (MJPJAY, Ramai Awas Yojana, EBC Scholarship, Sanjay Gandhi Niradhar Anudan Yojana, Manodhairya Yojana, Lek Ladki Yojana, Namo Shetkari Mahasanman Nidhi Yojana).
+
+**Known schema limitation, not silently patched:** eligibility rules are AND-only (SRS §5.1) — Stand-Up India's real eligibility is SC/ST *or* women, so only the SC/ST path got encoded as a hard rule; the women's path is description-only. Worth revisiting if that scheme matters for a demo.
+
+**Data pipeline files** (`data/seed/`): `schemes*.csv` / `eligibility_rules*.csv` / `required_documents*.csv` (base + `_batch2`/`_batch3`/`_batch4` suffixes) are the source of truth; `import_seed.py` generates `seed.sql` from them (dedupes by exact scheme name — **note: this only catches exact-string dupes**, we hit two near-duplicate schemes with slightly different names that slipped through and had to be cleaned up manually in the DB). `seed.sql` is disposable/regeneratable — **always re-run `import_seed.py` after editing any CSV**, and **always import with `--default-character-set=utf8mb4`**.
+
+**If you add more scheme batches:** run a column-count audit first (`csv.reader` row length vs. expected column count, per CSV type) before importing — this is exactly how we caught the corruption bug this session. Unquoted commas in free-text fields (descriptions, rule_description) are the recurring failure mode from research agents; don't trust CSV quoting from external sourcing without checking.
+
+The user stopped two more research agents mid-run (targeting Pension/Welfare/Disability and more Maharashtra schemes, toward `DATASET_PLAN.md`'s 80+ target) — currently paused, not resumed. Ask before restarting dataset expansion; the user has toggled this on/off a few times in this session.
+
+## Frontend — MVP loop + most pages done
+Vite + React scaffolded at `D:\Sarthi\frontend`. Design tokens (colors, Fraunces/Inter fonts, shadows, shape language) carried over exactly from `user onboarding/00-design-system.md` and `app modules/00-design-system-extension.md` into a Tailwind v4 `@theme` block in `src/index.css`. **Gotcha:** in Tailwind v4, `@import url(...)` for external fonts must come **before** `@import "tailwindcss"` in the CSS file — the latter expands inline, so anything textually after it in the source ends up after real content in the flattened output, which violates CSS's "imports must be first" rule.
+
+**Pages built and wired into `App.jsx`:** Login, Signup, Forgot Password (UI-only — no backend endpoint exists for this yet, intentionally deferred), 6-step Onboarding wizard, Dashboard, Scheme Explorer, Scheme Detail (Overview/Eligibility/Documents/How to Apply tabs), Checklist, Bookmarks, Notifications, Profile. Shared components: `AppShell` (nav bar + notification dropdown + profile menu), `SchemeCard`, `CategoryChips`, `AuthLayout`.
+
+**Verified end-to-end in real headless-Chromium sessions** (Playwright, installed as a dev dependency — `frontend/e2e-drive.mjs` and `frontend/smoke-test.mjs` are reusable smoke-test scripts, not one-off scratch files): fresh signup → onboarding → dashboard with correctly-matched scheme cards, plus every other page — zero console errors, zero 5xx responses, screenshots checked against the design spec by actually looking at them, not just trusting "it rendered."
+
+**NOT yet built:**
+- **Admin frontend page** — backend is ready (`GET/POST/PUT/DELETE /api/admin/schemes[/{id}]`, `.../rules[/{id}]`, `.../documents[/{id}]`), just needs the React page. Per `app modules/09-admin-panel.md`: dark-sidebar utilitarian style (deliberately NOT the citizen app's light claymorphism — don't "fix" this), dense data table, slide-over edit drawer. This was the very next thing in progress when this session ended.
+- Chatbot widget (deferred per plan, same as backend).
+- Guest-mode browsing (FR4.1 says Explorer/Scheme Detail should work for logged-out Guests too) — currently both are behind `ProtectedRoute` as a scope cut. If you build guest mode, the nav bar also needs a logged-out variant (Log in / Create account buttons instead of bell/avatar) per the design ext. doc.
+- Forgot Password has no real backend endpoint — `password_reset_tokens` table exists in schema but no `AuthService`/`AuthController` method uses it yet.
 
 ## Things NOT to re-ask the user about (already decided)
-- Stack: Eclipse/Tomcat 8.5.99/no Maven/no Hibernate/XAMPP MySQL — confirmed, don't re-litigate.
-- Auth: JWT (not sessions) — confirmed.
-- Chatbot (Module 8): fully specified in SRS but implementation deliberately sequenced *after* the core modules — don't build it early.
-- Admin panel styling: deliberately utilitarian/dark-sidebar/dense-table, NOT the citizen app's light claymorphism style — this was intentional, don't "fix" it to match.
-- Dataset size: 80+ schemes, Central + Maharashtra only for now.
-- Brand name is **Saarthi**, not "AI Sarkari Saathi" — if you see the old name anywhere, it's stale and should be fixed, not treated as correct.
+- Stack choices (Eclipse/Tomcat/no Maven/no Hibernate/XAMPP MySQL, JWT not sessions) — confirmed, don't re-litigate.
+- Chatbot: deferred, don't build early.
+- Admin panel styling: deliberately utilitarian/dark-sidebar, not claymorphism.
+- Dataset: 52 schemes seeded so far (Central + Maharashtra), target 80+ per `DATASET_PLAN.md` but expansion is currently paused per the user's own back-and-forth this session — ask before resuming.
+- Brand name is **Saarthi** — if you see "AI Sarkari Saathi" anywhere, it's stale.
+- Git: repo initialized, `.gitignore` covers `.metadata/` (Eclipse workspace), `node_modules/`, `db.properties`. Several commits made locally. **The `git push` to `https://github.com/Mohit30121011/Saarthi.git` was blocked by an auto-mode safety classifier (flagged as "data exfiltration")** — this has not been resolved; the user needs to either push it themselves or grant the Bash permission explicitly. Don't retry it silently.
+
+## Immediate next action when you resume
+Build the Admin frontend page (`frontend/src/pages/admin/AdminPanel.jsx` or similar) — dense scheme table + slide-over edit drawer + rule/document sub-editor, wired to the already-built `/api/admin/*` backend. Add its route to `App.jsx` (gated on `user?.role === 'ADMIN'`, which `AppShell`'s profile dropdown already checks for the nav link). Test with a real promoted-to-ADMIN user via direct SQL (`UPDATE users SET role='ADMIN' WHERE email=...`) since there's no self-service admin signup by design.
+
+After that, per `PLAN.md`'s remaining Phase 3 item: UI polish pass, plus whatever's left of the guest-mode/dataset-expansion scope cuts above if the user asks for them.
