@@ -1,0 +1,68 @@
+scheme_name,document_name,document_category,is_mandatory
+National Means-cum-Merit Scholarship (NMMS),Aadhaar Card,ID Proof,true
+National Means-cum-Merit Scholarship (NMMS),Income Certificate,Income Proof,true
+National Means-cum-Merit Scholarship (NMMS),Class 7 Mark Sheet,Educational Certificate,true
+National Means-cum-Merit Scholarship (NMMS),Bank Passbook,Bank Details,true
+National Means-cum-Merit Scholarship (NMMS),Caste Certificate,ID Proof,false
+National Means-cum-Merit Scholarship (NMMS),Passport Size Photograph,Photograph,true
+Central Sector Scheme of Scholarship for College and University Students,Aadhaar Card,ID Proof,true
+Central Sector Scheme of Scholarship for College and University Students,Class 12 Mark Sheet,Educational Certificate,true
+Central Sector Scheme of Scholarship for College and University Students,Income Certificate,Income Proof,true
+Central Sector Scheme of Scholarship for College and University Students,College Admission/Bonafide Certificate,Educational Certificate,true
+Central Sector Scheme of Scholarship for College and University Students,Bank Passbook,Bank Details,true
+PM YASASVI Scholarship,Aadhaar Card,ID Proof,true
+PM YASASVI Scholarship,OBC/EBC/DNT Category Certificate,ID Proof,true
+PM YASASVI Scholarship,Income Certificate,Income Proof,true
+PM YASASVI Scholarship,Previous Class Mark Sheet,Educational Certificate,true
+PM YASASVI Scholarship,School Bonafide/Enrollment Certificate,Educational Certificate,true
+PM YASASVI Scholarship,Bank Passbook,Bank Details,true
+AICTE Pragati Scholarship for Girls,Aadhaar Card,ID Proof,true
+AICTE Pragati Scholarship for Girls,Income Certificate,Income Proof,true
+AICTE Pragati Scholarship for Girls,Admission Letter,Educational Certificate,true
+AICTE Pragati Scholarship for Girls,Class 12 Mark Sheet,Educational Certificate,true
+AICTE Pragati Scholarship for Girls,Bank Passbook,Bank Details,true
+AICTE Saksham Scholarship for Specially Abled Students,Aadhaar Card,ID Proof,true
+AICTE Saksham Scholarship for Specially Abled Students,Disability Certificate (Government Medical Board),Other,true
+AICTE Saksham Scholarship for Specially Abled Students,Income Certificate,Income Proof,true
+AICTE Saksham Scholarship for Specially Abled Students,Admission Letter,Educational Certificate,true
+AICTE Saksham Scholarship for Specially Abled Students,Bank Passbook,Bank Details,true
+Top Class Education Scheme for SC Students,Aadhaar Card,ID Proof,true
+Top Class Education Scheme for SC Students,Caste Certificate,ID Proof,true
+Top Class Education Scheme for SC Students,Income Certificate,Income Proof,true
+Top Class Education Scheme for SC Students,Class 12 Mark Sheet,Educational Certificate,true
+Top Class Education Scheme for SC Students,Admission Letter from Notified Institution,Educational Certificate,true
+Top Class Education Scheme for SC Students,Bank Passbook,Bank Details,true
+National Fellowship for OBC Students,Aadhaar Card,ID Proof,true
+National Fellowship for OBC Students,OBC Caste Certificate,ID Proof,true
+National Fellowship for OBC Students,Income Certificate,Income Proof,true
+National Fellowship for OBC Students,Postgraduate Degree Certificate,Educational Certificate,true
+National Fellowship for OBC Students,UGC NET-JRF/CSIR-JRF Certificate,Educational Certificate,true
+National Fellowship for OBC Students,University Registration Certificate,Educational Certificate,true
+Post-Matric Scholarship for Minorities,Aadhaar Card,ID Proof,true
+Post-Matric Scholarship for Minorities,Minority Community Certificate/Self-Declaration,ID Proof,true
+Post-Matric Scholarship for Minorities,Income Certificate,Income Proof,true
+Post-Matric Scholarship for Minorities,Previous Year Mark Sheet,Educational Certificate,true
+Post-Matric Scholarship for Minorities,Bank Passbook,Bank Details,true
+PM Vishwakarma Yojana,Aadhaar Card,ID Proof,true
+PM Vishwakarma Yojana,Trade/Occupation Proof,Other,true
+PM Vishwakarma Yojana,Bank Passbook,Bank Details,true
+PM Vishwakarma Yojana,Passport Size Photograph,Photograph,true
+Deendayal Antyodaya Yojana - National Urban Livelihoods Mission (DAY-NULM),Aadhaar Card,ID Proof,true
+Deendayal Antyodaya Yojana - National Urban Livelihoods Mission (DAY-NULM),BPL/Urban Poor Identification Proof,Other,true
+Deendayal Antyodaya Yojana - National Urban Livelihoods Mission (DAY-NULM),Address Proof,Address Proof,true
+Deendayal Antyodaya Yojana - National Urban Livelihoods Mission (DAY-NULM),Bank Passbook,Bank Details,true
+PM Kaushal Vikas Yojana (PMKVY 4.0),Aadhaar Card,ID Proof,true
+PM Kaushal Vikas Yojana (PMKVY 4.0),Bank Passbook (Aadhaar-linked),Bank Details,true
+PM Kaushal Vikas Yojana (PMKVY 4.0),Passport Size Photograph,Photograph,true
+National Career Service (NCS) registration,Aadhaar Card,ID Proof,false
+National Career Service (NCS) registration,Educational Certificates,Educational Certificate,false
+National Career Service (NCS) registration,Resume/Bio-data,Other,false
+Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA),Aadhaar Card,ID Proof,true
+Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA),Residence/Address Proof,Address Proof,true
+Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA),Passport Size Photograph,Photograph,true
+Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA),Bank/Post Office Passbook,Bank Details,true
+Startup India Seed Fund Scheme,DPIIT Recognition Certificate,Other,true
+Startup India Seed Fund Scheme,Certificate of Incorporation,Other,true
+Startup India Seed Fund Scheme,Pitch Deck/Business Plan,Other,true
+Startup India Seed Fund Scheme,PAN Card,ID Proof,true
+Startup India Seed Fund Scheme,Bank Account Details,Bank Details,true

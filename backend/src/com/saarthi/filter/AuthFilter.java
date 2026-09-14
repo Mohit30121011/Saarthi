@@ -39,6 +39,11 @@ public class AuthFilter implements Filter {
                 return;
             }
         }
+        // FR4.x — Scheme Explorer/Detail is browsable by Guests, not just logged-in citizens.
+        if (path.equals("/api/schemes") || path.startsWith("/api/schemes/")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = req.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -53,7 +58,10 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        if (path.startsWith("/api/admin/") && !"ADMIN".equals(claims.get("role"))) {
+        // For a wildcard mapping ("/api/admin/*"), getServletPath() returns just "/api/admin"
+        // (no trailing slash) — the rest lives in getPathInfo(). A startsWith("/api/admin/")
+        // check here would never match and would silently let any authenticated user through.
+        if (path.equals("/api/admin") && !"ADMIN".equals(claims.get("role"))) {
             JsonUtil.writeError(resp, 403, "Admin access required.");
             return;
         }

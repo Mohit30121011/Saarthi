@@ -1,6 +1,7 @@
 package com.saarthi.service;
 
 import com.saarthi.dao.ProfileDAO;
+import com.saarthi.model.SchemeMatch;
 import com.saarthi.model.UserProfile;
 
 import java.math.BigDecimal;
@@ -21,6 +22,8 @@ public class ProfileService {
     private static final List<String> VALID_CATEGORIES = Arrays.asList("GENERAL", "OBC", "SC", "ST", "EWS");
 
     private final ProfileDAO profileDAO = new ProfileDAO();
+    private final EligibilityService eligibilityService = new EligibilityService();
+    private final NotificationService notificationService = new NotificationService();
 
     public static class ProfileResult {
         public final boolean success;
@@ -50,6 +53,13 @@ public class ProfileService {
         }
         profile.setUserId(userId);
         profileDAO.upsert(profile);
+
+        // FR2.4 — every profile save re-runs the matching engine and the notification trigger (Section 5.5).
+        List<SchemeMatch> matches = eligibilityService.getPersonalizedMatches(userId);
+        notificationService.runMatchSnapshotDiff(userId, matches);
+        notificationService.checkDeadlineProximity(userId, matches);
+        profileDAO.touchMatchSnapshot(userId);
+
         return ProfileResult.ok(profileDAO.findByUserId(userId).orElse(profile));
     }
 

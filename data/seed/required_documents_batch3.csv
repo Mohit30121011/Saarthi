@@ -1,0 +1,43 @@
+scheme_name,document_name,document_category,is_mandatory
+Pradhan Mantri Suraksha Bima Yojana (PMSBY),Aadhaar Card,ID Proof,TRUE
+Pradhan Mantri Suraksha Bima Yojana (PMSBY),Bank Account Details,Bank Details,TRUE
+Pradhan Mantri Suraksha Bima Yojana (PMSBY),Nomination Form,Other,TRUE
+Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY),Aadhaar Card,ID Proof,TRUE
+Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY),Bank Account Details,Bank Details,TRUE
+Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY),Nomination Form,Other,TRUE
+Janani Suraksha Yojana (JSY),Aadhaar Card,ID Proof,TRUE
+Janani Suraksha Yojana (JSY),Mother and Child Protection (MCP) Card,Other,TRUE
+Janani Suraksha Yojana (JSY),BPL/SC/ST Certificate,Income Proof,FALSE
+Janani Suraksha Yojana (JSY),Bank Account Details,Bank Details,TRUE
+Pradhan Mantri Kisan Maandhan Yojana (PM-KMY),Aadhaar Card,ID Proof,TRUE
+Pradhan Mantri Kisan Maandhan Yojana (PM-KMY),Land Records/Khatauni,Other,TRUE
+Pradhan Mantri Kisan Maandhan Yojana (PM-KMY),Age Proof,ID Proof,TRUE
+Pradhan Mantri Kisan Maandhan Yojana (PM-KMY),Bank Account Details,Bank Details,TRUE
+PM Krishi Sinchayee Yojana - Per Drop More Crop (PMKSY-PDMC),Land Ownership/Tenancy Document,Other,TRUE
+PM Krishi Sinchayee Yojana - Per Drop More Crop (PMKSY-PDMC),Aadhaar Card,ID Proof,TRUE
+PM Krishi Sinchayee Yojana - Per Drop More Crop (PMKSY-PDMC),Bank Account Details,Bank Details,TRUE
+Soil Health Card Scheme,Aadhaar Card,ID Proof,TRUE
+Soil Health Card Scheme,Land Records,Other,TRUE
+Kisan Credit Card (KCC) Scheme,Aadhaar Card,ID Proof,TRUE
+Kisan Credit Card (KCC) Scheme,Land Ownership/Tenancy Proof,Other,TRUE
+Kisan Credit Card (KCC) Scheme,Bank Account Details,Bank Details,TRUE
+Kisan Credit Card (KCC) Scheme,Photograph,Photograph,TRUE
+Paramparagat Krishi Vikas Yojana (PKVY),Aadhaar Card,ID Proof,TRUE
+Paramparagat Krishi Vikas Yojana (PKVY),Land Records,Other,TRUE
+Paramparagat Krishi Vikas Yojana (PKVY),Farmer Cluster/Group Membership Proof,Other,TRUE
+Paramparagat Krishi Vikas Yojana (PKVY),Bank Account Details,Bank Details,TRUE
+National Livestock Mission,Detailed Project Report,Other,TRUE
+National Livestock Mission,Aadhaar Card,ID Proof,TRUE
+National Livestock Mission,Bank Account Details,Bank Details,TRUE
+National Livestock Mission,GST Registration Certificate,Other,FALSE
+Pradhan Mantri Bhartiya Janaushadhi Pariyojana (PMBJP),Aadhaar Card,ID Proof,TRUE
+Pradhan Mantri Bhartiya Janaushadhi Pariyojana (PMBJP),Retail Drug License,Other,TRUE
+Pradhan Mantri Bhartiya Janaushadhi Pariyojana (PMBJP),Pharmacist Degree Certificate,Educational Certificate,TRUE
+Pradhan Mantri Bhartiya Janaushadhi Pariyojana (PMBJP),GST Registration Certificate,Other,TRUE
+Nikshay Poshan Yojana,Aadhaar Card,ID Proof,TRUE
+Nikshay Poshan Yojana,Nikshay Portal TB Notification Record,Other,TRUE
+Nikshay Poshan Yojana,Bank Account Details,Bank Details,TRUE
+Rashtriya Arogya Nidhi (RAN),BPL Certificate,Income Proof,TRUE
+Rashtriya Arogya Nidhi (RAN),Income Certificate,Income Proof,TRUE
+Rashtriya Arogya Nidhi (RAN),Aadhaar Card,ID Proof,TRUE
+Rashtriya Arogya Nidhi (RAN),Medical Diagnosis Report from Government Hospital,Other,TRUE

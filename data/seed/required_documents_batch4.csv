@@ -1,0 +1,35 @@
+scheme_name,document_name,document_category,is_mandatory
+Pradhan Mantri Jan Dhan Yojana,Aadhaar Card,ID Proof,TRUE
+Pradhan Mantri Jan Dhan Yojana,Officially Valid Document (Voter ID/Passport/Driving License),ID Proof,FALSE
+Pradhan Mantri Jan Dhan Yojana,Passport Size Photograph,Photograph,TRUE
+National Pension System,PAN Card,ID Proof,TRUE
+National Pension System,Address Proof,Address Proof,TRUE
+National Pension System,Bank Account Details,Bank Details,TRUE
+National Pension System,Passport Size Photograph,Photograph,TRUE
+Pradhan Mantri Garib Kalyan Anna Yojana,Ration Card,ID Proof,TRUE
+Pradhan Mantri Garib Kalyan Anna Yojana,Aadhaar Card,ID Proof,FALSE
+One Nation One Ration Card,Ration Card,ID Proof,TRUE
+One Nation One Ration Card,Aadhaar Card,ID Proof,TRUE
+Ramai Awas Yojana,7/12 Extract or Property Ownership Document,Address Proof,TRUE
+Ramai Awas Yojana,Caste Certificate,Other,TRUE
+Ramai Awas Yojana,Income Certificate,Income Proof,TRUE
+Ramai Awas Yojana,Aadhaar Card,ID Proof,TRUE
+Ramai Awas Yojana,Ration Card,ID Proof,FALSE
+Sanjay Gandhi Niradhar Anudan Yojana,Age Proof,ID Proof,TRUE
+Sanjay Gandhi Niradhar Anudan Yojana,Income Certificate,Income Proof,TRUE
+Sanjay Gandhi Niradhar Anudan Yojana,BPL Certificate,Other,FALSE
+Sanjay Gandhi Niradhar Anudan Yojana,Aadhaar Card,ID Proof,TRUE
+Sanjay Gandhi Niradhar Anudan Yojana,Bank Passbook,Bank Details,TRUE
+Manodhairya Yojana,FIR Copy,Other,TRUE
+Manodhairya Yojana,Medical Examination Report,Other,TRUE
+Manodhairya Yojana,Aadhaar Card,ID Proof,TRUE
+Manodhairya Yojana,Bank Account Details,Bank Details,TRUE
+Lek Ladki Yojana,Birth Certificate,Other,TRUE
+Lek Ladki Yojana,Income Certificate,Income Proof,TRUE
+Lek Ladki Yojana,Aadhaar Card (Beneficiary and Parents),ID Proof,TRUE
+Lek Ladki Yojana,Bank Passbook,Bank Details,TRUE
+Lek Ladki Yojana,Ration Card,ID Proof,TRUE
+Namo Shetkari Mahasanman Nidhi Yojana,Aadhaar Card,ID Proof,TRUE
+Namo Shetkari Mahasanman Nidhi Yojana,7/12 Land Ownership Extract,Other,TRUE
+Namo Shetkari Mahasanman Nidhi Yojana,Bank Account Linked with Aadhaar,Bank Details,TRUE
+Namo Shetkari Mahasanman Nidhi Yojana,PM-KISAN Registration Details,Other,TRUE
