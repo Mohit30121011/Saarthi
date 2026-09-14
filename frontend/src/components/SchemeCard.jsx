@@ -31,7 +31,7 @@ function ConfidenceTag({ confidence }) {
   )
 }
 
-export default function SchemeCard({ scheme, confidence, missingFields, bookmarked: initialBookmarked, onBookmarkChange }) {
+export default function SchemeCard({ scheme, confidence, missingFields, bookmarked: initialBookmarked, onBookmarkChange, showBookmark = true }) {
   const [bookmarked, setBookmarked] = useState(!!initialBookmarked)
   const [busy, setBusy] = useState(false)
 
@@ -62,17 +62,19 @@ export default function SchemeCard({ scheme, confidence, missingFields, bookmark
       to={`/schemes/${scheme.schemeId}`}
       className="relative block bg-white rounded-[20px] border border-saarthi-border p-5 hover:shadow-saarthi-card transition-shadow group"
     >
-      <button
-        aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark this scheme'}
-        onClick={toggleBookmark}
-        className={`absolute -top-3 left-4 w-8 h-8 rounded-full bg-white border border-saarthi-border flex items-center justify-center shadow-sm transition-transform active:scale-90 ${
-          bookmarked ? 'text-saarthi-green' : 'text-saarthi-muted'
-        }`}
-      >
-        <svg className="w-4 h-4" fill={bookmarked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21l-7.682-8.318a4.5 4.5 0 010-6.364z" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
+      {showBookmark && (
+        <button
+          aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark this scheme'}
+          onClick={toggleBookmark}
+          className={`absolute -top-3 left-4 w-8 h-8 rounded-full bg-white border border-saarthi-border flex items-center justify-center shadow-sm transition-transform active:scale-90 ${
+            bookmarked ? 'text-saarthi-green' : 'text-saarthi-muted'
+          }`}
+        >
+          <svg className="w-4 h-4" fill={bookmarked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21l-7.682-8.318a4.5 4.5 0 010-6.364z" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      )}
 
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

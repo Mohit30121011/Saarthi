@@ -37,6 +37,20 @@ public class SchemeDAO {
         return schemes;
     }
 
+    /** FR9.1/FR9.2 — Admin scheme management needs to see inactive schemes too (to reactivate, audit, etc). */
+    public List<Scheme> findAll() throws SQLException {
+        String sql = SELECT_BASE + "ORDER BY s.name";
+        List<Scheme> schemes = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                schemes.add(mapRow(rs));
+            }
+        }
+        return schemes;
+    }
+
     public Optional<Scheme> findById(int schemeId) throws SQLException {
         String sql = SELECT_BASE + "WHERE s.scheme_id = ?";
         try (Connection conn = DBUtil.getConnection();

@@ -7,6 +7,12 @@ import Signup from './pages/auth/Signup'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import OnboardingWizard from './pages/onboarding/OnboardingWizard'
 import Dashboard from './pages/Dashboard'
+import SchemeExplorer from './pages/SchemeExplorer'
+import SchemeDetail from './pages/SchemeDetail'
+import Checklist from './pages/Checklist'
+import Bookmarks from './pages/Bookmarks'
+import Notifications from './pages/Notifications'
+import Profile from './pages/Profile'
 
 export default function App() {
   return (
@@ -22,6 +28,12 @@ export default function App() {
             <Route path="/onboarding" element={<OnboardingWizard />} />
             <Route element={<AppShell />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/explorer" element={<SchemeExplorer />} />
+              <Route path="/schemes/:schemeId" element={<SchemeDetail />} />
+              <Route path="/checklist" element={<Checklist />} />
+              <Route path="/bookmarks" element={<Bookmarks />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
           </Route>
 

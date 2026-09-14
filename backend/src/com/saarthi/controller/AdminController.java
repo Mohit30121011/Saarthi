@@ -5,6 +5,7 @@ import com.saarthi.model.EligibilityRule;
 import com.saarthi.model.RequiredDocument;
 import com.saarthi.model.Scheme;
 import com.saarthi.service.AdminService;
+import com.saarthi.service.SchemeService;
 import com.saarthi.util.JsonUtil;
 
 import javax.servlet.ServletException;
@@ -30,6 +31,34 @@ import java.util.stream.Collectors;
 public class AdminController extends HttpServlet {
 
     private final AdminService adminService = new AdminService();
+    private final SchemeService schemeService = new SchemeService();
+
+    /** FR9.1/FR9.2 — GET /api/admin/schemes (all schemes, incl. inactive) or GET /api/admin/schemes/{id} (full detail). */
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String[] parts = splitPath(req);
+        try {
+            if (parts.length == 1 && parts[0].equals("schemes")) {
+                java.util.List<Scheme> schemes = adminService.listAllSchemes();
+                java.util.List<SchemeResponse> summaries = schemes.stream().map(this::toSchemeResponse).collect(Collectors.toList());
+                JsonUtil.writeJson(resp, 200, summaries);
+            } else if (parts.length == 2 && parts[0].equals("schemes")) {
+                int schemeId = parseId(parts[1]);
+                Optional<SchemeService.SchemeDetail> detail = schemeService.getDetail(schemeId);
+                if (!detail.isPresent()) {
+                    JsonUtil.writeError(resp, 404, "Scheme not found.");
+                    return;
+                }
+                JsonUtil.writeJson(resp, 200, toAdminDetailResponse(detail.get()));
+            } else {
+                JsonUtil.writeError(resp, 404, "Not found");
+            }
+        } catch (NumberFormatException e) {
+            JsonUtil.writeError(resp, 400, "Invalid id.");
+        } catch (SQLException e) {
+            JsonUtil.writeError(resp, 500, "A server error occurred. Please try again.");
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -215,6 +244,26 @@ public class AdminController extends HttpServlet {
 
     private DocumentResponse toDocumentResponse(RequiredDocument d) {
         return new DocumentResponse(d.getDocId(), d.getSchemeId(), d.getDocumentName(), d.getDocumentCategory(), d.isMandatory());
+    }
+
+    private AdminDetailResponse toAdminDetailResponse(SchemeService.SchemeDetail detail) {
+        return new AdminDetailResponse(
+                toSchemeResponse(detail.scheme),
+                detail.rules.stream().map(this::toRuleResponse).collect(Collectors.toList()),
+                detail.documents.stream().map(this::toDocumentResponse).collect(Collectors.toList())
+        );
+    }
+
+    private static final class AdminDetailResponse {
+        public final SchemeResponse scheme;
+        public final java.util.List<RuleResponse> rules;
+        public final java.util.List<DocumentResponse> documents;
+
+        AdminDetailResponse(SchemeResponse scheme, java.util.List<RuleResponse> rules, java.util.List<DocumentResponse> documents) {
+            this.scheme = scheme;
+            this.rules = rules;
+            this.documents = documents;
+        }
     }
 
     private static final class SchemeResponse {

@@ -29,6 +29,11 @@ public class AdminService {
     private final DocumentDAO documentDAO = new DocumentDAO();
     private final AdminAuditDAO auditDAO = new AdminAuditDAO();
 
+    /** FR9.1/FR9.2 — includes inactive schemes, unlike the public /api/schemes catalog. */
+    public java.util.List<Scheme> listAllSchemes() throws SQLException {
+        return schemeDAO.findAll();
+    }
+
     /** FR9.1 */
     public Scheme createScheme(int actorUserId, Scheme scheme) throws SQLException {
         int schemeId = schemeDAO.insert(scheme);
