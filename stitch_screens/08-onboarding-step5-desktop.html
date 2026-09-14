@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Saarthi - Onboarding Step 5 of 6: Additional Details</title>
+<!-- Tailwind CSS CDN with Forms and Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Fraunces & Plus Jakarta Sans / Inter fallback for General Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            saarthi: {
+              primary: '#1F6E43',
+              'primary-dark': '#165231',
+              accent: '#F2A93B',
+              'accent-dark': '#D9822B',
+              ink: '#10241A',
+              body: '#3C4A42',
+              muted: '#8A9A90',
+              bg: '#FBFBF6',
+              border: '#E7ECE3',
+              card: '#FFFFFF',
+              'tag-bg': '#EBF5F0'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Typography & Global Resets -->
+<style data-purpose="typography">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FBFBF6;
+      color: #3C4A42;
+    }
+    h1, h2, .font-serif {
+      font-family: 'Fraunces', Georgia, serif;
+    }
+  </style>
+<!-- Dot Grid Pattern & Custom Effects -->
+<style data-purpose="background-patterns">
+    .civic-dot-grid {
+      background-color: #FBFBF6;
+      background-image: radial-gradient(#8A9A90 1.2px, transparent 1.2px);
+      background-size: 28px 28px;
+    }
+    .tablet-shell {
+      border: 12px solid #10241A;
+      box-shadow: 0 24px 60px -8px rgba(31, 110, 67, 0.18), 0 10px 24px rgba(16, 36, 26, 0.08);
+    }
+    .toggle-active {
+      background-color: #1F6E43;
+    }
+    .toggle-inactive {
+      background-color: #D6DED7;
+    }
+  </style>
+</head>
+<body class="min-h-screen civic-dot-grid flex flex-col justify-between items-center py-6 px-4 select-none">
+<!-- BEGIN: CivicTopBar -->
+<header class="w-full max-w-[1240px] flex items-center justify-between text-xs text-saarthi-body border-b border-saarthi-border/80 pb-3 mb-5 px-2" data-purpose="civic-header">
+<div class="flex items-center space-x-3">
+<span class="inline-flex items-center justify-center bg-saarthi-primary/10 text-saarthi-primary font-bold px-2 py-0.5 rounded text-[11px] tracking-wide">GOV.IN</span>
+<span class="font-medium text-saarthi-ink">सार्थी • राष्ट्रीय नागरिक सेवा पोर्टल</span>
+<span class="hidden md:inline text-saarthi-muted">|</span>
+<span class="hidden md:inline text-saarthi-muted">Digital Public Infrastructure for Social Entitlements</span>
+</div>
+<div class="flex items-center space-x-5">
+<a class="hidden sm:inline-flex items-center space-x-1 hover:text-saarthi-primary transition-colors" href="tel:1800722784">
+<svg class="w-3.5 h-3.5 text-saarthi-accent-dark" fill="currentColor" viewBox="0 0 20 20">
+<path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 4V3z"></path>
+</svg>
+<span class="font-medium">1800-SAARTHI (1800-722784)</span>
+</a>
+<div class="flex items-center space-x-1 border border-saarthi-border bg-white rounded-full px-2 py-0.5 text-[11px] font-medium text-saarthi-ink">
+<span class="text-saarthi-primary font-semibold">EN</span>
+<span class="text-saarthi-border">•</span>
+<span class="text-saarthi-muted hover:text-saarthi-ink cursor-pointer">हिन्दी</span>
+</div>
+</div>
+</header>
+<!-- END: CivicTopBar -->
+<!-- BEGIN: MasterTabletEnclosure -->
+<main class="w-full max-w-[1180px] bg-white rounded-[32px] overflow-hidden relative flex flex-col md:flex-row my-auto border border-saarthi-border" data-purpose="master-container">
+<!-- BEGIN: LeftFormPanel -->
+<section class="w-full md:w-[60%] p-8 lg:p-10 flex flex-col justify-between bg-white z-10" data-purpose="left-interactive-panel">
+<div>
+<!-- Top Nav Branding & Save and Exit -->
+<div class="flex items-center justify-between mb-6 pb-2" data-purpose="panel-header">
+<div class="flex items-center space-x-2.5">
+<!-- Saarthi Ashok Emblem / Wheel Icon -->
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCseSsWVEVXjdDvajVpxSS97TA9TY7ZXkjrEQUOXXEDFxjHgRC10M1kOwcbOFGOboRZMi9Zh0jKb9R_W4aPeIQFsEJEMs8EE3jtNP6uKGxGd3Kfyl2gVxI4mhOi65VX77fc42ARgpyTk6NPYCzpMl3-0BZRgpXOVWrYLh2KoIH3o67tn8zkZBvHrttmZgBBcxvZHQ5YOUi_FEh4FAbTIrMdwbJsZ_2NGzgrUkG5Y6HgCKH3RPyTT_vX2eXDYfu7ooGbENk" alt="Saarthi Logo" class="h-9 w-auto object-contain">
+<div>
+<div class="flex items-center space-x-1.5 leading-none">
+<span class="font-extrabold tracking-wide text-saarthi-ink text-base">SAARTHI</span>
+<span class="bg-saarthi-primary text-white text-[9px] font-semibold tracking-wider px-1.5 py-0.5 rounded">CIVIC</span>
+</div>
+<span class="text-[10px] tracking-wider uppercase font-semibold text-saarthi-muted mt-0.5 block">Civic Entitlements Portal</span>
+</div>
+</div>
+<button class="text-xs font-semibold text-saarthi-ink hover:text-saarthi-primary flex items-center space-x-1 transition-colors group" type="button">
+<svg class="w-4 h-4 text-saarthi-muted group-hover:text-saarthi-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Save &amp; exit</span>
+</button>
+</div>
+<!-- Progress Bar & Metadata -->
+<div class="mb-8" data-purpose="onboarding-progress">
+<div class="flex items-center justify-between text-[11px] font-bold tracking-wider uppercase mb-2">
+<span class="text-saarthi-ink/80">Step 5 of 6 • Additional Criteria</span>
+<span class="text-saarthi-accent-dark bg-saarthi-accent/10 px-2.5 py-0.5 rounded-full font-semibold border border-saarthi-accent/20">83% COMPLETED</span>
+</div>
+<!-- 6 Pill Segments -->
+<div class="grid grid-cols-6 gap-1.5 h-1.5 w-full">
+<div class="bg-saarthi-primary rounded-full"></div>
+<div class="bg-saarthi-primary rounded-full"></div>
+<div class="bg-saarthi-primary rounded-full"></div>
+<div class="bg-saarthi-primary rounded-full"></div>
+<div class="bg-saarthi-accent rounded-full"></div>
+<div class="bg-saarthi-border rounded-full"></div>
+</div>
+</div>
+<!-- Heading & Context -->
+<div class="mb-7" data-purpose="step-intro">
+<h1 class="text-3xl lg:text-[34px] font-bold text-saarthi-ink tracking-tight mb-2 leading-tight">
+            A few more details
+          </h1>
+<p class="text-[14.5px] text-saarthi-body leading-relaxed max-w-xl">
+            These are optional, but answering them can unlock additional welfare and support schemes specifically for you.
+          </p>
+<div class="mt-3 inline-flex items-center space-x-1.5 px-3 py-1 bg-saarthi-tag-bg rounded-full border border-saarthi-primary/15 text-xs text-saarthi-primary font-medium">
+<span class="">🛡️</span>
+<span class="">100% Voluntary &amp; Confidential</span>
+</div>
+</div>
+<!-- Interactive Question Rows -->
+<div class="space-y-4" data-purpose="toggle-options-container">
+<!-- Card 1: Disability / Differently Abled (Active ON) -->
+<article class="p-4 rounded-2xl border border-saarthi-primary/30 bg-white/70 shadow-sm hover:border-saarthi-primary transition-all flex items-center justify-between space-x-4 cursor-pointer">
+<div class="flex items-center space-x-3.5">
+<div class="w-11 h-11 rounded-full bg-[#E8F2EC] flex-shrink-0 flex items-center justify-center text-saarthi-primary">
+<!-- Wheelchair / Disability Icon -->
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+<path d="M12 4a2 2 0 100-4 2 2 0 000 4zm4 6a2 2 0 00-2-2H9a1 1 0 00-1 1v6a1 1 0 002 0v-5h2v3a2 2 0 002 2h3a1 1 0 000-2h-3v-3h2a2 2 0 002-2v-1z"></path>
+<circle cx="8" cy="18" fill="none" r="4" stroke="currentColor" stroke-width="2"></circle>
+</svg>
+</div>
+<div>
+<h2 class="text-[15px] font-semibold text-saarthi-ink leading-snug">
+                  I have a disability / Differently-Abled
+                </h2>
+<p class="text-[13px] text-saarthi-muted mt-0.5">
+                  Unlocks Divyangjan pensions, assistive aids &amp; dedicated reservations
+                </p>
+</div>
+</div>
+<!-- Active Toggle Pill -->
+<button aria-label="Toggle disability status" class="w-12 h-6 flex items-center rounded-full p-0.5 duration-300 cursor-pointer bg-saarthi-primary flex-shrink-0" type="button">
+<span class="bg-white w-5 h-5 rounded-full shadow-md transform translate-x-6 duration-300"></span>
+</button>
+</article>
+<!-- Card 2: BPL / Ration Card (OFF State) -->
+<article class="p-4 rounded-2xl border border-saarthi-border bg-white hover:border-saarthi-muted/60 transition-all flex items-center justify-between space-x-4 cursor-pointer">
+<div class="flex items-center space-x-3.5">
+<div class="w-11 h-11 rounded-full bg-[#FFF7EB] flex-shrink-0 flex items-center justify-center text-saarthi-accent-dark">
+<!-- Ration / Shelter Card Icon -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-[15px] font-semibold text-saarthi-ink leading-snug">
+                  My family holds a BPL or Ration Card
+                </h2>
+<p class="text-[13px] text-saarthi-muted mt-0.5">
+                  Unlocks priority rations, fuel subsidies, and low-income welfare support
+                </p>
+</div>
+</div>
+<!-- Inactive Toggle Pill -->
+<button aria-label="Toggle BPL card status" class="w-12 h-6 flex items-center rounded-full p-0.5 duration-300 cursor-pointer bg-saarthi-border flex-shrink-0" type="button">
+<span class="bg-white w-5 h-5 rounded-full shadow-md transform translate-x-0 duration-300"></span>
+</button>
+</article>
+<!-- Card 3: Minority Community Status (OFF State) -->
+<article class="p-4 rounded-2xl border border-saarthi-border bg-white hover:border-saarthi-muted/60 transition-all flex items-center justify-between space-x-4 cursor-pointer">
+<div class="flex items-center space-x-3.5">
+<div class="w-11 h-11 rounded-full bg-[#E8F8F0] flex-shrink-0 flex items-center justify-center text-saarthi-primary">
+<!-- Unity / Community Hands Icon -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-[15px] font-semibold text-saarthi-ink leading-snug">
+                  I belong to a notified minority community
+                </h2>
+<p class="text-[13px] text-saarthi-muted mt-0.5">
+                  Unlocks National Minorities Development (NMDFC) grants &amp; coaching
+                </p>
+</div>
+</div>
+<!-- Inactive Toggle Pill -->
+<button aria-label="Toggle minority status" class="w-12 h-6 flex items-center rounded-full p-0.5 duration-300 cursor-pointer bg-saarthi-border flex-shrink-0" type="button">
+<span class="bg-white w-5 h-5 rounded-full shadow-md transform translate-x-0 duration-300"></span>
+</button>
+</article>
+</div>
+<!-- Skip Link -->
+<div class="mt-4 text-left">
+<button class="text-xs font-medium text-saarthi-muted hover:text-saarthi-primary transition-colors underline-offset-4 hover:underline" type="button">
+            Prefer not to answer — skip this step →
+          </button>
+</div>
+</div>
+<!-- Bottom Nav Row -->
+<footer class="pt-8 mt-6 border-t border-saarthi-border flex items-center justify-between" data-purpose="form-action-footer">
+<a class="inline-flex items-center text-sm font-semibold text-saarthi-ink hover:text-saarthi-primary transition-colors py-2 px-1" href="/onboarding/income">
+<svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+<span class="">Back</span>
+</a>
+<div class="hidden sm:block text-xs font-medium text-saarthi-muted">
+          Next: <span class="text-saarthi-ink font-semibold">Review &amp; Final Confirmation</span>
+</div>
+<button class="inline-flex items-center justify-center space-x-2 bg-saarthi-primary hover:bg-saarthi-primary-dark text-white text-sm font-semibold px-7 py-3 rounded-full shadow-lg shadow-saarthi-primary/25 hover:shadow-saarthi-primary/35 transition-all" type="button">
+<span class="">Continue</span>
+<svg class="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</footer>
+</section>
+<!-- END: LeftFormPanel -->
+<!-- BEGIN: RightIllustrationPanel -->
+<aside class="w-full md:w-[40%] bg-gradient-to-br from-[#1F6E43] via-[#1A5C38] to-[#124128] p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden text-white" data-purpose="right-showcase-panel">
+<!-- Subtle concentric radar background pattern -->
+<div class="absolute -top-24 -right-24 w-96 h-96 border border-white/5 rounded-full pointer-events-none"></div>
+<div class="absolute -top-12 -right-12 w-72 h-72 border border-white/10 rounded-full pointer-events-none"></div>
+<div class="absolute bottom-12 left-6 w-80 h-80 border border-white/5 rounded-full pointer-events-none"></div>
+<!-- Top Badges -->
+<div class="flex items-center justify-between z-10 relative" data-purpose="illustration-header-badges">
+<div class="inline-flex items-center space-x-2 bg-black/25 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 text-[11px] font-medium tracking-wide">
+<span class="w-2 h-2 rounded-full bg-saarthi-accent animate-pulse"></span>
+<span class="">Inclusion &amp; Social Welfare Engine</span>
+</div>
+<div class="text-[10px] uppercase font-bold tracking-widest bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 text-white/90">
+          SOCIAL JUSTICE REGISTRY
+        </div>
+</div>
+<!-- Claymorphic 3D Artwork Embed -->
+<div class="my-auto py-4 flex items-center justify-center relative z-10" data-purpose="clay-character-artwork">
+<div class="relative w-full max-w-[320px] aspect-square rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
+<img alt="3D claymorphic soft matte render of a warm, compassionate, and welcoming young Indian citizen" class="w-full h-full object-cover object-center transform transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMb5GNGogL2HaZ1QTCBIPk2Hvq0qPCh1Swxc8bcAEdH2Ydl85LFWRY1PSANleFVYWJlzMSMVQ-wVZMf5FJo8p_H_YdYVtRxJX8Po9aHiY6k_80SiGZjKfazI5gSehWWwm_98UuU8CjWph9Oq2bIpW2hIuxJnzqFJgq4PqXqYjenMT692sOdN9w5TxwXOqLvFXCG2r4KXJ3ptzOhW23p8yr9hZNceOqq8igRUQk_fn5Jq3eRe48fTq6qw">
+<div class="absolute inset-0 bg-gradient-to-t from-[#10241A]/50 via-transparent to-transparent pointer-events-none"></div>
+</div>
+</div>
+<!-- Floating Bottom Metrics Card -->
+<div class="bg-[#10241A]/85 backdrop-blur-md border border-white/15 rounded-2xl p-4 shadow-xl relative z-20" data-purpose="entitlement-stats-badge">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center space-x-1.5 text-[11px] uppercase tracking-wider font-semibold text-emerald-300">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+<span class="">Targeted Support Matches</span>
+</div>
+<span class="text-[11px] font-bold bg-saarthi-accent/20 text-saarthi-accent border border-saarthi-accent/30 px-2.5 py-0.5 rounded-full">
+            12 Targeted Schemes Identified
+          </span>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<div class="text-2xl font-bold font-serif tracking-tight text-white">
+              ₹28,000+ <span class="text-sm font-sans font-normal text-white/80">Potential Additional Aid</span>
+</div>
+<p class="text-xs text-white/70 mt-0.5">
+              Disability Aid, Assistive Equipment &amp; Concessional Credit
+            </p>
+</div>
+<!-- Star bookmark icon -->
+<div class="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-saarthi-accent hover:bg-white/20 transition-colors cursor-pointer flex-shrink-0 ml-3">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+</svg>
+</div>
+</div>
+</div>
+</aside>
+<!-- END: RightIllustrationPanel -->
+</main>
+<!-- END: MasterTabletEnclosure -->
+<!-- BEGIN: CivicLegalFooter -->
+<footer class="w-full max-w-[1180px] text-center text-xs text-saarthi-muted py-3 mt-4" data-purpose="legal-footer">
+<div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+<a class="hover:text-saarthi-ink underline-offset-2 hover:underline" href="#">Income Data Privacy</a>
+<span class="">•</span>
+<a class="hover:text-saarthi-ink underline-offset-2 hover:underline" href="#">Citizen Charter</a>
+<span class="">•</span>
+<a class="hover:text-saarthi-ink underline-offset-2 hover:underline" href="#">Accessibility Statement</a>
+<span class="">•</span>
+<span class="">© 2025 Saarthi Civic Platform • Ministry of Social Justice &amp; Empowerment</span>
+</div>
+</footer>
+<!-- END: CivicLegalFooter -->
+
+
+
+
+
+
+</body></html>

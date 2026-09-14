@@ -1,0 +1,390 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Saarthi - Onboarding Step 2: Location (Desktop)</title>
+<!-- Fonts: Fraunces (Editorial Serif) & Plus Jakarta Sans / Inter for crisp civic UI -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#1F6E43',
+              darkgreen: '#144B2E',
+              ink: '#10241A',
+              saffron: '#F2A93B',
+              cream: '#FBFBF6',
+              lightgrey: '#E7ECE3',
+              subtle: '#3C4A42',
+              mintbg: '#E8F2EC',
+              mintborder: '#C8E1D2'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
+          },
+          boxShadow: {
+            'bezel': '0 24px 60px -12px rgba(16, 36, 26, 0.18), 0 16px 40px rgba(31, 110, 67, 0.14)',
+            'clay-card': '0 12px 32px rgba(16, 36, 26, 0.16)',
+            'pill': '0 4px 14px rgba(31, 110, 67, 0.28)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Bespoke Polish -->
+<style data-purpose="custom-decorations">
+    /* Subtle paper texture overlay & scroll styling */
+    .bg-paper {
+      background-color: #FBFBF6;
+      background-image: radial-gradient(#10241a0d 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F1F4EE;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #C2CEC6;
+      border-radius: 9999px;
+    }
+    .hero-radial-bg {
+      background: radial-gradient(circle at 50% 35%, #257e4e 0%, #1F6E43 50%, #123f27 100%);
+    }
+  </style>
+</head>
+<body class="bg-paper text-brand-ink font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-brand-saffron selection:text-brand-ink">
+<!-- BEGIN: TopGovHeader -->
+<header class="w-full border-b border-[#E7ECE3] bg-[#FBFBF6]/95 backdrop-blur-sm z-30 sticky top-0" data-purpose="government-global-header">
+<div class="max-w-[1360px] mx-auto px-6 h-12 flex items-center justify-between text-xs text-brand-subtle">
+<!-- Left Gov Identifier -->
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-brand-green/10 text-brand-green font-semibold text-[11px] tracking-wide">
+          GOV.IN
+        </span>
+<div class="flex items-center gap-2">
+<span class="font-medium text-brand-ink">सारथी • राष्ट्रीय नागरिक सेवा पोर्टल</span>
+<span class="text-gray-300">|</span>
+<span class="hidden md:inline font-normal text-brand-subtle">Digital Public Infrastructure for Social Entitlements</span>
+</div>
+</div>
+<!-- Right Support and Localization -->
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1.5 font-medium text-brand-ink">
+<!-- Telephone Icon -->
+<svg class="w-3.5 h-3.5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Toll-Free: <strong class="font-semibold text-brand-green">1800-SAARTHI</strong> (1800-722784)</span>
+</div>
+<div class="h-3 w-px bg-[#E7ECE3]"></div>
+<!-- Language Switcher Pill -->
+<button aria-label="Language selection" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#D5DDD2] bg-white text-xs font-semibold text-brand-ink hover:border-brand-green transition-colors" type="button">
+<span class="text-brand-green">EN</span>
+<span class="text-gray-300">/</span>
+<span class="text-brand-subtle hover:text-brand-ink">हिन्दी</span>
+<svg class="w-3 h-3 text-brand-subtle ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</header>
+<!-- END: TopGovHeader -->
+<!-- BEGIN: MainContentFrame -->
+<main class="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8" data-purpose="onboarding-viewport-container">
+<!-- Outer Bezel Container (Authentic 12px Dark Ink-Green Frame with Ambient Shadow) -->
+<div class="w-full max-w-[1120px] transition-all duration-300">
+<!-- Inner Main Window Enclosure with Split Panel Layout -->
+<div class="w-full overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[670px] relative">
+<!-- BEGIN: LeftContentPanel (60% Desktop) -->
+<section class="lg:col-span-7 p-7 md:p-10 lg:p-11 flex flex-col justify-between" data-purpose="location-interactive-form">
+<!-- Top Area: Logo, Exit, Progress and Headings -->
+<div>
+<!-- Header row: Brand Lockup & Save & Exit -->
+<div class="flex items-center justify-between pb-6 mb-4 border-b border-gray-100">
+<!-- Saarthi Logo Lockup -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 flex-shrink-0">
+<svg fill="none" height="40" viewBox="0 0 40 40" width="40" xmlns="http://www.w3.org/2000/svg">
+<circle cx="20" cy="20" fill="#1F6E43" r="18"></circle>
+<circle cx="20" cy="20" r="14" stroke="#F2A93B" stroke-dasharray="2 3" stroke-width="1.75"></circle>
+<!-- Stylized chakra spokes / citizen guide symbol -->
+<circle cx="20" cy="20" fill="#F2A93B" r="4.5"></circle>
+<circle cx="20" cy="20" fill="#10241A" r="2"></circle>
+<path d="M20 6V11M20 29V34M6 20H11M29 20H34M10.1 10.1L13.6 13.6M26.4 26.4L29.9 29.9M10.1 29.9L13.6 26.4M26.4 13.6L29.9 10.1" stroke="#FBFBF6" stroke-linecap="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-serif font-bold text-xl tracking-tight text-brand-ink leading-none">Saarthi</span>
+<span class="text-[10px] uppercase font-bold tracking-widest bg-[#EEF4EF] text-brand-green px-1.5 py-0.5 rounded">CIVIC</span>
+</div>
+<p class="text-[11px] font-medium tracking-wider text-brand-subtle uppercase mt-0.5">Entitlements Portal</p>
+</div>
+</div>
+<!-- Save & Exit Action Button -->
+<button class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-subtle hover:text-brand-ink px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors" type="button">
+<svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Save &amp; exit</span>
+</button>
+</div>
+<!-- Progress Indicator: 6 Horizontal Rounded Pill Segments -->
+<div class="mb-3" data-purpose="onboarding-stepper-progress">
+<div class="grid grid-cols-6 gap-1.5 h-1.5 w-full">
+<!-- Step 1: Completed -->
+<div class="bg-brand-green rounded-full h-full" title="Step 1: Citizen Identity (Completed)"></div>
+<!-- Step 2: Current -->
+<div class="bg-brand-saffron rounded-full h-full" title="Step 2: Location (Current)"></div>
+<!-- Step 3: Upcoming -->
+<div class="bg-brand-lightgrey rounded-full h-full"></div>
+<!-- Step 4: Upcoming -->
+<div class="bg-brand-lightgrey rounded-full h-full"></div>
+<!-- Step 5: Upcoming -->
+<div class="bg-brand-lightgrey rounded-full h-full"></div>
+<!-- Step 6: Upcoming -->
+<div class="bg-brand-lightgrey rounded-full h-full"></div>
+</div>
+<div class="flex items-center justify-between mt-2">
+<span class="text-[11px] font-bold tracking-wider uppercase text-brand-subtle">
+                  STEP 2 OF 6 • LOCATION DETAILS
+                </span>
+<span class="text-[11px] font-semibold text-brand-green">33% Completed</span>
+</div>
+</div>
+<!-- Main Question & Supportive Explanatory Copy -->
+<div class="mt-4 mb-5">
+<h1 class="font-serif font-bold text-3xl md:text-[34px] tracking-tight text-brand-ink leading-tight">
+                Where do you live?
+              </h1>
+<p class="text-sm md:text-[15px] text-brand-subtle mt-1.5 leading-relaxed">
+                Many schemes are state-specific, or offer higher benefits in certain districts. This narrows your matches to what’s actually available to you.
+              </p>
+</div>
+<!-- Form Controls Container -->
+<div class="space-y-4" data-purpose="location-selectors">
+<!-- State Selector Field -->
+<div class="relative">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold uppercase tracking-wider text-brand-ink flex items-center gap-1.5" for="state-input-preview">
+                    State
+                    <span class="text-brand-saffron">*</span>
+</label>
+<span class="text-[11px] font-medium text-brand-green bg-brand-mintbg px-2 py-0.5 rounded-full border border-brand-mintborder inline-flex items-center gap-1">
+<svg class="w-3 h-3 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                    Why we ask? (Tailors state-specific welfare portals)
+                  </span>
+</div>
+<!-- Interactive State Selector Bar -->
+<div class="relative flex items-center">
+<div class="absolute left-3.5 flex items-center pointer-events-none text-brand-green">
+<!-- Location Pin Icon -->
+<svg class="w-5 h-5 text-brand-green" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<input class="w-full bg-[#FCFDFB] border border-brand-green/70 rounded-2xl pl-11 pr-10 py-3 text-[15px] font-semibold text-brand-ink focus:outline-none focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green cursor-pointer shadow-sm transition-all" id="state-input-preview" readonly="" type="text" value="Maharashtra">
+<div class="absolute right-3.5 flex items-center pointer-events-none text-brand-ink">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+</div>
+<!-- Desktop Interactive State Presentation: Popover Dropdown Sheet Preview -->
+<div class="mt-2 bg-white rounded-2xl border border-gray-200 shadow-xl p-2.5 space-y-1.5 z-20">
+<!-- Search Filter Input -->
+<div class="relative">
+<svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<input class="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:border-brand-green" placeholder="Search states... (e.g., Karnataka, Rajasthan)" type="text">
+</div>
+<!-- Quick Option Items -->
+<div class="max-h-28 overflow-y-auto custom-scroll space-y-0.5 pt-1 text-xs">
+<!-- Selected State Item -->
+<div class="flex items-center justify-between px-3 py-1.5 rounded-xl bg-brand-mintbg text-brand-green font-semibold cursor-pointer">
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-green inline-block"></span>
+                        Maharashtra
+                      </span>
+<svg class="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+<!-- Other Option -->
+<div class="flex items-center justify-between px-3 py-1.5 rounded-xl text-brand-subtle hover:bg-gray-50 cursor-pointer transition-colors">
+<span class="">Gujarat</span>
+<span class="text-[10px] text-gray-400 font-normal">142 schemes</span>
+</div>
+<!-- Other Option -->
+<div class="flex items-center justify-between px-3 py-1.5 rounded-xl text-brand-subtle hover:bg-gray-50 cursor-pointer transition-colors">
+<span class="">Karnataka</span>
+<span class="text-[10px] text-gray-400 font-normal">168 schemes</span>
+</div>
+<!-- Other Option -->
+<div class="flex items-center justify-between px-3 py-1.5 rounded-xl text-brand-subtle hover:bg-gray-50 cursor-pointer transition-colors">
+<span class="">Madhya Pradesh</span>
+<span class="text-[10px] text-gray-400 font-normal">156 schemes</span>
+</div>
+<!-- Other Option -->
+<div class="flex items-center justify-between px-3 py-1.5 rounded-xl text-brand-subtle hover:bg-gray-50 cursor-pointer transition-colors">
+<span class="">Uttar Pradesh</span>
+<span class="text-[10px] text-gray-400 font-normal">210 schemes</span>
+</div>
+</div>
+</div>
+</div>
+<!-- District Field -->
+<div class="pt-1">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold uppercase tracking-wider text-brand-ink flex items-center gap-1.5" for="district-selector">
+                    District
+                    <span class="text-brand-saffron">*</span>
+</label>
+<span class="text-[11px] text-brand-subtle font-normal">
+                    Active jurisdiction for local municipal &amp; zilla parishad schemes
+                  </span>
+</div>
+<div class="relative flex items-center">
+<div class="absolute left-3.5 flex items-center pointer-events-none text-brand-green">
+<svg class="w-5 h-5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full bg-[#FCFDFB] border border-brand-lightgrey rounded-2xl pl-11 pr-10 py-3 text-[15px] font-semibold text-brand-ink focus:outline-none focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green cursor-pointer shadow-sm transition-all" id="district-selector" type="text" value="Pune">
+<div class="absolute right-3.5 flex items-center pointer-events-none text-brand-subtle">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Contextual Micro-Detail Confirmation Tag -->
+<div class="bg-brand-mintbg border border-brand-mintborder rounded-xl px-3.5 py-2 flex items-center justify-between" data-purpose="active-jurisdiction-chip">
+<div class="flex items-center gap-2">
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-green opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-brand-green"></span>
+</span>
+<span class="text-xs font-semibold text-brand-green">
+                    📍 Verified Match: Pune, Maharashtra
+                  </span>
+</div>
+<span class="text-[11px] font-bold text-brand-darkgreen bg-white/70 px-2 py-0.5 rounded-md border border-brand-mintborder">
+                  184 State Schemes Active
+                </span>
+</div>
+</div>
+</div>
+<!-- Bottom Persistent Navigation Bar -->
+<div class="pt-6 mt-6 border-t border-gray-100 flex items-center justify-between" data-purpose="step-navigation-actions">
+<!-- Back Action -->
+<button class="inline-flex items-center gap-2 text-sm font-semibold text-brand-subtle hover:text-brand-green transition-colors px-3 py-2 rounded-full hover:bg-gray-50" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Back</span>
+</button>
+<!-- Continue Button (52px height, solid Tricolor Green, ambient green shadow) -->
+<button class="inline-flex items-center justify-center gap-2 h-[52px] px-8 rounded-full bg-brand-green hover:bg-[#185936] text-white font-medium text-base shadow-pill hover:shadow-lg transition-all transform active:scale-[0.98]" type="button">
+<span class="">Continue</span>
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+</div>
+</section>
+<!-- END: LeftContentPanel -->
+<!-- BEGIN: RightHeroPanel (40% Desktop) -->
+<section class="lg:col-span-5 hero-radial-bg p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden text-white rounded-[24px]" data-purpose="visual-context-panel">
+<!-- Subtle decorative background concentric rings -->
+<div class="absolute -right-20 -top-20 w-80 h-80 rounded-full border border-white/10 pointer-events-none"></div>
+<div class="absolute -right-10 -top-10 w-60 h-60 rounded-full border border-white/5 pointer-events-none"></div>
+<!-- Top Status Pill Header -->
+<div class="flex items-center justify-between z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#144B2E]/90 border border-white/20 text-xs font-semibold text-white tracking-wide shadow-sm backdrop-blur-md">
+<span class="w-2 h-2 rounded-full bg-brand-saffron inline-block"></span>
+<span class="">Geographic Jurisdiction Verified</span>
+</div>
+<div class="text-[11px] uppercase tracking-widest text-emerald-200 font-bold hidden sm:block">
+              NIC • GIS
+            </div>
+</div>
+<!-- Central Hero 3D Claymorphic Artwork -->
+<div class="my-auto py-2 flex flex-col items-center justify-center relative z-10" data-purpose="hero-clay-visual">
+<div class="w-full max-w-[340px] aspect-square relative flex items-center justify-center group">
+<!-- Claymorphic Render Image with soft ambient lighting -->
+<img alt="3D claymorphic soft matte render of an optimistic Indian citizen standing beside an abstract clay India map relief with warm saffron location pin, navigational compass, and home icon" class="w-full h-full object-contain rounded-2xl filter drop-shadow-2xl transition-transform duration-500 hover:scale-[1.02]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBCn3M-PPWRR1JSbAdjXvw2JtsZ_51KXnDJg7tr5swBq9EwEsJAKfFnjqemfTvmZE9an9B1x0LjRnUsljZvGHyvX6XGi0-E6ZJv8MzFu51ZOFL9El-2zd6pzSxM9a7QDrzF-Cel8vO5BZnKCthKCBnOocsrepTHej7TRWrbCjlo8D_EqgMKFhKDLkAjXEMV7PaZ_n7Y3Xvv3nYqbhbJQ9HNE_Jkh7MflfUga-Gz6GseIORjX5AeJEGug">
+</div>
+</div>
+<!-- Floating Overlapping Entitlement Card (Bottom Quadrant) -->
+<div class="relative z-10 mt-auto" data-purpose="state-entitlement-metric-card">
+<div class="bg-white rounded-[20px] p-4 text-brand-ink shadow-clay-card border border-white/80">
+<div class="flex items-start gap-3">
+<!-- Saffron Star Badge -->
+<div class="w-8 h-8 rounded-full bg-brand-saffron/20 flex-shrink-0 flex items-center justify-center mt-0.5">
+<svg class="w-4 h-4 text-[#D38515]" fill="currentColor" viewBox="0 0 20 20">
+<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+</svg>
+</div>
+<!-- Card Copy -->
+<div class="space-y-0.5">
+<p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-subtle">
+                    State Entitlement Pool
+                  </p>
+<p class="text-xs font-bold text-brand-ink leading-snug">
+                    ₹48,500+ <span class="font-normal text-brand-subtle">Avg. State Grant Value per Eligible Citizen</span>
+</p>
+<div class="flex items-center gap-1.5 pt-1 text-[11px] text-brand-green font-medium">
+<svg class="w-3.5 h-3.5 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Maharashtra DBT Registry Synced</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: RightHeroPanel -->
+</div>
+</div>
+</main>
+<!-- END: MainContentFrame -->
+<!-- BEGIN: BottomGovFooter -->
+<footer class="w-full border-t border-[#E7ECE3] bg-[#FBFBF6] py-3.5 px-6 text-xs text-brand-subtle" data-purpose="government-global-footer">
+<div class="max-w-[1360px] mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5">
+<!-- Copyright & Ministry Note -->
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-green inline-block"></span>
+<p class="">© 2025 Saarthi Civic Platform • Ministry of Electronics &amp; IT • Government of India</p>
+</div>
+<!-- Compliance Links -->
+<nav aria-label="Legal and compliance navigation" class="flex items-center gap-5 text-[11px]">
+<a class="hover:text-brand-green underline-offset-4 hover:underline transition-colors" href="#privacy">Data Privacy &amp; Consent</a>
+<span class="text-gray-300">•</span>
+<a class="hover:text-brand-green underline-offset-4 hover:underline transition-colors" href="#charter">Citizen Charter</a>
+<span class="text-gray-300">•</span>
+<a class="hover:text-brand-green underline-offset-4 hover:underline transition-colors" href="#accessibility">Accessibility Statement</a>
+</nav>
+</div>
+</footer>
+<!-- END: BottomGovFooter -->
+
+
+</body></html>

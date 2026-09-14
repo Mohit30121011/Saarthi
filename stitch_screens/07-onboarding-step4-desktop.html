@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Saarthi — Category &amp; Education (Step 4 of 6)</title>
+<!-- Tailwind CSS CDN with Forms and Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Fraunces (Headings) & Plus Jakarta Sans (General Sans fallback) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'saarthi-green': '#1F6E43',
+            'saarthi-green-dark': '#175433',
+            'saarthi-saffron': '#F2A93B',
+            'saarthi-ink': '#10241A',
+            'saarthi-cream': '#FBFBF6',
+            'saarthi-border': '#E7ECE3',
+            'saarthi-muted': '#5D6B64',
+            'saarthi-body': '#3C4A42'
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+<style data-purpose="custom-layout">
+    /* Civic subtle dot-grid background */
+    body {
+      background-color: #FBFBF6;
+      background-image: radial-gradient(#10241A 0.85px, transparent 0.85px);
+      background-size: 24px 24px;
+    }
+
+    /* Master bezel container shadow and depth */
+    .master-frame {
+      box-shadow: 0 16px 40px rgba(31, 110, 67, 0.14), 0 2px 8px rgba(16, 36, 26, 0.06);
+    }
+
+    /* Right panel radial gradient backdrop */
+    .hero-panel-gradient {
+      background: radial-gradient(circle at 45% 35%, #2a8a55 0%, #1F6E43 55%, #10241A 100%);
+    }
+
+    /* Glassmorphic micro-card */
+    .glass-card-bottom {
+      background: rgba(16, 36, 26, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(242, 169, 59, 0.28);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-saarthi-ink font-sans flex items-center justify-center p-4 lg:p-8 antialiased selection:bg-saarthi-saffron selection:text-saarthi-ink">
+<!-- BEGIN: MasterEnclosure -->
+<!-- Centered 1100px master frame with 12px dark ink-green outer bezel -->
+<main class="w-full max-w-[1100px] transition-all">
+<!-- Split Layout Grid: 60% Form Content, 40% Rich Visual Panel -->
+<div class="w-full grid grid-cols-1 lg:grid-cols-12 rounded-[22px] overflow-hidden bg-white">
+<!-- BEGIN: LeftFormPanel -->
+<section class="lg:col-span-7 bg-white p-6 sm:p-8 lg:p-10 flex flex-col justify-between" data-purpose="form-onboarding-step-4">
+<!-- Top Navigation Bar Inside Left Panel -->
+<div>
+<!-- BEGIN: BrandHeader -->
+<div class="flex items-center justify-between pb-6 border-b border-saarthi-border/60">
+<!-- Brand Logo Mark & Titles -->
+<div class="flex items-center gap-3">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPDHBsi1BH0OK-cv6reLy20UeIIF7kgDmYWpmbwcKcV2k6MnNRCQRsJOxAv5DgfIzaXa35OZNukJkm4ks74y7C8b9meZkfGBXMsDTpssqWM_pwOFTcmRa7vyH1T7KZCxKRyBrfvCz4A2oacMe0lh-OL3JSWSdz2nZrLZuO6kiGQ0b3ctgovqWXxWj-b_9wne39YVRvQYJ7l9HBnl1o6RyznDF10HaKAAclByrFCvddvNImoypWnZbP9a8pS1wAxGLkNGo" alt="Saarthi Logo" class="h-9 w-auto object-contain">
+<div class="leading-tight">
+<span class="block text-sm font-bold tracking-tight text-saarthi-ink font-sans uppercase">Saarthi</span>
+<span class="block text-[9.5px] font-semibold tracking-widest text-saarthi-muted">CIVIC ENTITLEMENTS PORTAL</span>
+</div>
+</div>
+<!-- Save & Exit Link -->
+<button aria-label="Save and exit onboarding" class="inline-flex items-center gap-1.5 text-xs font-semibold text-saarthi-muted hover:text-saarthi-green transition-colors px-2.5 py-1.5 rounded-md hover:bg-saarthi-cream" type="button">
+<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14">
+<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+<polyline points="17 21 17 13 7 13 7 21"></polyline>
+<polyline points="7 3 7 8 15 8"></polyline>
+</svg>
+<span class="">Save &amp; exit</span>
+</button>
+</div>
+<!-- END: BrandHeader -->
+<!-- BEGIN: StepProgressBar -->
+<div class="pt-6 pb-6">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-bold tracking-wider text-saarthi-muted uppercase">STEP 4 OF 6 • CATEGORY &amp; EDUCATION</span>
+<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-saarthi-saffron border border-saarthi-saffron/30">67% COMPLETED</span>
+</div>
+<!-- 6-Segment Connected Progress Bar -->
+<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="67" class="grid grid-cols-6 gap-[2px] h-1 w-full bg-saarthi-cream rounded-full overflow-hidden" role="progressbar">
+<!-- Segment 1: Completed (Green) -->
+<div class="h-1 bg-saarthi-green rounded-sm"></div>
+<!-- Segment 2: Completed (Green) -->
+<div class="h-1 bg-saarthi-green rounded-sm"></div>
+<!-- Segment 3: Completed (Green) -->
+<div class="h-1 bg-saarthi-green rounded-sm"></div>
+<!-- Segment 4: Current / Active (Saffron Gold) -->
+<div class="h-1 bg-saarthi-saffron rounded-sm"></div>
+<!-- Segment 5: Upcoming -->
+<div class="h-1 bg-saarthi-border rounded-sm"></div>
+<!-- Segment 6: Upcoming -->
+<div class="h-1 bg-saarthi-border rounded-sm"></div>
+</div>
+</div>
+<!-- END: StepProgressBar -->
+<!-- BEGIN: SectionHeadline -->
+<div class="space-y-2">
+<h1 class="text-2xl sm:text-[28px] leading-[1.25] font-serif font-bold text-saarthi-ink">
+              Which category and education level apply to you?
+            </h1>
+<p class="text-xs sm:text-[13px] text-saarthi-body leading-relaxed max-w-xl">
+              Reservation-based scholarships and category-specific schemes use this. Choose what applies to you — this is kept confidential.
+            </p>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#EBF6EE] border border-saarthi-green/20 text-saarthi-green text-[11px] font-medium mt-1">
+<span class="">🔒 Confidential &amp; Encrypted</span>
+</div>
+</div>
+<!-- END: SectionHeadline -->
+<!-- BEGIN: FormFields -->
+<form class="mt-8 space-y-7" onsubmit="event.preventDefault();">
+<!-- Field 1: Social Category Selection -->
+<fieldset class="space-y-3" data-purpose="field-social-category">
+<div class="flex items-center gap-2">
+<legend class="text-xs font-bold text-saarthi-ink uppercase tracking-wider">Social Category</legend>
+<div class="relative group cursor-pointer inline-flex items-center text-saarthi-muted hover:text-saarthi-green" tabindex="0">
+<svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="15">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" x2="12" y1="16" y2="12"></line>
+<line x1="12" x2="12.01" y1="8" y2="8"></line>
+</svg>
+<!-- Tooltip Pill -->
+<div class="absolute left-6 top-1/2 -translate-y-1/2 hidden group-hover:flex items-center px-2.5 py-1 rounded bg-saarthi-ink text-[11px] text-white whitespace-nowrap shadow-md z-10 pointer-events-none">
+                    Matches caste/community certificate
+                  </div>
+</div>
+</div>
+<!-- Wrapping Selection Chips -->
+<div aria-label="Social Category" class="flex flex-wrap gap-2.5" role="radiogroup">
+<!-- General -->
+<label class="cursor-pointer">
+<input class="peer sr-only" name="social_category" type="radio" value="general">
+<span class="inline-flex items-center px-4 py-2 rounded-full border border-saarthi-border bg-white text-xs font-semibold text-saarthi-body transition-all hover:border-saarthi-muted hover:bg-saarthi-cream peer-checked:bg-saarthi-green peer-checked:text-white peer-checked:border-saarthi-green shadow-sm">
+                    General
+                  </span>
+</label>
+<!-- OBC (Selected by Default) -->
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="social_category" type="radio" value="obc">
+<span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-saarthi-green bg-saarthi-green text-xs font-semibold text-white transition-all shadow-sm">
+<svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24" width="14">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+                    OBC
+                  </span>
+</label>
+<!-- SC -->
+<label class="cursor-pointer">
+<input class="peer sr-only" name="social_category" type="radio" value="sc">
+<span class="inline-flex items-center px-4 py-2 rounded-full border border-saarthi-border bg-white text-xs font-semibold text-saarthi-body transition-all hover:border-saarthi-muted hover:bg-saarthi-cream peer-checked:bg-saarthi-green peer-checked:text-white peer-checked:border-saarthi-green shadow-sm">
+                    SC
+                  </span>
+</label>
+<!-- ST -->
+<label class="cursor-pointer">
+<input class="peer sr-only" name="social_category" type="radio" value="st">
+<span class="inline-flex items-center px-4 py-2 rounded-full border border-saarthi-border bg-white text-xs font-semibold text-saarthi-body transition-all hover:border-saarthi-muted hover:bg-saarthi-cream peer-checked:bg-saarthi-green peer-checked:text-white peer-checked:border-saarthi-green shadow-sm">
+                    ST
+                  </span>
+</label>
+<!-- EWS -->
+<label class="cursor-pointer">
+<input class="peer sr-only" name="social_category" type="radio" value="ews">
+<span class="inline-flex items-center px-4 py-2 rounded-full border border-saarthi-border bg-white text-xs font-semibold text-saarthi-body transition-all hover:border-saarthi-muted hover:bg-saarthi-cream peer-checked:bg-saarthi-green peer-checked:text-white peer-checked:border-saarthi-green shadow-sm">
+                    EWS
+                  </span>
+</label>
+</div>
+</fieldset>
+<!-- Field 2: Highest Education Level (Spaced 32px below) -->
+<fieldset class="pt-2 space-y-2.5" data-purpose="field-highest-education">
+<div>
+<legend class="text-xs font-bold text-saarthi-ink uppercase tracking-wider">Highest Education Level</legend>
+<p class="text-[12px] text-saarthi-muted mt-0.5">Unlocks degree-specific subsidies &amp; apprentice grants</p>
+</div>
+<!-- Connected Ordinal Segmented Control Bar -->
+<div class="w-full bg-white border border-saarthi-border rounded-full p-1 flex items-stretch shadow-sm overflow-x-auto text-[11.5px] font-semibold divide-x divide-saarthi-border">
+<!-- No formal education -->
+<label class="flex-1 min-w-[76px] cursor-pointer text-center">
+<input class="sr-only peer" name="education_level" type="radio" value="none">
+<span class="block py-2 px-1 text-saarthi-muted hover:text-saarthi-ink transition-colors rounded-full peer-checked:bg-saarthi-green peer-checked:text-white whitespace-nowrap text-center">
+                    No formal
+                  </span>
+</label>
+<!-- Up to 10th -->
+<label class="flex-1 min-w-[78px] cursor-pointer text-center">
+<input class="sr-only peer" name="education_level" type="radio" value="10th">
+<span class="block py-2 px-1 text-saarthi-muted hover:text-saarthi-ink transition-colors rounded-full peer-checked:bg-saarthi-green peer-checked:text-white whitespace-nowrap text-center">
+                    Up to 10th
+                  </span>
+</label>
+<!-- 12th -->
+<label class="flex-1 min-w-[58px] cursor-pointer text-center">
+<input class="sr-only peer" name="education_level" type="radio" value="12th">
+<span class="block py-2 px-1 text-saarthi-muted hover:text-saarthi-ink transition-colors rounded-full peer-checked:bg-saarthi-green peer-checked:text-white whitespace-nowrap text-center">
+                    12th
+                  </span>
+</label>
+<!-- Diploma -->
+<label class="flex-1 min-w-[68px] cursor-pointer text-center">
+<input class="sr-only peer" name="education_level" type="radio" value="diploma">
+<span class="block py-2 px-1 text-saarthi-muted hover:text-saarthi-ink transition-colors rounded-full peer-checked:bg-saarthi-green peer-checked:text-white whitespace-nowrap text-center">
+                    Diploma
+                  </span>
+</label>
+<!-- Graduate (Selected) -->
+<label class="flex-1 min-w-[76px] cursor-pointer text-center">
+<input checked="" class="sr-only peer" name="education_level" type="radio" value="graduate">
+<span class="block py-2 px-1 bg-saarthi-green text-white shadow-sm rounded-full whitespace-nowrap text-center">
+                    Graduate
+                  </span>
+</label>
+<!-- Postgraduate+ -->
+<label class="flex-1 min-w-[84px] cursor-pointer text-center">
+<input class="sr-only peer" name="education_level" type="radio" value="postgraduate">
+<span class="block py-2 px-1 text-saarthi-muted hover:text-saarthi-ink transition-colors rounded-full peer-checked:bg-saarthi-green peer-checked:text-white whitespace-nowrap text-center">
+                    Postgrad+
+                  </span>
+</label>
+</div>
+</fieldset>
+</form>
+<!-- END: FormFields -->
+</div>
+<!-- BEGIN: NavigationFooter -->
+<footer class="pt-8 sm:pt-10 mt-6 border-t border-saarthi-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+<!-- Back Link -->
+<a aria-label="Go back to Income step" class="inline-flex items-center text-xs font-bold text-saarthi-muted hover:text-saarthi-green transition-colors py-2 px-1" href="#back">
+<span class="mr-1.5 font-sans text-sm leading-none">←</span> Back to Income
+          </a>
+<!-- Right Action Group -->
+<div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+<span class="text-[11px] font-medium text-saarthi-muted hidden md:inline-block">Next: Additional Details</span>
+<button class="h-[52px] px-8 rounded-full bg-saarthi-green hover:bg-saarthi-green-dark text-white font-semibold text-sm transition-all transform active:scale-95 shadow-md hover:shadow-lg inline-flex items-center justify-center gap-2 group w-full sm:w-auto" type="button">
+<span class="">Continue</span>
+<svg class="transition-transform group-hover:translate-x-1" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="16">
+<line x1="5" x2="19" y1="12" y2="12"></line>
+<polyline points="12 5 19 12 12 19"></polyline>
+</svg>
+</button>
+</div>
+</footer>
+<!-- END: NavigationFooter -->
+</section>
+<!-- END: LeftFormPanel -->
+<!-- BEGIN: RightHeroPanel -->
+<!-- 40% Width Green Hero with Claymorphic Render and Overlapping Badges -->
+<section class="lg:col-span-5 hero-panel-gradient rounded-[24px] m-2 sm:m-3 p-5 sm:p-6 text-white flex flex-col justify-between relative overflow-hidden min-h-[480px] lg:min-h-full" data-purpose="visual-summary-panel">
+<!-- Subtle Ambient Light Orbs in Background -->
+<div aria-hidden="true" class="absolute -top-16 -right-16 w-60 h-60 rounded-full bg-saarthi-saffron/15 blur-3xl pointer-events-none"></div>
+<div aria-hidden="true" class="absolute -bottom-20 -left-12 w-64 h-64 rounded-full bg-[#35a86a]/20 blur-3xl pointer-events-none"></div>
+<!-- Top Header Tags -->
+<header class="relative z-10 flex items-center justify-between gap-2 text-[10.5px]">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 tracking-tight font-medium text-emerald-100">
+<span class="w-1.5 h-1.5 rounded-full bg-saarthi-saffron animate-pulse"></span>
+<span class="">Affirmative Action &amp; Education Matching</span>
+</div>
+<span class="text-[10px] font-semibold text-white/70 tracking-wider uppercase px-2 py-0.5 rounded bg-black/20 border border-white/10">
+            UGC • AICTE Registry
+          </span>
+</header>
+<!-- Center 3D Claymorphic Visual Artwork -->
+<div class="relative z-10 my-auto py-4 flex items-center justify-center">
+<div class="relative max-w-[320px] w-full aspect-square flex items-center justify-center">
+<!-- Provided 3D Claymorphic Indian Citizen Artwork -->
+<img alt="3D claymorphic soft matte render of an optimistic, smiling young Indian citizen holding a small stack of rounded clay diploma certificates tied with a subtle saffron gold ribbon, with a stylized clay graduation mortarboard cap floating gently nearby." class="w-full h-full object-contain filter drop-shadow-2xl select-none" loading="eager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5apdjv-IaJGn5K1Ib5kx-ztUvfVfCuBMGzvY3xrx8LZqAeLuhZWDbH4Kvi35Et_xuaOSehX8i833xN9w4Lvid7bZ_MQElwQzMx-O1LRianjhMfQetztHrnl4dMypzQGNtEB7r0czRdKCYOjDsdjCVv7y7xWmMvD5uzah_tXu5Jse-fFBWxlgniPDdN_xWoRhoOSTxg71pBC8TT3N31OwIAv-l4kkLVAYce8ma17bxrFqYkLkXmO-BIQ">
+</div>
+</div>
+<!-- Bottom Overlapping Glass/Clay Benefit Match Card -->
+<aside class="relative z-10 glass-card-bottom rounded-2xl p-4 text-left border shadow-xl">
+<div class="flex items-center justify-between gap-2 border-b border-white/10 pb-2.5 mb-2.5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="text-[10.5px] font-bold tracking-wider uppercase text-emerald-200">SCHOLARSHIP &amp; SUBSIDY MATCHES</span>
+</div>
+<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-saarthi-saffron/20 text-saarthi-saffron border border-saarthi-saffron/40 font-mono">
+              22 Verified
+            </span>
+</div>
+<div class="flex items-center justify-between gap-3">
+<div>
+<p class="text-base sm:text-lg font-serif font-bold text-white tracking-tight leading-tight">
+                ₹45,000+ Targeted Grants
+              </p>
+<p class="text-[11px] text-white/70 mt-0.5">
+                Post-Matric, National Fellowship &amp; Skill Vouchers
+              </p>
+</div>
+<!-- Mini Emblem / Check badge -->
+<div class="w-9 h-9 rounded-xl bg-gradient-to-br from-saarthi-saffron to-amber-600 p-0.5 shadow-md flex items-center justify-center shrink-0" title="Verified Govt Scheme Framework">
+<div class="w-full h-full rounded-[10px] bg-saarthi-ink/40 flex items-center justify-center">
+<svg fill="none" height="18" stroke="#FBFBF6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18">
+<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+</svg>
+</div>
+</div>
+</div>
+</aside>
+</section>
+<!-- END: RightHeroPanel -->
+</div>
+</main>
+<!-- END: MasterEnclosure -->
+
+
+
+
+</body></html>

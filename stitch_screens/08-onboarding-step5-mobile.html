@@ -1,0 +1,252 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Saarthi - Onboarding Step 5 of 6</title>
+<!-- Tailwind CSS v3 with Forms & Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Fraunces & Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Custom Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#1F6E43',
+              greenDark: '#10241A',
+              greenLight: '#EDFDF2',
+              greenBadge: '#E8F3ED',
+              gold: '#F2A93B',
+              bgLight: '#F5F7F4',
+              ink: '#10241A',
+              muted: '#3C4A42',
+              subtle: '#8A9A90',
+              border: '#E7ECE3'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          boxShadow: {
+            'nav': '0 -4px 20px rgba(16, 36, 26, 0.06)',
+            'card': '0 2px 10px rgba(16, 36, 26, 0.04)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Layout & UI Styles -->
+<style data-purpose="custom-layout">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Hide scrollbars for clean native app feel */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- END: Custom Layout & UI Styles -->
+</head>
+<body class="bg-slate-100 flex justify-center min-h-screen items-center p-0 sm:py-6">
+<!-- BEGIN: Mobile Device Frame (390px x 844px) -->
+<div class="w-[390px] h-[844px] bg-brand-bgLight text-brand-ink flex flex-col relative overflow-hidden shadow-2xl rounded-[44px] border-[6px] border-slate-800">
+<!-- BEGIN: iOS Status Bar -->
+<header class="w-full pt-3 px-7 flex justify-between items-center z-30 shrink-0 select-none" data-purpose="status-bar">
+<!-- Clock -->
+<span class="text-[15px] font-semibold tracking-tight text-brand-ink">9:41</span>
+<!-- Dynamic Island Simulation -->
+<div class="w-28 h-6 bg-black rounded-full flex items-center justify-end px-2.5 gap-1.5 ml-3">
+<div class="w-2.5 h-2.5 rounded-full bg-[#112211]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#053d1b]/60"></div>
+</div>
+<!-- Status Icons -->
+<div class="flex items-center space-x-1.5 text-brand-ink">
+<!-- Cellular Signal Icon -->
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+<path d="M2 18h2v3H2v-3zm4-4h2v7H6v-7zm4-4h2v11h-2V10zm4-4h2v15h-2V6zm4-4h2v19h-2V2z"></path>
+</svg>
+<!-- Wifi Icon -->
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+<path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.78 0 7.23 1.48 9.8 3.91L12 18.24 2.2 11.41C4.77 8.98 8.22 7.5 12 7.5z"></path>
+</svg>
+<!-- Battery Icon -->
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+<path d="M16 7H4c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-1h1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1h-1V9c0-1.1-.9-2-2-2zm0 8H4V9h12v6z"></path>
+</svg>
+</div>
+</header>
+<!-- END: iOS Status Bar -->
+<!-- BEGIN: App Navigation Header -->
+<div class="px-5 pt-3 pb-2 flex justify-between items-center shrink-0" data-purpose="app-header">
+<div class="flex items-center gap-2">
+<!-- Saarthi Emblemed Logo Icon -->
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjOnV3gMyPeXfuWpzFRS8rz3MqpomYpQEPGzH2-VAdIrJfmhAJcbiCcfs8wEfej0_afuAaM5_i96s2rx3kud19olgkcUmA6E4TPS53cQUohMk2u5sUWeiu37NnxTM02bR9IXfI1hz087JtAZMaKMpewFKAFN-unmdvagDFDMMMdxKQg8hb7KzVEgUhmkJ0IP1iL1vXRnQ5YxhtdU1pWKacL_qDZJlA-X_iWLZ8pV2uu0BPnMVfr9SqTi-p_Psj9YyK9rA" alt="Saarthi Logo" class="h-8 w-auto object-contain">
+<!-- App Title & Portal Badge -->
+<span class="font-serif font-bold text-xl text-brand-ink tracking-tight">Saarthi</span>
+<span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-[#E8F3ED] text-brand-green border border-brand-green/20">
+          Civic Portal
+        </span>
+</div>
+<!-- Save & Exit Action Button -->
+<button class="text-xs font-semibold text-brand-muted hover:text-brand-ink transition-colors">
+        Save &amp; exit
+      </button>
+</div>
+<!-- END: App Navigation Header -->
+<!-- BEGIN: Multi-Segment Progress Tracker -->
+<div class="px-5 pt-1.5 pb-2.5 shrink-0" data-purpose="progress-tracker">
+<div class="flex justify-between items-center text-[11px] font-bold tracking-wide mb-1.5">
+<span class="text-brand-muted">Step <strong class="text-brand-ink">5</strong> of 6</span>
+<span class="text-brand-green font-semibold uppercase tracking-wider text-[10px]">Additional Details</span>
+</div>
+<!-- 6 Progress Segments: 1-4 Green, 5 Active Saffron Gold, 6 Gray -->
+<div class="grid grid-cols-6 gap-1.5 h-1">
+<div class="bg-brand-green rounded-full"></div>
+<div class="bg-brand-green rounded-full"></div>
+<div class="bg-brand-green rounded-full"></div>
+<div class="bg-brand-green rounded-full"></div>
+<div class="bg-brand-gold rounded-full ring-2 ring-brand-gold/30"></div>
+<div class="bg-brand-border rounded-full"></div>
+</div>
+</div>
+<!-- END: Multi-Segment Progress Tracker -->
+<!-- BEGIN: Scrollable Content Viewport -->
+<main class="flex-1 overflow-y-auto px-4 pb-28 pt-1" data-purpose="main-flow-content">
+<!-- BEGIN: Hero Image Card Banner -->
+<div class="relative w-full h-[148px] rounded-[20px] overflow-hidden shadow-sm mb-3 bg-[#1F6E43] border border-black/5" data-purpose="banner-card">
+<!-- Claymorphic Background Image -->
+<img alt="3D claymorphic soft matte render of a warm, compassionate, and welcoming young Indian citizen" class="w-full h-full object-cover object-center transform scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMb5GNGogL2HaZ1QTCBIPk2Hvq0qPCh1Swxc8bcAEdH2Ydl85LFWRY1PSANleFVYWJlzMSMVQ-wVZMf5FJo8p_H_YdYVtRxJX8Po9aHiY6k_80SiGZjKfazI5gSehWWwm_98UuU8CjWph9Oq2bIpW2hIuxJnzqFJgq4PqXqYjenMT692sOdN9w5TxwXOqLvFXCG2r4KXJ3ptzOhW23p8yr9hZNceOqq8igRUQk_fn5Jq3eRe48fTq6qw">
+<!-- Inner subtle gradient overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+<!-- Floating Badge Chip -->
+<div class="absolute bottom-3 left-3.5 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 border border-white/10 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-brand-gold inline-block"></span>
+<span class="text-[11px] font-medium tracking-wide text-white">Social Protection &amp; Inclusion</span>
+</div>
+<div class="absolute bottom-3 right-3 text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-black/40 text-white/70 border border-white/5">
+          FR2.2
+        </div>
+</div>
+<!-- END: Hero Image Card Banner -->
+<!-- BEGIN: Main Questionnaire Card -->
+<div class="bg-white rounded-[24px] p-5 shadow-card border border-brand-border" data-purpose="form-container">
+<!-- Header Text Block -->
+<div class="mb-4">
+<h1 class="font-serif font-bold text-[25px] leading-tight text-brand-ink mb-1.5">
+            A few more details
+          </h1>
+<p class="text-[13px] leading-relaxed text-brand-muted">
+            These are optional, but answering them unlocks dedicated welfare &amp; special support schemes.
+          </p>
+</div>
+<!-- BEGIN: Interactive Toggle Rows Container -->
+<div class="space-y-2.5 mb-4" data-purpose="toggles-group">
+<!-- Card Row 1: Differently-Abled (Toggled ON) -->
+<div class="p-3.5 rounded-[16px] border border-brand-green/30 bg-brand-green/5 flex items-center justify-between gap-3 transition-colors">
+<div class="flex-1 pr-1">
+<div class="text-[13.5px] font-semibold text-brand-ink flex items-center gap-1.5">
+                I have a disability / Differently-Abled
+              </div>
+<p class="text-[11.5px] text-brand-muted leading-tight mt-0.5">
+                Disability pensions &amp; assistive aids
+              </p>
+</div>
+<!-- Toggle Switch (Active State) -->
+<button aria-pressed="true" class="w-12 h-7 bg-brand-green rounded-full p-0.5 flex items-center justify-end transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-green/40" type="button">
+<div class="w-6 h-6 rounded-full bg-white shadow-md transform transition-transform"></div>
+</button>
+</div>
+<!-- Card Row 2: BPL Card (Toggled OFF) -->
+<div class="p-3.5 rounded-[16px] border border-brand-border bg-white flex items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+<div class="flex-1 pr-1">
+<div class="text-[13.5px] font-semibold text-brand-ink">
+                Family holds a BPL card
+              </div>
+<p class="text-[11.5px] text-brand-muted leading-tight mt-0.5">
+                Targeted subsidies &amp; welfare grants
+              </p>
+</div>
+<!-- Toggle Switch (Inactive State) -->
+<button aria-pressed="false" class="w-12 h-7 bg-slate-200 rounded-full p-0.5 flex items-center justify-start transition-all cursor-pointer focus:outline-none" type="button">
+<div class="w-6 h-6 rounded-full bg-white shadow-sm transform transition-transform"></div>
+</button>
+</div>
+<!-- Card Row 3: Minority Status (Toggled OFF) -->
+<div class="p-3.5 rounded-[16px] border border-brand-border bg-white flex items-center justify-between gap-3 hover:border-slate-300 transition-colors">
+<div class="flex-1 pr-1">
+<div class="text-[13.5px] font-semibold text-brand-ink">
+                Belong to a minority community
+              </div>
+<p class="text-[11.5px] text-brand-muted leading-tight mt-0.5">
+                NMDFC scholarships &amp; coaching schemes
+              </p>
+</div>
+<!-- Toggle Switch (Inactive State) -->
+<button aria-pressed="false" class="w-12 h-7 bg-slate-200 rounded-full p-0.5 flex items-center justify-start transition-all cursor-pointer focus:outline-none" type="button">
+<div class="w-6 h-6 rounded-full bg-white shadow-sm transform transition-transform"></div>
+</button>
+</div>
+</div>
+<!-- END: Interactive Toggle Rows Container -->
+<!-- Optional Skip Action -->
+<div class="text-center py-1 mb-4">
+<a class="text-[12.5px] font-medium text-brand-subtle hover:text-brand-muted underline underline-offset-4 decoration-slate-300" href="#">
+            Prefer not to answer — skip this step
+          </a>
+</div>
+<!-- BEGIN: Live Opportunity Match Notification Box -->
+<div class="rounded-xl border border-brand-green/30 bg-brand-greenLight p-3 flex items-start gap-2.5" data-purpose="schemes-alert">
+<div class="w-5 h-5 rounded-full bg-brand-green text-white flex items-center justify-center shrink-0 mt-0.5">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h4 class="text-[12.5px] font-bold text-brand-green leading-snug">
+              12 Targeted Welfare Schemes Available
+            </h4>
+<p class="text-[11px] text-brand-muted leading-normal mt-0.5">
+              Including Divyangjan Pension, Assistive Devices &amp; Concessions for your profile.
+            </p>
+</div>
+</div>
+<!-- END: Live Opportunity Match Notification Box -->
+</div>
+<!-- END: Main Questionnaire Card -->
+</main>
+<!-- END: Scrollable Content Viewport -->
+<!-- BEGIN: Sticky Bottom Navigation Dock -->
+<nav class="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-brand-border px-5 pt-3 pb-7 shadow-nav z-20" data-purpose="bottom-nav-dock">
+<div class="flex items-center gap-3">
+<!-- Back Button Circular Pill -->
+<button aria-label="Go back to step 4" class="w-12 h-12 rounded-full border border-brand-border bg-white flex items-center justify-center text-brand-ink active:scale-95 transition-transform shrink-0 shadow-sm hover:bg-slate-50" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Continue Primary Action Pill Button -->
+<button class="flex-1 h-12 bg-brand-green hover:bg-[#185a36] active:scale-[0.98] text-white rounded-full font-semibold text-[15px] flex items-center justify-center gap-2 shadow-md transition-all" type="button">
+<span class="">Continue to Step 6</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- iOS Home Indicator bar -->
+<div class="w-32 h-1 bg-slate-300 rounded-full mx-auto mt-4"></div>
+</nav>
+<!-- END: Sticky Bottom Navigation Dock -->
+</div>
+<!-- END: Mobile Device Frame -->
+
+
+</body></html>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - Scheme Explorer & Search (Desktop)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1F6E43',
+            'primary-hover': '#195A37',
+            'primary-tint': '#E8F2EC',
+            'primary-subtle': '#F5FAF7',
+            accent: '#F2A93B',
+            'accent-light': '#FEF6E9',
+            ink: '#10241A',
+            body: '#3C4A42',
+            muted: '#8A9A90',
+            border: '#E7ECE3',
+            surface: '#FFFFFF',
+            'bg-base': '#FBFBF6'
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'General Sans', 'Inter', 'sans-serif']
+          },
+          boxShadow: {
+            nav: '0 4px 20px rgba(31,110,67,0.06)',
+            card: '0 2px 10px rgba(16,36,26,0.03)',
+            'card-hover': '0 12px 30px rgba(31,110,67,0.12)',
+            floating: '0 12px 36px rgba(31,110,67,0.22)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FBFBF6;
+      color: #3C4A42;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #D5DDD2;
+      border-radius: 999px;
+    }
+    .scheme-card {
+      transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scheme-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(31,110,67,0.11);
+      border-color: #CADBCF;
+    }
+    .scheme-card:hover .view-link {
+      text-decoration: underline;
+      gap: 6px;
+    }
+    .pulse-subtle {
+      animation: pulseSoft 3s ease-in-out infinite;
+    }
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.92; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-bg-base">
+
+  <!-- GOV.IN Master Top Utility Bar -->
+  <header class="bg-[#10241A] text-white text-[11px] font-medium py-1.5 px-6 border-b border-[#1A3828]">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 font-semibold tracking-wider text-[#98E3B6]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#34D399]"></span>
+          GOV.IN
+        </span>
+        <span class="text-white/40">|</span>
+        <span class="text-white/80">सारथी · राष्ट्रीय नागरिक सेवा पोर्टल | Digital Public Infrastructure</span>
+      </div>
+      <div class="flex items-center gap-4 text-white/80">
+        <div class="flex items-center gap-1.5 text-[#F2A93B]">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Open Scheme Catalog (Guest & Citizen Access)</span>
+        </div>
+        <span class="text-white/30">•</span>
+        <a href="tel:18007227844" class="hover:text-white transition-colors">Toll-Free Helpline: 1800-SAARTHI (1800-722784)</a>
+        <span class="text-white/30">•</span>
+        <div class="flex items-center gap-1 text-white/90">
+          <button class="font-semibold text-[#A3E635]">English</button>
+          <span>/</span>
+          <button class="hover:text-white transition-colors">हिन्दी</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Top Navigation Bar (72px fixed aesthetic) -->
+  <nav class="sticky top-0 z-40 bg-surface border-b border-border shadow-nav">
+    <div class="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
+      <!-- Left: Logo & Badging -->
+      <div class="flex items-center gap-8">
+        <a href="/dashboard" class="flex items-center gap-3 group" aria-label="Saarthi Home">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoP2HXbxa0DWlKnAODtMX2Y9gJDFAWFHEsfeDLJPDBzUZe89EhgCiGA8OKNBl04V8jF6xQa49q-iMBaAprnpIUz1mcmsGvtDEmk_Qao0XLfebN2jBsynUcsh0lg0GI3vFTGV8W_I_pO7l79BTT_5oS_oIs_EG74UVTv752VAIJ01FYhi59kPGm6xkWv-o5TU1NMxruWe1Zp7mdPAvCw4lhGHUXh-aV58ElYC5F-xhOztsULApIqzcw1qGTP4YlgIx6HR0" alt="Saarthi Emblem" class="h-9 w-auto object-contain transition-transform group-hover:scale-105">
+          <div class="flex items-baseline gap-2">
+            <span class="font-serif font-bold text-2xl tracking-tight text-ink">Saarthi</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-primary bg-primary-tint px-2 py-0.5 rounded-full border border-primary/20">
+              Civic Platform
+            </span>
+          </div>
+        </a>
+
+        <!-- Center-left: Primary Nav Links -->
+        <div class="hidden md:flex items-center gap-8 text-[14px] font-medium pt-1">
+          <a href="/dashboard" class="text-body hover:text-ink transition-colors pb-5">
+            Dashboard
+          </a>
+          <a href="/explore" class="text-primary font-semibold relative pb-5">
+            Explorer
+            <span class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-primary rounded-full"></span>
+          </a>
+          <a href="/checklist" class="text-body hover:text-ink transition-colors pb-5 flex items-center gap-1.5">
+            Checklist
+            <span class="bg-accent/20 text-ink text-[11px] font-bold px-1.5 py-0.2 rounded-full border border-accent/40">3 ready</span>
+          </a>
+          <a href="/bookmarks" class="text-body hover:text-ink transition-colors pb-5">
+            Bookmarks
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Search quick-peek, Guest / Auth indicator -->
+      <div class="flex items-center gap-4">
+        <!-- Notification Bell -->
+        <button class="relative p-2.5 rounded-full text-body hover:text-ink hover:bg-bg-base transition-colors" aria-label="Notifications (2 unread)">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+        </button>
+
+        <!-- Citizen Profile Dropdown -->
+        <div class="flex items-center gap-3 pl-2 border-l border-border">
+          <div class="w-9 h-9 rounded-full bg-primary-tint border border-primary/30 flex items-center justify-center text-primary font-bold text-sm">
+            AK
+          </div>
+          <div class="hidden lg:block text-left">
+            <p class="text-xs font-bold text-ink leading-tight">Ananya K.</p>
+            <p class="text-[11px] text-muted leading-tight">Pune, Maharashtra</p>
+          </div>
+          <svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Breadcrumb & Context Header -->
+  <div class="bg-surface/60 border-b border-border py-2.5 px-6">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between text-xs text-muted">
+      <div class="flex items-center gap-2">
+        <a href="/dashboard" class="hover:text-primary transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-ink font-semibold">Scheme Explorer</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="flex items-center gap-1 text-primary">
+          <span class="w-2 h-2 rounded-full bg-primary"></span>
+          Live National DBT Registry Synced
+        </span>
+        <span class="text-border">|</span>
+        <span>Central & 28 State Portals</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Application Body -->
+  <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full">
+    <div class="flex items-start gap-8">
+
+      <!-- LEFT: Filter Sidebar (280px fixed width) -->
+      <aside class="w-[280px] shrink-0 bg-surface rounded-2xl border border-border p-5 sticky top-[96px] max-h-[calc(100vh-120px)] overflow-y-auto custom-scroll shadow-sm">
+        
+        <!-- Sidebar Header with Clear Action -->
+        <div class="flex items-center justify-between pb-4 border-b border-border">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            <h2 class="font-bold text-sm text-ink tracking-wide">Filter Schemes</h2>
+          </div>
+          <button id="clear-filters-btn" class="text-xs font-semibold text-primary hover:text-primary-hover hover:underline">
+            Clear all
+          </button>
+        </div>
+
+        <!-- SECTION 1: State Filter (Searchable Dropdown style) -->
+        <fieldset class="pt-4 pb-5 border-b border-border">
+          <div class="flex items-center justify-between mb-2.5">
+            <legend class="text-[12px] font-bold uppercase tracking-wider text-muted">State / Jurisdiction</legend>
+            <span class="text-[11px] font-semibold text-primary bg-primary-tint px-1.5 py-0.5 rounded">1 selected</span>
+          </div>
+
+          <!-- Quick state search box -->
+          <div class="relative mb-2.5">
+            <input type="text" placeholder="Filter states..." class="w-full pl-7 pr-3 py-1.5 text-xs rounded-lg border border-border bg-bg-base text-ink focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40">
+            <svg class="w-3.5 h-3.5 text-muted absolute left-2 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0118 0z" />
+            </svg>
+          </div>
+
+          <!-- State Checkbox List (Active top priority) -->
+          <div class="space-y-1.5 max-h-36 overflow-y-auto custom-scroll pr-1">
+            <label class="flex items-center justify-between p-1.5 rounded-lg bg-primary-tint/60 text-xs font-semibold text-ink cursor-pointer hover:bg-primary-tint transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" checked class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Maharashtra
+              </span>
+              <span class="text-[11px] text-muted">412</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                All-India (Central)
+              </span>
+              <span class="text-[11px] text-muted">890</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Karnataka
+              </span>
+              <span class="text-[11px] text-muted">210</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Uttar Pradesh
+              </span>
+              <span class="text-[11px] text-muted">340</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Tamil Nadu
+              </span>
+              <span class="text-[11px] text-muted">188</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- SECTION 2: Category Filter -->
+        <fieldset class="py-5 border-b border-border">
+          <div class="flex items-center justify-between mb-3">
+            <legend class="text-[12px] font-bold uppercase tracking-wider text-muted">Scheme Category</legend>
+            <span class="text-[11px] text-muted">6 domains</span>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="flex items-center justify-between p-1.5 rounded-lg bg-primary-tint/60 text-xs font-semibold text-ink cursor-pointer hover:bg-primary-tint transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" checked class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Education & Scholarships
+              </span>
+              <span class="text-[11px] font-semibold text-primary">342</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Healthcare & Assistive Aid
+              </span>
+              <span class="text-[11px] text-muted">218</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Financial Aid & Subsidies
+              </span>
+              <span class="text-[11px] text-muted">405</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Agriculture & Rural Livelihood
+              </span>
+              <span class="text-[11px] text-muted">280</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Housing & Sanitation
+              </span>
+              <span class="text-[11px] text-muted">165</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Employment & Skill Mission
+              </span>
+              <span class="text-[11px] text-muted">192</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- SECTION 3: Beneficiary / Target Group -->
+        <fieldset class="py-5 border-b border-border">
+          <div class="flex items-center justify-between mb-3">
+            <legend class="text-[12px] font-bold uppercase tracking-wider text-muted">Beneficiary Group</legend>
+          </div>
+          <div class="space-y-1.5">
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Students & Youth
+              </span>
+              <span class="text-[11px] text-muted">450</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Women & Mothers
+              </span>
+              <span class="text-[11px] text-muted">380</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Persons with Disability (Divyangjan)
+              </span>
+              <span class="text-[11px] text-muted">124</span>
+            </label>
+            <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base transition-colors">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                Farmers & Marginal Landholders
+              </span>
+              <span class="text-[11px] text-muted">265</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- SECTION 4: Ministry (Collapsed by default per spec) -->
+        <fieldset class="pt-4">
+          <details class="group">
+            <summary class="flex items-center justify-between text-[12px] font-bold uppercase tracking-wider text-muted cursor-pointer list-none">
+              <span>Nodal Ministry (Central)</span>
+              <svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="mt-3 space-y-1.5 max-h-36 overflow-y-auto custom-scroll">
+              <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base">
+                <span class="flex items-center gap-2">
+                  <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                  Ministry of Education
+                </span>
+                <span class="text-[11px] text-muted">142</span>
+              </label>
+              <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base">
+                <span class="flex items-center gap-2">
+                  <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                  Social Justice & Empowerment
+                </span>
+                <span class="text-[11px] text-muted">98</span>
+              </label>
+              <label class="flex items-center justify-between p-1.5 rounded-lg text-xs text-body cursor-pointer hover:bg-bg-base">
+                <span class="flex items-center gap-2">
+                  <input type="checkbox" class="w-4 h-4 rounded text-primary focus:ring-primary border-border accent-primary">
+                  Ministry of Health & Family Welfare
+                </span>
+                <span class="text-[11px] text-muted">87</span>
+              </label>
+            </div>
+          </details>
+        </fieldset>
+      </aside>
+
+      <!-- RIGHT: Main Content Explorer Area -->
+      <section class="flex-1 min-w-0" aria-label="Schemes catalog">
+        
+        <!-- Active Filter Summary Chips -->
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span class="text-xs font-semibold text-muted">Active filters:</span>
+          <span class="inline-flex items-center gap-1.5 bg-primary-tint text-ink text-xs font-medium px-3 py-1 rounded-full border border-primary/20">
+            <span>State: <strong>Maharashtra</strong></span>
+            <button class="hover:text-primary transition-colors text-muted hover:text-ink font-bold" aria-label="Remove Maharashtra filter">×</button>
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-primary-tint text-ink text-xs font-medium px-3 py-1 rounded-full border border-primary/20">
+            <span>Category: <strong>Education & Scholarships</strong></span>
+            <button class="hover:text-primary transition-colors text-muted hover:text-ink font-bold" aria-label="Remove Education filter">×</button>
+          </span>
+          <button class="text-xs font-semibold text-primary hover:underline ml-1">Reset</button>
+        </div>
+
+        <!-- Search Bar (Full Width, 52px, Rounded 16px) -->
+        <div class="relative mb-5">
+          <label for="scheme-search" class="sr-only">Search government schemes by name, keyword, or benefit</label>
+          <div class="relative flex items-center">
+            <div class="absolute left-4.5 pointer-events-none text-muted">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0118 0z" />
+              </svg>
+            </div>
+            <input 
+              id="scheme-search"
+              type="search" 
+              value="Scholarship"
+              placeholder="Search by scheme name, keyword, or benefit…" 
+              class="w-full h-[52px] pl-12 pr-12 text-[15px] rounded-2xl bg-surface border border-border shadow-sm text-ink placeholder-muted focus:outline-none focus:border-primary focus:ring-3 focus:ring-primary/25 transition-all"
+            >
+            <!-- Trailing Clear button -->
+            <button class="absolute right-4 p-1 text-muted hover:text-ink rounded-full transition-colors" aria-label="Clear search input">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Result Count + Sort Controls Row -->
+        <div class="flex items-center justify-between mb-6 pb-3 border-b border-border/80">
+          <div class="flex items-center gap-2">
+            <span class="font-serif font-bold text-xl text-ink">Search Results</span>
+            <span class="text-muted text-sm font-medium">(Showing <strong class="text-ink font-semibold">1,842 schemes</strong> across all categories)</span>
+          </div>
+
+          <!-- Sort Dropdown styled button -->
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-muted font-medium">Sort by:</span>
+            <div class="relative inline-block text-left">
+              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border font-semibold text-ink text-xs hover:border-primary transition-colors shadow-sm">
+                <span>Most Relevant</span>
+                <svg class="w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCHEME GRID (Responsive 3-Column / 2-Column Responsive Layout) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-10">
+
+          <!-- CARD 1: Post-Matric OBC -->
+          <article class="scheme-card bg-surface rounded-[20px] border border-border p-5 flex flex-col justify-between shadow-card relative group">
+            <div>
+              <!-- Top row: Category Badge & Bookmark Icon -->
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-full bg-primary-tint flex items-center justify-center text-primary text-sm">
+                    🎓
+                  </span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-muted">Education</span>
+                </div>
+                <!-- Bookmark Heart -->
+                <button class="p-1.5 rounded-full text-muted hover:text-primary hover:bg-primary-tint/50 transition-colors" aria-label="Bookmark Post-Matric Scholarship">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Scheme Title & Authority -->
+              <h3 class="font-serif font-semibold text-lg text-ink leading-snug mb-1 line-clamp-2">
+                Post-Matric Scholarship for OBC Students
+              </h3>
+              <p class="text-xs text-muted mb-3">
+                Dept. of Social Justice & Special Assistance, Maharashtra
+              </p>
+
+              <!-- Benefit Summary -->
+              <p class="text-[13px] text-body line-clamp-2 mb-4 leading-relaxed">
+                Full academic tuition fee waiver plus monthly maintenance allowance of up to ₹1,200 for post-secondary study.
+              </p>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="pt-3 border-t border-border flex items-center justify-between">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#EBF7EE] text-primary">
+                ₹24,000 / yr
+              </span>
+              <a href="/scheme/post-matric-obc" class="view-link text-xs font-semibold text-primary flex items-center gap-1 transition-all">
+                View details <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 2: Central Sector Scheme -->
+          <article class="scheme-card bg-surface rounded-[20px] border border-border p-5 flex flex-col justify-between shadow-card relative group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-full bg-primary-tint flex items-center justify-center text-primary text-sm">
+                    📚
+                  </span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-muted">Higher Ed</span>
+                </div>
+                <button class="p-1.5 rounded-full text-muted hover:text-primary hover:bg-primary-tint/50 transition-colors" aria-label="Bookmark Central Sector Scheme">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <h3 class="font-serif font-semibold text-lg text-ink leading-snug mb-1 line-clamp-2">
+                Central Sector Scheme of Scholarship for College & University
+              </h3>
+              <p class="text-xs text-muted mb-3">
+                Ministry of Education, Government of India
+              </p>
+
+              <p class="text-[13px] text-body line-clamp-2 mb-4 leading-relaxed">
+                Direct DBT grant of ₹12,000/year for undergraduate graduation, expanding to ₹20,000 for postgraduate research.
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-border flex items-center justify-between">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#EBF7EE] text-primary">
+                ₹12,000 / yr
+              </span>
+              <a href="/scheme/central-sector" class="view-link text-xs font-semibold text-primary flex items-center gap-1 transition-all">
+                View details <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 3: Rajarshi Shahu Maharaj Fee Reimbursement -->
+          <article class="scheme-card bg-surface rounded-[20px] border border-border p-5 flex flex-col justify-between shadow-card relative group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-full bg-primary-tint flex items-center justify-center text-primary text-sm">
+                    🏛️
+                  </span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-muted">Education</span>
+                </div>
+                <button class="p-1.5 rounded-full text-muted hover:text-primary hover:bg-primary-tint/50 transition-colors" aria-label="Bookmark Rajarshi Shahu Maharaj Scheme">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <h3 class="font-serif font-semibold text-lg text-ink leading-snug mb-1 line-clamp-2">
+                Rajarshi Chhatrapati Shahu Maharaj Fee Reimbursement (EBC)
+              </h3>
+              <p class="text-xs text-muted mb-3">
+                Higher & Technical Education Dept, Maharashtra
+              </p>
+
+              <p class="text-[13px] text-body line-clamp-2 mb-4 leading-relaxed">
+                50% tuition and exam fee reimbursement for students enrolled in professional engineering and medical degree courses.
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-border flex items-center justify-between">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#EBF7EE] text-primary">
+                50% Tuition Off
+              </span>
+              <a href="/scheme/rajarshi-shahu" class="view-link text-xs font-semibold text-primary flex items-center gap-1 transition-all">
+                View details <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 4: PM YASASVI Scholarship -->
+          <article class="scheme-card bg-surface rounded-[20px] border border-border p-5 flex flex-col justify-between shadow-card relative group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-full bg-primary-tint flex items-center justify-center text-primary text-sm">
+                    🎒
+                  </span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-muted">School Level</span>
+                </div>
+                <button class="p-1.5 rounded-full text-muted hover:text-primary hover:bg-primary-tint/50 transition-colors" aria-label="Bookmark PM YASASVI">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <h3 class="font-serif font-semibold text-lg text-ink leading-snug mb-1 line-clamp-2">
+                PM Young Achievers Scholarship Award Scheme (PM-YASASVI)
+              </h3>
+              <p class="text-xs text-muted mb-3">
+                Ministry of Social Justice & Empowerment
+              </p>
+
+              <p class="text-[13px] text-body line-clamp-2 mb-4 leading-relaxed">
+                Direct financial grant up to ₹1,25,000 per year for Class 9 through Class 12 OBC, EBC, and DNT students in top schools.
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-border flex items-center justify-between">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#EBF7EE] text-primary">
+                Up to ₹1.25L / yr
+              </span>
+              <a href="/scheme/pm-yasasvi" class="view-link text-xs font-semibold text-primary flex items-center gap-1 transition-all">
+                View details <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 5: National Overseas Scholarship -->
+          <article class="scheme-card bg-surface rounded-[20px] border border-border p-5 flex flex-col justify-between shadow-card relative group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-full bg-primary-tint flex items-center justify-center text-primary text-sm">
+                    ✈️
+                  </span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-muted">Study Abroad</span>
+                </div>
+                <button class="p-1.5 rounded-full text-muted hover:text-primary hover:bg-primary-tint/50 transition-colors" aria-label="Bookmark National Overseas Scholarship">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <h3 class="font-serif font-semibold text-lg text-ink leading-snug mb-1 line-clamp-2">
+                National Overseas Scholarship for Higher Education
+              </h3>
+              <p class="text-xs text-muted mb-3">
+                Govt. of India · Social Justice Division
+              </p>
+
+              <p class="text-[13px] text-body line-clamp-2 mb-4 leading-relaxed">
+                Full contingency, international airfare, and annual tuition allowance for pursuing Master's and Ph.D. degrees abroad.
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-border flex items-center justify-between">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#EBF7EE] text-primary">
+                100% Sponsorship
+              </span>
+              <a href="/scheme/overseas-scholarship" class="view-link text-xs font-semibold text-primary flex items-center gap-1 transition-all">
+                View details <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- CARD 6: Dr. Ambedkar Post-Matric Scholarship -->
+          <article class="scheme-card bg-surface rounded-[20px] border border-border p-5 flex flex-col justify-between shadow-card relative group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-7 h-7 rounded-full bg-primary-tint flex items-center justify-center text-primary text-sm">
+                    📜
+                  </span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-muted">EBC Students</span>
+                </div>
+                <button class="p-1.5 rounded-full text-muted hover:text-primary hover:bg-primary-tint/50 transition-colors" aria-label="Bookmark Dr. Ambedkar Scholarship">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <h3 class="font-serif font-semibold text-lg text-ink leading-snug mb-1 line-clamp-2">
+                Dr. Ambedkar Post-Matric Scholarship for Economically Backward Classes
+              </h3>
+              <p class="text-xs text-muted mb-3">
+                Ministry of Social Justice & Empowerment
+              </p>
+
+              <p class="text-[13px] text-body line-clamp-2 mb-4 leading-relaxed">
+                Direct cash stipend for books, reader allowance for visually impaired, and study tour allowances for technical degrees.
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-border flex items-center justify-between">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#EBF7EE] text-primary">
+                ₹18,000 / yr
+              </span>
+              <a href="/scheme/ambedkar-scholarship" class="view-link text-xs font-semibold text-primary flex items-center gap-1 transition-all">
+                View details <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Pagination / Modern "Load More" Action Section -->
+        <div class="flex flex-col items-center justify-center pt-2 pb-12">
+          <p class="text-xs text-muted mb-3 font-medium">Viewing 6 of 1,842 matching schemes</p>
+          <button class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-sm transition-all duration-200 shadow-sm group">
+            <span>Load more schemes</span>
+            <svg class="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div class="flex items-center gap-4 mt-6 text-xs text-muted">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              Verified Citizen Entitlements
+            </span>
+            <span>•</span>
+            <span>Direct Benefit Transfer (DBT) Direct to Aadhaar Bank Account</span>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Floating Assistant Widget Bubble (Module 8) -->
+  <aside class="fixed bottom-6 right-6 z-50">
+    <button class="w-14 h-14 rounded-full bg-primary text-white shadow-floating flex items-center justify-center hover:bg-primary-hover pulse-subtle transition-transform hover:scale-105" aria-label="Open Saarthi Civic Assistant">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+      <span class="absolute top-0 right-0 w-3.5 h-3.5 bg-accent rounded-full border-2 border-white"></span>
+    </button>
+  </aside>
+
+  <!-- Footer -->
+  <footer class="bg-surface border-t border-border mt-auto py-8 text-xs text-muted">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL0N3O46IzvXefdD50VZ3PSFX6_9QU7w_aE3qim5YYxZjrsBR1Ab2EpgNZb-BtXYwPX9uHVjDByxouWUxWmGO2Yfbdc-QsKhXPqmUfY28J0sC__kANARPJgnHvjJRoYc_pdYy950PcAZ9ojHcDBxWmjqkdA70WLbbZzh642M5MiGiRFXjC9HA7OsmxMqXbVB7_leJgcTWD_ObGLStyaognFq-AlTUznXcclfL9jaNov1Ky6C2YpSIdlNbR45MfEpw4SNc" alt="Saarthi Logo" class="h-6 w-auto grayscale opacity-80">
+        <span>© 2025 Saarthi Civic Platform · Ministry of Electronics & IT · National Informatics Centre</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="#" class="hover:text-ink transition-colors">Data Privacy & Consent</a>
+        <a href="#" class="hover:text-ink transition-colors">Citizen Charter</a>
+        <a href="#" class="hover:text-ink transition-colors">Accessibility (WCAG 2.1 AA)</a>
+        <a href="#" class="hover:text-ink transition-colors">256-Bit Encrypted DBT</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

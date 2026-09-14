@@ -1,0 +1,275 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Saarthi - Category &amp; Education (Step 4 of 6)</title>
+<!-- Google Fonts for Fraunces and Plus Jakarta Sans (General Sans equivalent fallback) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#1F6E43',
+              'green-dark': '#165232',
+              'green-light': '#E8F2EC',
+              gold: '#F2A93B',
+              'gold-light': '#FEF7EC',
+              cream: '#FBFBF6',
+              border: '#E7ECE3',
+              ink: '#10241A',
+              muted: '#627368'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(16, 36, 26, 0.06)',
+            'nav': '0 -4px 16px rgba(16, 36, 26, 0.05)',
+            'chip': '0 2px 6px rgba(31, 110, 67, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="base-styling">
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: #F4F6F2;
+      color: #10241A;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Hide scrollbars for clean iOS aesthetic */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="flex justify-center items-center min-h-screen p-0 sm:p-4">
+<!-- BEGIN: Mobile Device Frame (390x844 iPhone mockup) -->
+<div class="w-[390px] h-[844px] bg-brand-cream relative overflow-hidden flex flex-col justify-between shadow-2xl border border-[#DCE3D9] sm:rounded-[48px]">
+<!-- BEGIN: iOS Top Status Bar & Dynamic Island -->
+<header class="w-full pt-3 px-7 flex justify-between items-center z-30 shrink-0 select-none">
+<!-- iOS Time -->
+<span class="text-[14px] font-semibold tracking-tight text-brand-ink">9:41</span>
+<!-- Dynamic Island pill -->
+<div class="w-[118px] h-[28px] bg-black rounded-full absolute left-1/2 -translate-x-1/2 top-2.5 flex items-center justify-end pr-2.5 space-x-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-[#111] ring-1 ring-white/10"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#0d2a1d] ring-1 ring-emerald-500/20"></div>
+</div>
+<!-- System Icons: Cellular, Wifi, Battery -->
+<div class="flex items-center space-x-1.5 text-brand-ink">
+<svg class="w-4 h-3.5 fill-current" viewBox="0 0 17 12">
+<rect height="4" rx="0.6" width="2.5" x="0" y="8"></rect>
+<rect height="6.5" rx="0.6" width="2.5" x="4" y="5.5"></rect>
+<rect height="9" rx="0.6" width="2.5" x="8" y="3"></rect>
+<rect height="12" rx="0.6" width="2.5" x="12" y="0"></rect>
+</svg>
+<svg class="w-4 h-3.5 fill-current" viewBox="0 0 16 12">
+<path d="M8 2.4c2.8 0 5.3 1.1 7.2 2.9l-1.3 1.3C12.3 5.1 10.3 4.2 8 4.2c-2.3 0-4.3.9-5.9 2.4L.8 5.3C2.7 3.5 5.2 2.4 8 2.4zm0 3.8c1.8 0 3.4.7 4.6 1.9l-1.3 1.3c-.8-.8-2-1.3-3.3-1.3s-2.5.5-3.3 1.3L3.4 8.1c1.2-1.2 2.8-1.9 4.6-1.9zm0 3.8c.8 0 1.5.3 2 .8L8 12.8 6 10.8c.5-.5 1.2-.8 2-.8z"></path>
+</svg>
+<div class="w-5 h-2.5 border border-brand-ink rounded-[3px] p-[1px] flex items-center">
+<div class="w-full h-full bg-brand-ink rounded-[1.5px]"></div>
+</div>
+</div>
+</header>
+<!-- END: iOS Top Status Bar & Dynamic Island -->
+<!-- BEGIN: Top Navigation App Bar -->
+<nav class="w-full px-5 pt-3 pb-2 flex items-center justify-between z-20 shrink-0">
+<div class="flex items-center space-x-2">
+<!-- Saarthi emblem placeholder with fallback style -->
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAijFnOX6mXaptWuqQg-zclahxSADVVsGprSCi9T3fwQGP9ZhEUQb5PBLaVSzJFxM6vULvR1YJmDXIkCrsdWCU_rom5yUTHDMNasso8ctGJ4dIhrblWlrF8RZ5OY_0re-0stVf2_L9aHZlyg7gP5gg-nbNzZecbByxm2cw_zeMVkA1ft0LroGmydwxo0WsEaViaA5-TG1JvSOe-vwd-wxwhTiXSmWawzDs0hmP7Z-6FlfLZbcFu3jXmdZmEdRDL2GPiS40" alt="Saarthi Logo" class="h-8 w-auto object-contain">
+<div class="flex items-baseline space-x-1.5">
+<span class="font-serif font-bold text-lg tracking-tight text-brand-ink">Saarthi</span>
+<span class="text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded bg-brand-green/10 text-brand-green uppercase">CIVIC PORTAL</span>
+</div>
+</div>
+<button class="text-xs font-semibold text-brand-muted hover:text-brand-ink transition-colors px-2.5 py-1.5 rounded-lg border border-transparent hover:border-brand-border" type="button">
+        Save &amp; exit
+      </button>
+</nav>
+<!-- END: Top Navigation App Bar -->
+<!-- BEGIN: Step Progress Section -->
+<section class="w-full px-5 py-2 shrink-0">
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="font-medium text-brand-muted">Step <strong class="text-brand-ink font-bold">4</strong> of 6</span>
+<span class="font-semibold text-brand-green text-[11px] tracking-wide uppercase">Category &amp; Education</span>
+</div>
+<!-- 6-segment progress tracker -->
+<div class="grid grid-cols-6 gap-1.5 w-full">
+<!-- Segments 1, 2, 3 COMPLETED (#1F6E43) -->
+<div class="h-1.5 rounded-full bg-brand-green"></div>
+<div class="h-1.5 rounded-full bg-brand-green"></div>
+<div class="h-1.5 rounded-full bg-brand-green"></div>
+<!-- Segment 4 ACTIVE (#F2A93B Saffron Gold) -->
+<div class="h-1.5 rounded-full bg-brand-gold relative shadow-xs"></div>
+<!-- Segments 5, 6 UPCOMING (#E7ECE3) -->
+<div class="h-1.5 rounded-full bg-brand-border"></div>
+<div class="h-1.5 rounded-full bg-brand-border"></div>
+</div>
+</section>
+<!-- END: Step Progress Section -->
+<!-- BEGIN: Scrollable Main Content Area -->
+<main class="flex-1 overflow-y-auto no-scrollbar px-4 pb-4 pt-1 space-y-3.5">
+<!-- BEGIN: Hero Card Banner (<=22% height) -->
+<section class="relative w-full h-[152px] rounded-2xl overflow-hidden shadow-card border border-brand-border/60 bg-gradient-to-br from-[#1b5b37] via-brand-green to-[#133f26]">
+<img alt="Claymorphic 3D young Indian citizen with diploma and graduation cap" class="w-full h-full object-cover object-[center_35%]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5apdjv-IaJGn5K1Ib5kx-ztUvfVfCuBMGzvY3xrx8LZqAeLuhZWDbH4Kvi35Et_xuaOSehX8i833xN9w4Lvid7bZ_MQElwQzMx-O1LRianjhMfQetztHrnl4dMypzQGNtEB7r0czRdKCYOjDsdjCVv7y7xWmMvD5uzah_tXu5Jse-fFBWxlgniPDdN_xWoRhoOSTxg71pBC8TT3N31OwIAv-l4kkLVAYce8ma17bxrFqYkLkXmO-BIQ">
+<!-- Subtle gradient vignette -->
+<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 via-transparent to-transparent"></div>
+<!-- Floating tag on hero banner -->
+<div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
+<span class="inline-flex items-center space-x-1.5 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-medium text-brand-cream border border-white/20">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse"></span>
+<span class="">Affirmative Action &amp; Merit Matching</span>
+</span>
+<span class="text-[10px] text-brand-cream/80 bg-black/30 backdrop-blur-xs px-2 py-0.5 rounded-md font-mono">
+            FR2.1
+          </span>
+</div>
+</section>
+<!-- END: Hero Card Banner -->
+<!-- BEGIN: Form Container Card -->
+<article class="bg-white rounded-2xl p-4 shadow-card border border-brand-border space-y-4">
+<!-- Title & Subtext Header -->
+<header class="space-y-1">
+<h1 class="font-serif font-bold text-[22px] leading-tight text-brand-ink">
+            Which category and education apply?
+          </h1>
+<p class="text-[12px] leading-relaxed text-brand-muted">
+            Matches reservation scholarships and higher education schemes. Kept strictly private.
+          </p>
+</header>
+<!-- BEGIN: Field 1 - Social Category -->
+<section class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold text-brand-ink uppercase tracking-wider flex items-center space-x-1">
+<span class="">Social Category</span>
+<span class="text-brand-green">*</span>
+</label>
+<button class="text-[11px] font-semibold text-brand-green underline decoration-brand-green/40 underline-offset-2 hover:text-brand-green-dark" type="button">
+              Why we ask?
+            </button>
+</div>
+<!-- Selectable Chips (General, OBC-Active, SC, ST, EWS) -->
+<div class="flex flex-wrap gap-2 pt-0.5">
+<!-- Chip: General -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-cream text-brand-ink border border-brand-border hover:border-brand-green/50 transition-all" type="button">
+              General
+            </button>
+<!-- Chip: OBC (Active with green checkmark) -->
+<button class="px-3 py-2 rounded-xl text-xs font-bold bg-brand-green-light text-brand-green border-2 border-brand-green flex items-center space-x-1.5 shadow-chip ring-2 ring-brand-green/10" type="button">
+<svg class="w-3.5 h-3.5 text-brand-green fill-current stroke-current stroke-[0.5]" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+<span class="">OBC (Non-Creamy)</span>
+</button>
+<!-- Chip: SC -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-cream text-brand-ink border border-brand-border hover:border-brand-green/50 transition-all" type="button">
+              SC
+            </button>
+<!-- Chip: ST -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-cream text-brand-ink border border-brand-border hover:border-brand-green/50 transition-all" type="button">
+              ST
+            </button>
+<!-- Chip: EWS -->
+<button class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-cream text-brand-ink border border-brand-border hover:border-brand-green/50 transition-all" type="button">
+              EWS
+            </button>
+</div>
+</section>
+<!-- END: Field 1 - Social Category -->
+<div class="h-px bg-brand-border/60 w-full"></div>
+<!-- BEGIN: Field 2 - Highest Education Level -->
+<section class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold text-brand-ink uppercase tracking-wider">
+              Highest Education Level
+            </label>
+<span class="text-[11px] text-brand-muted">Select highest attained</span>
+</div>
+<!-- Ordinal Segmented Pills Bar (Horizontally scrollable with clean snap) -->
+<div class="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-1 pt-0.5 -mx-1 px-1">
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-brand-cream text-brand-muted border border-brand-border hover:text-brand-ink" type="button">
+              No formal
+            </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-brand-cream text-brand-muted border border-brand-border hover:text-brand-ink" type="button">
+              Up to 10th
+            </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-brand-cream text-brand-muted border border-brand-border hover:text-brand-ink" type="button">
+              12th
+            </button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-brand-cream text-brand-muted border border-brand-border hover:text-brand-ink" type="button">
+              Diploma
+            </button>
+<!-- Active: Graduate -->
+<button class="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-green text-white shadow-sm ring-2 ring-brand-green/20 flex items-center space-x-1" type="button">
+<svg class="w-3 h-3 text-brand-gold fill-current" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+<span class="">Graduate</span>
+</button>
+<button class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium bg-brand-cream text-brand-muted border border-brand-border hover:text-brand-ink" type="button">
+              Postgrad+
+            </button>
+</div>
+</section>
+<!-- END: Field 2 - Highest Education Level -->
+<!-- BEGIN: Live Affirmative Match Callout Tag -->
+<div class="bg-brand-green-light border border-brand-green/25 rounded-xl p-2.5 flex items-start space-x-2.5">
+<div class="w-5 h-5 rounded-full bg-brand-green text-white flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
+            ✓
+          </div>
+<div>
+<p class="text-xs font-bold text-brand-green">
+              22 Targeted Category &amp; Education Schemes Found
+            </p>
+<p class="text-[11px] text-brand-muted leading-tight mt-0.5">
+              Including National Fellowship &amp; State Post-Matric fee concessions for your profile.
+            </p>
+</div>
+</div>
+<!-- END: Live Affirmative Match Callout Tag -->
+</article>
+<!-- END: Form Container Card -->
+</main>
+<!-- END: Scrollable Main Content Area -->
+<!-- BEGIN: Pinned Bottom Action Navigation Footer -->
+<footer class="w-full bg-white/95 backdrop-blur-md border-t border-brand-border px-5 py-3.5 flex items-center space-x-3 shadow-nav z-20 shrink-0">
+<!-- Circular Back Button -->
+<button aria-label="Previous step" class="w-[52px] h-[52px] rounded-full border border-brand-border bg-brand-cream text-brand-ink flex items-center justify-center hover:bg-brand-border/50 active:scale-95 transition-all shrink-0" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M19 12H5M12 19l-7-7 7-7"></path>
+</svg>
+</button>
+<!-- Primary Continue Button (52px tall, full pill) -->
+<button class="flex-1 h-[52px] rounded-full bg-brand-green hover:bg-brand-green-dark active:scale-[0.99] text-white font-semibold text-[15px] flex items-center justify-center space-x-2 shadow-lg shadow-brand-green/20 transition-all" type="button">
+<span class="">Continue to Step 5</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M5 12h14M12 5l7 7-7 7"></path>
+</svg>
+</button>
+</footer>
+<!-- END: Pinned Bottom Action Navigation Footer -->
+<!-- iOS Home Indicator -->
+<div class="w-full pb-1 pt-0.5 flex justify-center bg-white shrink-0">
+<div class="w-32 h-1 bg-brand-ink/20 rounded-full"></div>
+</div>
+</div>
+<!-- END: Mobile Device Frame -->
+
+
+</body></html>

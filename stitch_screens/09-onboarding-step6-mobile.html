@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Saarthi - Onboarding Step 6 (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1F6E43',
+            'primary-hover': '#195A37',
+            accent: '#F2A93B',
+            ink: '#10241A',
+            body: '#3C4A42',
+            muted: '#8A9A90',
+            bgbase: '#FBFBF6',
+            bordercol: '#E7ECE3',
+            cardbg: '#FFFFFF',
+            lightgreen: '#E8F2EC'
+          },
+          fontFamily: {
+            fraunces: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'General Sans', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #10241A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .custom-touch-card:active {
+      background-color: #F8FAF7;
+      transform: scale(0.99);
+    }
+    .safe-bottom-padding {
+      padding-bottom: 110px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-primary selection:text-white p-1 sm:p-3">
+
+  <!-- Mobile Outer Bezel Container (6px dark-green frame on mobile) -->
+  <main class="w-full max-w-[400px] mx-auto bg-white rounded-[36px] border-[6px] border-[#10241A] shadow-2xl overflow-hidden flex flex-col min-h-[820px] relative">
+
+    <!-- Mobile Top Navigation Header -->
+    <header class="pt-3 px-5 pb-3 bg-white border-b border-bordercol/50">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXZ-vmy-Q_CPanQ-trcS5zKykdlS8YGV1MM8jMGkt42l6tRnot8UHQXwnxpQunJYz28TrlR-NPd5Qb8Xmtnk8ZoZQZCDaR7Io-604bg-_ZZGuPMzp9hUNpB6kpIzgbUHQK_8DWQMrVXnKiObTtFapDewegLUL3xmBJ19Ijqn_oEEKqgg6KCNiEo6SMhccbvPWAL4dtH5li23taKUJY8enI_VlQ_hIUBtP9LqyZrlGB7s53h-oZEszwiBgiJnimZGULPA8" alt="Saarthi Logo" class="h-8 w-auto object-contain">
+          <span class="font-fraunces font-bold text-ink text-lg tracking-tight">Saarthi</span>
+          <span class="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-lightgreen text-primary border border-emerald-200">CIVIC</span>
+        </div>
+
+        <a href="#save-exit" class="text-xs text-muted hover:text-ink font-medium px-2.5 py-1 rounded-md border border-bordercol">
+          Save &amp; exit
+        </a>
+      </div>
+
+      <!-- Segmented Progress Bar: 6 pills (all 6 completed, 6th highlighted with gold outline) -->
+      <div class="flex items-center justify-between text-[11px] mb-1.5">
+        <span class="font-semibold text-primary">Step 6 of 6</span>
+        <span class="font-bold text-ink uppercase tracking-wider text-[10px]">REVIEW &amp; CONFIRM</span>
+      </div>
+      <div class="flex items-center gap-1.5 w-full">
+        <div class="h-1 flex-1 rounded-full bg-primary"></div>
+        <div class="h-1 flex-1 rounded-full bg-primary"></div>
+        <div class="h-1 flex-1 rounded-full bg-primary"></div>
+        <div class="h-1 flex-1 rounded-full bg-primary"></div>
+        <div class="h-1 flex-1 rounded-full bg-primary"></div>
+        <div class="h-1 flex-1 rounded-full bg-primary ring-1.5 ring-accent ring-offset-0.5"></div>
+      </div>
+    </header>
+
+    <!-- Scrollable Screen Content Area -->
+    <div class="flex-1 overflow-y-auto px-5 pt-4 safe-bottom-padding">
+
+      <!-- Compact Decorative 3D Clay Strip (Simplified for Mobile) -->
+      <div class="w-full h-16 rounded-2xl bg-gradient-to-r from-emerald-50/70 via-[#FDFEFD] to-amber-50/70 border border-bordercol flex items-center justify-center overflow-hidden mb-4 shadow-sm px-2">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyioF7c-vdqyrhcVn3j8p6NPWZYDZtgAVd1DbgNKH-KmLfty-b40ikGV75aJKo4vf1ysEnlBkK89XgszM_5NGlcM9F61qZMv2tdo3uMLEgidX85VpQ4tX2yzpSOKVKn1nhvZZ9RZWmoOVKFh_HYH1OgyRDLwjhN7kK54SkBFYZV5emAdrBhbMvvy4ypgqILGLvqsZSa0LGXnJQZUEko9NZIFyKIJwOp05hslepAs7yE8Q2qZ7HLRFlaA" alt="Claymorphic 3D milestone props" class="h-12 object-contain filter drop-shadow-sm">
+      </div>
+
+      <!-- Headline & Subtext -->
+      <div class="mb-5">
+        <h1 class="font-fraunces font-bold text-2xl text-ink tracking-tight mb-1.5 leading-snug">
+          You're all set — let's check
+        </h1>
+        <p class="text-body text-xs leading-relaxed">
+          Review your details below. You can edit any answer before we find your matching welfare schemes.
+        </p>
+      </div>
+
+      <!-- Summary Card List (Mobile Single-Column) -->
+      <div class="space-y-2.5 mb-5" role="list">
+
+        <!-- Step 1: Basic Info -->
+        <div class="custom-touch-card bg-white border border-bordercol rounded-2xl p-3 flex items-center justify-between shadow-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200/70 flex items-center justify-center text-accent shrink-0">
+              <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div>
+              <span class="block text-[10px] font-bold text-muted uppercase tracking-wide">Step 1 • Basic Info</span>
+              <span class="text-ink font-semibold text-xs leading-tight">14 Aug 2001 (23 yrs) · Female</span>
+            </div>
+          </div>
+          <a href="#edit-step-1" aria-label="Edit Basic Info" class="text-xs font-bold text-primary px-2.5 py-1 rounded hover:bg-lightgreen">
+            Edit
+          </a>
+        </div>
+
+        <!-- Step 2: Location -->
+        <div class="custom-touch-card bg-white border border-bordercol rounded-2xl p-3 flex items-center justify-between shadow-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200/70 flex items-center justify-center text-primary shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            <div>
+              <span class="block text-[10px] font-bold text-muted uppercase tracking-wide">Step 2 • Location</span>
+              <span class="text-ink font-semibold text-xs leading-tight">Pune, Maharashtra</span>
+            </div>
+          </div>
+          <a href="#edit-step-2" aria-label="Edit Location" class="text-xs font-bold text-primary px-2.5 py-1 rounded hover:bg-lightgreen">
+            Edit
+          </a>
+        </div>
+
+        <!-- Step 3: Income & Occupation -->
+        <div class="custom-touch-card bg-white border border-bordercol rounded-2xl p-3 flex items-center justify-between shadow-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200/70 flex items-center justify-center text-accent shrink-0">
+              <span class="font-fraunces font-bold text-base text-accent leading-none">₹</span>
+            </div>
+            <div>
+              <span class="block text-[10px] font-bold text-muted uppercase tracking-wide">Step 3 • Income &amp; Work</span>
+              <span class="text-ink font-semibold text-xs leading-tight">₹3.5 Lakh/yr · Self-Employed</span>
+            </div>
+          </div>
+          <a href="#edit-step-3" aria-label="Edit Income and Occupation" class="text-xs font-bold text-primary px-2.5 py-1 rounded hover:bg-lightgreen">
+            Edit
+          </a>
+        </div>
+
+        <!-- Step 4: Category & Education -->
+        <div class="custom-touch-card bg-white border border-bordercol rounded-2xl p-3 flex items-center justify-between shadow-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200/70 flex items-center justify-center text-primary shrink-0">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </div>
+            <div>
+              <span class="block text-[10px] font-bold text-muted uppercase tracking-wide">Step 4 • Category &amp; Study</span>
+              <span class="text-ink font-semibold text-xs leading-tight">OBC (Non-Creamy) · Graduate</span>
+            </div>
+          </div>
+          <a href="#edit-step-4" aria-label="Edit Category and Education" class="text-xs font-bold text-primary px-2.5 py-1 rounded hover:bg-lightgreen">
+            Edit
+          </a>
+        </div>
+
+        <!-- Step 5: Additional Criteria -->
+        <div class="custom-touch-card bg-white border border-bordercol rounded-2xl p-3 flex items-center justify-between shadow-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200/70 flex items-center justify-center text-accent shrink-0">
+              <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </div>
+            <div>
+              <span class="block text-[10px] font-bold text-muted uppercase tracking-wide">Step 5 • Criteria</span>
+              <span class="text-ink font-semibold text-xs leading-tight">Differently-Abled (Divyangjan)</span>
+            </div>
+          </div>
+          <a href="#edit-step-5" aria-label="Edit Additional Details" class="text-xs font-bold text-primary px-2.5 py-1 rounded hover:bg-lightgreen">
+            Edit
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Trust & Matching Micro Note -->
+      <div class="p-3 rounded-xl bg-lightgreen/70 border border-emerald-200/60 flex items-center gap-2 text-[11px] text-primary">
+        <svg class="w-3.5 h-3.5 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span class="">Matches across 5,400+ Central &amp; State welfare initiatives.</span>
+      </div>
+
+    </div>
+
+    <!-- Pinned Fixed Bottom Action Bar -->
+    <footer class="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-bordercol px-5 py-3.5 shadow-lg flex flex-col items-center">
+      <button onclick="triggerMobileLoading(this)" class="w-full h-12 rounded-full bg-primary hover:bg-primary-hover text-white font-semibold text-sm shadow-md shadow-primary/25 flex items-center justify-center gap-2 transition active:scale-[0.98]">
+        <span id="m-btn-text" class="">Find my schemes</span>
+        <svg id="m-btn-icon" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        <div id="m-spinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+      </button>
+      <p class="text-[11px] text-muted mt-1.5 font-medium">
+        This takes just a moment.
+      </p>
+    </footer>
+
+  </main>
+
+  <script>
+    function triggerMobileLoading(btn) {
+      const text = document.getElementById('m-btn-text');
+      const icon = document.getElementById('m-btn-icon');
+      const spinner = document.getElementById('m-spinner');
+      
+      text.textContent = 'Finding schemes…';
+      icon.classList.add('hidden');
+      spinner.classList.remove('hidden');
+      btn.disabled = true;
+    }
+  </script>
+
+
+
+</body></html>

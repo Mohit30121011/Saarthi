@@ -1,0 +1,223 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Saarthi - Onboarding Step 1 of 6</title>
+<!-- Google Fonts: Fraunces (Headings) & Inter (UI/Body) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#1F6E43',
+              greenHover: '#195A37',
+              saffron: '#F2A93B',
+              ink: '#10241A',
+              body: '#3C4A42',
+              muted: '#8A9A90',
+              base: '#FBFBF6',
+              surface: '#FFFFFF',
+              border: '#E7ECE3',
+              badgeGreen: '#EAF5EE',
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 8px 24px -4px rgba(16, 36, 26, 0.05)',
+            'btn': '0 4px 14px rgba(31, 110, 67, 0.28)',
+            'inner-soft': 'inset 0 2px 4px rgba(0,0,0,0.02)',
+          }
+        }
+      }
+    };
+  </script>
+<!-- Custom Typography & Specific UI Styles -->
+<style data-purpose="typography">
+    .font-serif-heading {
+      font-family: 'Fraunces', serif;
+      letter-spacing: -0.02em;
+    }
+  </style>
+<style data-purpose="viewport-lock">
+    /* Constrain the preview container to mobile viewport dimensions (390 x 844) */
+    body {
+      background-color: #EDECE6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-frame {
+      width: 390px;
+      height: 844px;
+      position: relative;
+      background-color: #FBFBF6;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body class="text-brand-body antialiased selection:bg-brand-saffron/30">
+<!-- BEGIN: MobileContainer -->
+<main class="mobile-frame shadow-2xl rounded-[40px] border-[6px] border-[#1a231e]" data-purpose="mobile-screen-wrapper">
+<!-- BEGIN: TopBrandBar -->
+<header class="px-5 pt-4 pb-2.5 flex items-center justify-between z-10 flex-shrink-0" data-purpose="brand-navigation-bar">
+<!-- Saarthi Brand Logo & Title -->
+<div class="flex items-center gap-2.5">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVxpLHutcsmYfrPppSdRQ_3YHxS70zuBJoo3aDd8v6aRsmRyY0h_LiAogVxOLtah0XWRXTfvuHzDuiSW-OzTN886edRQCYLIihRZWYPY7n6DZnS12xjsv80v3B4R2mqlzKHsVbRHpQm89Sj88400ADrZvGGMeFM4jlAg2LKuPgEkwiiYHytel9EYyU5DUXUvtoKB-SPFUV0ijuw8nTI9Zy3lSTMB9QGs-IDmfyVFzXw6ejzCLz1SmeeKEkX6sEHcEO3Rg" alt="Saarthi Logo" class="h-8 w-auto object-contain">
+<div class="flex flex-col">
+<span class="text-base font-bold font-serif-heading text-brand-ink leading-none">Saarthi</span>
+<span class="text-[10px] font-semibold text-brand-muted tracking-wider uppercase leading-tight">Civic Portal</span>
+</div>
+</div>
+<!-- Save & Exit Action Button -->
+<button class="text-xs font-semibold text-brand-muted hover:text-brand-ink px-2.5 py-1 rounded-full border border-brand-border/80 transition-colors" data-purpose="save-exit-button" type="button">
+        Save &amp; exit
+      </button>
+</header>
+<!-- END: TopBrandBar -->
+<!-- BEGIN: ProgressIndicator -->
+<section class="px-5 py-2 flex flex-col gap-1.5 flex-shrink-0" data-purpose="step-progress-indicator">
+<div class="flex items-center justify-between text-xs">
+<span class="font-semibold text-brand-ink">Step 1 of 6</span>
+<span class="text-brand-muted text-[11px] font-medium">Basic Profile</span>
+</div>
+<!-- 6 Thin Pill Segments -->
+<div class="grid grid-cols-6 gap-1.5 w-full">
+<!-- Step 1: Active with Saffron Gold -->
+<div class="h-1 rounded-full bg-brand-saffron"></div>
+<!-- Steps 2 to 6: Inactive -->
+<div class="h-1 rounded-full bg-brand-border"></div>
+<div class="h-1 rounded-full bg-brand-border"></div>
+<div class="h-1 rounded-full bg-brand-border"></div>
+<div class="h-1 rounded-full bg-brand-border"></div>
+<div class="h-1 rounded-full bg-brand-border"></div>
+</div>
+</section>
+<!-- END: ProgressIndicator -->
+<!-- BEGIN: ScrollableContent -->
+<div class="flex-1 overflow-y-auto px-5 pt-2 pb-24 space-y-4 no-scrollbar" data-purpose="main-scrollable-form">
+<!-- BEGIN: HeroIllustrationBanner -->
+<!-- Compact Claymorphism Container (Max 22% viewport height ~ 180px) -->
+<div class="relative w-full h-[170px] rounded-[20px] overflow-hidden p-1 bg-gradient-to-b from-[#184F32] to-[#0E331F] shadow-sm border border-brand-green/30" data-purpose="claymorphic-illustration-banner">
+<!-- Radial Glow Background -->
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(31,110,67,0.85)_0%,rgba(16,36,26,0.95)_100%)]"></div>
+<!-- Ambient Decorative Pill Tag -->
+<div class="absolute top-3 left-3.5 z-10 flex items-center gap-1.5 bg-brand-ink/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-[11px] font-medium text-brand-base">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-saffron animate-pulse"></span>
+<span class="">Age Verification 18+</span>
+</div>
+<!-- 3D Clay Render Image -->
+<div class="relative w-full h-full flex items-center justify-center">
+<img alt="3D claymorphic soft matte render of a cheerful young Indian citizen holding an 18+ voter milestone calendar" class="w-full h-full object-cover object-[center_35%] scale-[1.05]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBMWjFwGHw5tlJw8Gc7kfYzWHpu3pf_g2709n69-jnyNqOUmXrzhK79MAbZCyj4aMDq-9mTEXNqshEglrgVO4m2jTrmPD29BoF4cxtlWWiydQM11e48qUXjiuUJsFqqiwqYnNdT_mPnemtG-mxLiaBsm1N6eQruo-enIbyj2h5xjxdrCwQoJNEMtIIFw5qCn5aW8PM3wZyE3TsHYOhxgI77-wPHyxs-LnoyX8LkS-NLCzk3TP5ZKh87w">
+</div>
+</div>
+<!-- END: HeroIllustrationBanner -->
+<!-- BEGIN: FormCardSection -->
+<div class="bg-brand-surface rounded-2xl p-4 shadow-card border border-brand-border/60 space-y-4" data-purpose="form-input-card">
+<!-- Header Text -->
+<div class="space-y-1">
+<h1 class="text-[24px] font-serif-heading font-bold text-brand-ink leading-tight">
+            When were you born?
+          </h1>
+<p class="text-[13px] text-brand-muted leading-snug">
+            Matches age-based scholarships, pensions &amp; youth schemes.
+          </p>
+</div>
+<!-- Segmented Date of Birth Inputs (DD, MM, YYYY) -->
+<div class="space-y-1.5" data-purpose="dob-segmented-fields">
+<label class="block text-xs font-semibold text-brand-ink uppercase tracking-wider">
+            Date of Birth
+          </label>
+<div class="grid grid-cols-3 gap-2.5">
+<!-- Day Input -->
+<div class="flex flex-col items-center">
+<input aria-label="Day" class="w-full h-12 text-center text-lg font-bold text-brand-ink bg-brand-base rounded-[16px] border border-brand-border focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 focus:bg-white transition-all shadow-inner-soft outline-none" maxlength="2" type="text" value="14">
+<span class="text-[11px] font-medium text-brand-muted mt-1">DD</span>
+</div>
+<!-- Month Input -->
+<div class="flex flex-col items-center">
+<input aria-label="Month" class="w-full h-12 text-center text-lg font-bold text-brand-ink bg-brand-base rounded-[16px] border border-brand-border focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 focus:bg-white transition-all shadow-inner-soft outline-none" maxlength="2" type="text" value="08">
+<span class="text-[11px] font-medium text-brand-muted mt-1">MM</span>
+</div>
+<!-- Year Input -->
+<div class="flex flex-col items-center">
+<input aria-label="Year" class="w-full h-12 text-center text-lg font-bold text-brand-ink bg-brand-base rounded-[16px] border border-brand-border focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 focus:bg-white transition-all shadow-inner-soft outline-none" maxlength="4" type="text" value="2001">
+<span class="text-[11px] font-medium text-brand-muted mt-1">YYYY</span>
+</div>
+</div>
+</div>
+<!-- Calculated Age Helper Tag -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-badgeGreen rounded-lg border border-brand-green/15 text-brand-green text-xs font-semibold" data-purpose="age-calculation-badge">
+<!-- Small verification badge icon -->
+<svg class="w-3.5 h-3.5 text-brand-green" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="">Calculated Age: <strong>23 yrs</strong> • Verified Category</span>
+</div>
+<!-- Gender Selector Chips -->
+<div class="pt-2 space-y-2" data-purpose="gender-selection-group">
+<label class="block text-xs font-semibold text-brand-ink uppercase tracking-wider">
+            Gender
+          </label>
+<div class="grid grid-cols-3 gap-2">
+<!-- Chip: Male -->
+<button class="h-10 rounded-xl border border-brand-border bg-brand-base text-brand-ink text-xs font-semibold flex items-center justify-center hover:border-brand-muted transition-all" type="button">
+              Male
+            </button>
+<!-- Chip: Female (Selected State) -->
+<button class="h-10 rounded-xl border-2 border-brand-green bg-brand-badgeGreen text-brand-green text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm" type="button">
+<svg class="w-3.5 h-3.5 text-brand-green" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Female
+            </button>
+<!-- Chip: Other -->
+<button class="h-10 rounded-xl border border-brand-border bg-brand-base text-brand-ink text-xs font-semibold flex items-center justify-center hover:border-brand-muted transition-all" type="button">
+              Other
+            </button>
+</div>
+</div>
+</div>
+<!-- END: FormCardSection -->
+</div>
+<!-- END: ScrollableContent -->
+<!-- BEGIN: PinnedBottomNavigation -->
+<footer class="absolute bottom-0 inset-x-0 bg-brand-surface/95 backdrop-blur-md border-t border-brand-border px-5 py-3.5 z-30" data-purpose="bottom-pinned-navigation">
+<div class="flex items-center gap-3">
+<!-- Back Navigation Button -->
+<button aria-label="Go back" class="w-12 h-[52px] flex items-center justify-center rounded-full border border-brand-border bg-brand-base text-brand-ink hover:bg-brand-border/40 transition-colors flex-shrink-0" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Primary Continue Pill CTA (52px height) -->
+<button class="flex-1 h-[52px] bg-brand-green hover:bg-brand-greenHover active:scale-[0.99] text-white rounded-full font-semibold text-base shadow-btn flex items-center justify-center gap-2 transition-all" type="button">
+<span class="">Continue</span>
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- iOS Home Indicator Spacing Simulator -->
+<div class="w-32 h-1 bg-black/20 rounded-full mx-auto mt-3"></div>
+</footer>
+<!-- END: PinnedBottomNavigation -->
+</main>
+<!-- END: MobileContainer -->
+
+
+</body></html>

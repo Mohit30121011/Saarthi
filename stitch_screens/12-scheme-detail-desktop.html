@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - Scheme Detail (Desktop)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#1F6E43',
+              'green-hover': '#195A37',
+              'green-tint': '#F5FAF7',
+              'green-subtle': '#E8F2EC',
+              gold: '#F2A93B',
+              'gold-tint': '#FEF7EC',
+              ink: '#10241A',
+              body: '#3C4A42',
+              muted: '#8A9A90',
+              bg: '#FBFBF6',
+              border: '#E7ECE3',
+              error: '#C0473B'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FBFBF6;
+      color: #3C4A42;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-serif {
+      font-family: 'Fraunces', serif;
+    }
+    .tab-btn {
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .tab-btn.active {
+      color: #10241A;
+      font-weight: 600;
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: #1F6E43;
+      border-radius: 3px 3px 0 0;
+    }
+    .scheme-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scheme-card:hover {
+      box-shadow: 0 12px 30px rgba(31, 110, 67, 0.09);
+      border-color: #1F6E43;
+      transform: translateY(-2px);
+    }
+    .scheme-card:hover .view-link {
+      text-decoration: underline;
+    }
+    @keyframes heartScale {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.22); }
+      100% { transform: scale(1); }
+    }
+    .anim-bounce {
+      animation: heartScale 0.3s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#FBFBF6]">
+
+  <!-- Citizen Gov Top Banner -->
+  <header class="bg-[#10241A] text-white text-[12px] font-medium border-b border-[#1f382a] py-1 px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="flex items-center space-x-1">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="font-semibold tracking-wide">GOV.IN</span>
+        </span>
+        <span class="text-white/40">|</span>
+        <span class="text-emerald-100/80">सारथी · राष्ट्रीय नागरिक सेवा पोर्टल | Digital Public Infrastructure</span>
+      </div>
+      <div class="flex items-center space-x-4 text-white/70">
+        <span class="flex items-center gap-1.5"><span class="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Live National DBT Registry Synced</span>
+        <span class="text-white/40">·</span>
+        <span>Toll-Free Helpline: 1800-SAARTHI (1800-722784)</span>
+        <span class="text-white/40">·</span>
+        <span class="hover:text-white cursor-pointer font-medium text-emerald-300">English / हिन्दी</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Persistent 72px Top Navigation Bar -->
+  <nav class="sticky top-0 z-40 bg-white border-b border-[#E7ECE3] h-[72px] shadow-[0_4px_20px_rgba(31,110,67,0.04)]">
+    <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+      
+      <!-- Brand Lockup -->
+      <div class="flex items-center space-x-8">
+        <a href="#" class="flex items-center space-x-3 group">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZoYwGtL_5ZSO1jMatqlyPDRWXEJ7WUHudZKoqJwuat9TUNW2TXCKEPTxK9uDghqqypcodejiZDTAlbSI4X1XAcX4DwzmvZZP0UwjqP_82TQtfTZpaH5f82roud1VtPFeUX7GI3sd1E7_Z2kP14VgDuK1rLgWDzDsDTO5kEthCisL51if25zq6P5FZDoXPf3OxrLVMxNMnmo-p100TlECGYiZI43nzFkDvBWbQVsSAyAu1fmfpz_tt1ohRI2K65nM-p48" alt="Saarthi Official Logo" class="h-10 w-auto object-contain">
+          <div class="hidden sm:flex flex-col">
+            <span class="text-xs uppercase tracking-wider font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">CIVIC PLATFORM</span>
+          </div>
+        </a>
+
+        <!-- Primary Nav Links -->
+        <div class="hidden md:flex items-center space-x-7">
+          <a href="#" class="text-[14px] text-[#3C4A42] hover:text-[#1F6E43] font-medium py-2">Dashboard</a>
+          <a href="#" class="text-[14px] text-[#1F6E43] font-semibold py-2 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-[#1F6E43] after:rounded-full">Explorer</a>
+          <a href="#" class="text-[14px] text-[#3C4A42] hover:text-[#1F6E43] font-medium py-2 flex items-center gap-1.5">
+            Checklist
+            <span class="bg-[#FEF7EC] text-[#9A5B00] border border-[#F2A93B]/40 text-[11px] font-bold px-1.5 py-0.2 rounded-full">3 ready</span>
+          </a>
+          <a href="#" class="text-[14px] text-[#3C4A42] hover:text-[#1F6E43] font-medium py-2">Bookmarks</a>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center space-x-4">
+        <!-- Quick Search -->
+        <div class="relative hidden lg:block w-64">
+          <input type="text" placeholder="Search schemes..." class="w-full pl-9 pr-3 py-1.5 bg-[#FBFBF6] border border-[#E7ECE3] rounded-full text-xs text-[#10241A] placeholder-[#8A9A90] focus:outline-none focus:border-[#1F6E43]">
+          <svg class="w-3.5 h-3.5 text-[#8A9A90] absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+
+        <!-- Notification Bell -->
+        <button class="relative p-2 text-[#3C4A42] hover:text-[#1F6E43] rounded-full hover:bg-emerald-50 transition-colors" aria-label="Notifications">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#C0473B] rounded-full ring-2 ring-white"></span>
+        </button>
+
+        <!-- Citizen Profile Dropdown -->
+        <div class="flex items-center space-x-2 pl-2 border-l border-[#E7ECE3]">
+          <div class="w-8 h-8 rounded-full bg-[#E8F2EC] border border-[#1F6E43]/20 flex items-center justify-center text-[#1F6E43] font-bold text-xs">
+            AK
+          </div>
+          <div class="hidden xl:flex flex-col text-left text-xs">
+            <span class="font-semibold text-[#10241A] flex items-center gap-1">Ananya K. <svg class="w-3 h-3 text-emerald-700" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg></span>
+            <span class="text-[#8A9A90]">Pune, MH · Verified</span>
+          </div>
+          <svg class="w-3.5 h-3.5 text-[#8A9A90]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Layout (Max-width 960px centered, 40px top padding) -->
+  <main class="flex-1 w-full max-w-[960px] mx-auto px-4 sm:px-6 pt-10 pb-20">
+
+    <!-- 1. Breadcrumb Row -->
+    <nav class="flex items-center space-x-2 text-[13px] text-[#8A9A90] mb-5" aria-label="Breadcrumb">
+      <a href="#" class="hover:text-[#1F6E43] transition-colors flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Explore
+      </a>
+      <span class="text-[#E7ECE3]">/</span>
+      <a href="#" class="hover:text-[#1F6E43] transition-colors">Education & Scholarships</a>
+      <span class="text-[#E7ECE3]">/</span>
+      <span class="text-[#10241A] font-medium truncate max-w-xs sm:max-w-md">Post-Matric Scholarship for OBC Students</span>
+    </nav>
+
+    <!-- 2. Header Block -->
+    <section class="bg-white rounded-[24px] border border-[#E7ECE3] p-6 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)] mb-6">
+      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+        
+        <!-- Left Title & Authority Area -->
+        <div class="space-y-3 max-w-2xl">
+          <!-- Category Badge & Match Confidence Tag -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F2EC] text-[#1F6E43] text-xs font-semibold tracking-wide uppercase">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/></svg>
+              Education & Higher Studies
+            </span>
+
+            <!-- Match Confidence Tag: Strong Match -->
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1F6E43] text-white text-xs font-semibold shadow-sm">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              Strong Match
+            </span>
+
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#F5FAF7] text-[#1F6E43] border border-[#1F6E43]/20">
+              Direct Benefit Transfer (DBT)
+            </span>
+          </div>
+
+          <!-- Scheme Name -->
+          <h1 class="font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#10241A] leading-tight">
+            Post-Matric Scholarship for Other Backward Class (OBC) Students
+          </h1>
+
+          <!-- Issuing Authority + State/Central Tag -->
+          <div class="flex flex-wrap items-center gap-2 text-sm text-[#8A9A90]">
+            <span class="text-[#3C4A42] font-medium">Department of Social Justice & Special Assistance</span>
+            <span>·</span>
+            <span class="inline-flex items-center gap-1 font-medium text-[#1F6E43]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              Government of Maharashtra
+            </span>
+            <span>·</span>
+            <span class="text-xs bg-[#FBFBF6] px-2 py-0.5 rounded border border-[#E7ECE3]">Scheme ID: MH-SJD-OBC-2026-04</span>
+          </div>
+        </div>
+
+        <!-- Right Header Action Area (Bookmark + Verified Provencance) -->
+        <div class="flex md:flex-col items-center md:items-end justify-between md:justify-start gap-3 shrink-0 pt-2 border-t md:border-t-0 border-[#E7ECE3]">
+          <!-- Bookmark Button Toggle -->
+          <button id="bookmarkBtn" onclick="toggleBookmark()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#1F6E43] bg-white text-[#1F6E43] font-medium text-sm hover:bg-[#F5FAF7] transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-[#1F6E43]/30">
+            <svg id="bookmarkIcon" class="w-4 h-4 text-[#1F6E43] transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            <span id="bookmarkText">Save Scheme</span>
+          </button>
+
+          <!-- Verified Provenance Line -->
+          <div class="flex items-center gap-1.5 text-[12px] text-[#8A9A90]" title="Verified by National Informatics Centre against MahaDBT schema">
+            <svg class="w-3.5 h-3.5 text-[#1F6E43]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>Verified: 12 Aug 2026</span>
+          </div>
+
+          <!-- Direct Benefit Highlight Metric -->
+          <div class="hidden md:block text-right mt-1">
+            <span class="text-[11px] text-[#8A9A90] uppercase tracking-wider block">Estimated Benefit</span>
+            <span class="text-xl font-serif font-bold text-[#1F6E43]">₹24,000 / yr</span>
+            <span class="text-[11px] text-[#3C4A42] block">+ 100% Tuition Waiver</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Stats Pill Badges Row -->
+      <div class="mt-6 pt-5 border-t border-[#E7ECE3] grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+        <div class="bg-[#FBFBF6] rounded-xl p-3 border border-[#E7ECE3]">
+          <span class="text-[#8A9A90] block text-[11px]">Application Mode</span>
+          <span class="font-semibold text-[#10241A] flex items-center gap-1 mt-0.5">
+            <svg class="w-3 h-3 text-[#1F6E43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Online (MahaDBT Portal)
+          </span>
+        </div>
+        <div class="bg-[#FBFBF6] rounded-xl p-3 border border-[#E7ECE3]">
+          <span class="text-[#8A9A90] block text-[11px]">Next Intake Deadline</span>
+          <span class="font-semibold text-[#10241A] flex items-center gap-1 mt-0.5">
+            <svg class="w-3 h-3 text-[#F2A93B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            31 Oct 2026 (Open)
+          </span>
+        </div>
+        <div class="bg-[#FBFBF6] rounded-xl p-3 border border-[#E7ECE3]">
+          <span class="text-[#8A9A90] block text-[11px]">Processing Time</span>
+          <span class="font-semibold text-[#10241A] flex items-center gap-1 mt-0.5">
+            <svg class="w-3 h-3 text-[#1F6E43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            21 Working Days
+          </span>
+        </div>
+        <div class="bg-[#FBFBF6] rounded-xl p-3 border border-[#E7ECE3]">
+          <span class="text-[#8A9A90] block text-[11px]">Disbursement</span>
+          <span class="font-semibold text-[#10241A] flex items-center gap-1 mt-0.5">
+            <svg class="w-3 h-3 text-[#1F6E43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Direct to Aadhaar Bank
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Plain-Language Eligibility Banner (SRS FR5.1 - Prominent Visual Weight) -->
+    <section class="bg-[#F5FAF7] border-2 border-[#1F6E43]/30 rounded-[18px] p-5 sm:p-6 mb-8 relative overflow-hidden shadow-[0_6px_20px_rgba(31,110,67,0.06)]">
+      <div class="flex items-start gap-4">
+        <!-- Shield Badge Icon -->
+        <div class="w-11 h-11 rounded-full bg-[#1F6E43] text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs uppercase font-bold tracking-wider text-[#1F6E43]">Personalized Assessment (SRS FR5.1)</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-[#1F6E43]"></span>
+            <span class="text-xs text-[#3C4A42]">Matched to your verified profile</span>
+          </div>
+          <!-- Single most important sentence on the page -->
+          <p class="font-serif text-lg sm:text-[20px] font-semibold text-[#10241A] leading-snug">
+            “You qualify because you are under 25, currently enrolled as a student, have family income below ₹1.5L, and hold Maharashtra domicile.”
+          </p>
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-1 mt-2 text-xs text-[#3C4A42]">
+            <span class="flex items-center gap-1.5 text-emerald-800 font-medium">
+              <svg class="w-3.5 h-3.5 text-[#1F6E43]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              5 of 5 core rules verified
+            </span>
+            <span>·</span>
+            <span class="text-[#8A9A90]">All 3 primary documents present in your Saarthi Locker</span>
+            <span>·</span>
+            <a href="#eligibilityTab" onclick="switchTab('eligibility')" class="text-[#1F6E43] font-medium hover:underline inline-flex items-center gap-0.5">
+              Inspect criteria breakdown →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Underline-Style Tabs (Overview · Eligibility · Documents · How to Apply) -->
+    <section class="bg-white rounded-[24px] border border-[#E7ECE3] p-6 sm:p-8 shadow-sm mb-10">
+      
+      <!-- Tab Bar Navigation (Underline-style with keyboard accessibility) -->
+      <div class="border-b border-[#E7ECE3] mb-8 overflow-x-auto" role="tablist" aria-label="Scheme Details Navigation">
+        <div class="flex space-x-8 min-w-max pb-0.5">
+          <button id="tab-btn-overview" onclick="switchTab('overview')" role="tab" aria-selected="true" aria-controls="panel-overview" class="tab-btn active pb-3 text-[15px] text-[#8A9A90] hover:text-[#10241A] font-medium transition-colors">
+            Overview
+          </button>
+          <button id="tab-btn-eligibility" onclick="switchTab('eligibility')" role="tab" aria-selected="false" aria-controls="panel-eligibility" class="tab-btn pb-3 text-[15px] text-[#8A9A90] hover:text-[#10241A] font-medium transition-colors flex items-center gap-1.5">
+            Eligibility Criteria
+            <span class="bg-[#E8F2EC] text-[#1F6E43] text-xs font-bold px-1.5 py-0.5 rounded-full">5/5 Met</span>
+          </button>
+          <button id="tab-btn-documents" onclick="switchTab('documents')" role="tab" aria-selected="false" aria-controls="panel-documents" class="tab-btn pb-3 text-[15px] text-[#8A9A90] hover:text-[#10241A] font-medium transition-colors flex items-center gap-1.5">
+            Required Documents
+            <span class="bg-[#FBFBF6] text-[#3C4A42] border border-[#E7ECE3] text-xs font-bold px-1.5 py-0.5 rounded-full">4 items</span>
+          </button>
+          <button id="tab-btn-how-to-apply" onclick="switchTab('how-to-apply')" role="tab" aria-selected="false" aria-controls="panel-how-to-apply" class="tab-btn pb-3 text-[15px] text-[#8A9A90] hover:text-[#10241A] font-medium transition-colors">
+            How to Apply
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div>
+
+        <!-- TAB 1: OVERVIEW -->
+        <div id="panel-overview" role="tabpanel" aria-labelledby="tab-btn-overview" class="space-y-8">
+          
+          <!-- Full Scheme Description -->
+          <div class="space-y-4">
+            <h3 class="font-serif text-xl font-semibold text-[#10241A]">About the Scheme</h3>
+            <p class="text-[15px] text-[#3C4A42] leading-relaxed">
+              The Post-Matric Scholarship for Other Backward Class (OBC) students is an affirmative welfare initiative administered by the Government of Maharashtra under the Social Justice & Special Assistance Department. The scheme aims to provide full financial support to meritorious and economically underprivileged students belonging to backward communities to pursue recognized post-matriculation or secondary/higher education courses (XI, XII, Diploma, Degree, Postgraduate, and Professional technical courses) in approved institutions across India.
+            </p>
+            <p class="text-[15px] text-[#3C4A42] leading-relaxed">
+              Assistance includes complete reimbursement of tuition fees, examination fees, compulsory educational charges, and a monthly maintenance stipend directly deposited into the citizen's Aadhaar-linked bank account under the Direct Benefit Transfer (DBT) framework.
+            </p>
+          </div>
+
+          <!-- Key Benefits Subsection -->
+          <div class="bg-[#FBFBF6] rounded-2xl p-6 border border-[#E7ECE3]">
+            <h4 class="font-serif text-lg font-semibold text-[#10241A] mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#1F6E43]"></span>
+              Key Entitlements & Benefits
+            </h4>
+            <div class="grid sm:grid-cols-2 gap-4">
+              
+              <div class="flex items-start space-x-3 bg-white p-3.5 rounded-xl border border-[#E7ECE3]">
+                <div class="w-6 h-6 rounded-full bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                </div>
+                <div>
+                  <h5 class="text-sm font-semibold text-[#10241A]">100% Tuition & Exam Fee Waiver</h5>
+                  <p class="text-xs text-[#3C4A42] mt-0.5">Complete reimbursement of approved college tuition, library, laboratory, and semester examination charges.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-3 bg-white p-3.5 rounded-xl border border-[#E7ECE3]">
+                <div class="w-6 h-6 rounded-full bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                </div>
+                <div>
+                  <h5 class="text-sm font-semibold text-[#10241A]">Monthly Living Maintenance Allowance</h5>
+                  <p class="text-xs text-[#3C4A42] mt-0.5">Up to ₹1,200 per month (hostellers) or ₹600 per month (day scholars) for ten academic calendar months.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-3 bg-white p-3.5 rounded-xl border border-[#E7ECE3]">
+                <div class="w-6 h-6 rounded-full bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                </div>
+                <div>
+                  <h5 class="text-sm font-semibold text-[#10241A]">Study Tour & Thesis Grants</h5>
+                  <p class="text-xs text-[#3C4A42] mt-0.5">Additional annual allowance of up to ₹1,600 for postgraduate research scholars and field study projects.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-3 bg-white p-3.5 rounded-xl border border-[#E7ECE3]">
+                <div class="w-6 h-6 rounded-full bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                </div>
+                <div>
+                  <h5 class="text-sm font-semibold text-[#10241A]">Direct Benefit Transfer (DBT) Direct Deposit</h5>
+                  <p class="text-xs text-[#3C4A42] mt-0.5">No intermediary delays; payments credited directly into Aadhaar NPCI-mapped bank savings accounts.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Official Portal Anchor CTA Bar -->
+          <div class="p-5 rounded-2xl bg-[#10241A] text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span class="text-xs text-emerald-300 font-semibold uppercase tracking-wider block">Ready to proceed?</span>
+              <p class="text-sm text-white/90">Applications are currently accepted for Academic Year 2026–2027.</p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <a href="#how-to-apply" onclick="switchTab('how-to-apply')" class="text-xs font-semibold text-white/80 hover:text-white underline">
+                Review Steps
+              </a>
+              <a href="https://mahadbt.maharashtra.gov.in" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-[#1F6E43] hover:bg-[#195A37] text-white font-medium text-sm flex items-center gap-1.5 shadow-sm hover:scale-[1.02] transition-transform">
+                Apply on Official Portal
+                <span class="text-xs" aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: ELIGIBILITY CRITERIA (SRS 5.1 - 5.2 Breakdown) -->
+        <div id="panel-eligibility" role="tabpanel" aria-labelledby="tab-btn-eligibility" class="hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#E7ECE3]">
+            <div>
+              <h3 class="font-serif text-xl font-semibold text-[#10241A]">Itemized Eligibility Rules</h3>
+              <p class="text-xs text-[#8A9A90] mt-0.5">Matched deterministically against your verified Saarthi Profile attributes.</p>
+            </div>
+            <!-- Legend (Accessibility: Distinct Shape + Color) -->
+            <div class="flex items-center gap-3 text-xs">
+              <span class="flex items-center gap-1 text-[#1F6E43]">
+                <span class="w-4 h-4 rounded-full bg-[#1F6E43] text-white flex items-center justify-center text-[10px]">✓</span> Pass
+              </span>
+              <span class="flex items-center gap-1 text-[#F2A93B]">
+                <span class="w-4 h-4 rounded-full bg-[#F2A93B] text-white flex items-center justify-center text-[10px] font-bold">?</span> Unknown
+              </span>
+              <span class="flex items-center gap-1 text-[#C0473B]">
+                <span class="w-4 h-4 rounded-full bg-[#C0473B] text-white flex items-center justify-center text-[10px] font-bold">✕</span> Fail
+              </span>
+            </div>
+          </div>
+
+          <!-- Rules List with Plain Language + Attribute Icons + Evaluation Status -->
+          <div class="space-y-3">
+            
+            <!-- Rule 1: Category -->
+            <div class="p-4 rounded-xl bg-white border border-[#E7ECE3] hover:border-[#1F6E43]/40 transition-colors flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3.5">
+                <div class="w-9 h-9 rounded-lg bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">Social Category</span>
+                    <span class="text-xs text-[#8A9A90]">· Mandatory</span>
+                  </div>
+                  <p class="text-sm font-semibold text-[#10241A] mt-0.5">Applicant must belong to recognized Other Backward Class (OBC) caste category.</p>
+                  <p class="text-xs text-[#3C4A42] mt-1">Your Profile: <span class="font-medium text-[#10241A]">OBC (Validated via Maharashtra Caste Certificate)</span></p>
+                </div>
+              </div>
+              <div class="shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5FAF7] text-[#1F6E43] border border-[#1F6E43]/30 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                Pass
+              </div>
+            </div>
+
+            <!-- Rule 2: State / Domicile -->
+            <div class="p-4 rounded-xl bg-white border border-[#E7ECE3] hover:border-[#1F6E43]/40 transition-colors flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3.5">
+                <div class="w-9 h-9 rounded-lg bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">State Domicile</span>
+                    <span class="text-xs text-[#8A9A90]">· Mandatory</span>
+                  </div>
+                  <p class="text-sm font-semibold text-[#10241A] mt-0.5">Applicant must be a permanent resident of Maharashtra with valid Domicile certificate.</p>
+                  <p class="text-xs text-[#3C4A42] mt-1">Your Profile: <span class="font-medium text-[#10241A]">Resident of Pune, Maharashtra (District Verified)</span></p>
+                </div>
+              </div>
+              <div class="shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5FAF7] text-[#1F6E43] border border-[#1F6E43]/30 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                Pass
+              </div>
+            </div>
+
+            <!-- Rule 3: Family Income Ceiling -->
+            <div class="p-4 rounded-xl bg-white border border-[#E7ECE3] hover:border-[#1F6E43]/40 transition-colors flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3.5">
+                <div class="w-9 h-9 rounded-lg bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="font-bold text-sm">₹</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">Family Income Ceiling</span>
+                    <span class="text-xs text-[#8A9A90]">· Max ₹1,50,000 / year</span>
+                  </div>
+                  <p class="text-sm font-semibold text-[#10241A] mt-0.5">Total gross annual family income from all combined sources must not exceed ₹1.5 Lakh.</p>
+                  <p class="text-xs text-[#3C4A42] mt-1">Your Profile: <span class="font-medium text-[#10241A]">₹1,20,000 / year (Tehsildar Income Certificate verified)</span></p>
+                </div>
+              </div>
+              <div class="shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5FAF7] text-[#1F6E43] border border-[#1F6E43]/30 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                Pass
+              </div>
+            </div>
+
+            <!-- Rule 4: Age Criterion -->
+            <div class="p-4 rounded-xl bg-white border border-[#E7ECE3] hover:border-[#1F6E43]/40 transition-colors flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3.5">
+                <div class="w-9 h-9 rounded-lg bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">Age Bracket</span>
+                    <span class="text-xs text-[#8A9A90]">· Max 30 years for UG</span>
+                  </div>
+                  <p class="text-sm font-semibold text-[#10241A] mt-0.5">Candidate must be under 30 years at the start of academic enrollment.</p>
+                  <p class="text-xs text-[#3C4A42] mt-1">Your Profile: <span class="font-medium text-[#10241A]">21 years old (DOB: 14 Aug 2004)</span></p>
+                </div>
+              </div>
+              <div class="shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5FAF7] text-[#1F6E43] border border-[#1F6E43]/30 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                Pass
+              </div>
+            </div>
+
+            <!-- Rule 5: Course Enrollment -->
+            <div class="p-4 rounded-xl bg-white border border-[#E7ECE3] hover:border-[#1F6E43]/40 transition-colors flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3.5">
+                <div class="w-9 h-9 rounded-lg bg-[#E8F2EC] text-[#1F6E43] flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">Education Level</span>
+                    <span class="text-xs text-[#8A9A90]">· Post-Matric (Class 11+)</span>
+                  </div>
+                  <p class="text-sm font-semibold text-[#10241A] mt-0.5">Enrolled in an affiliated college/university recognized by Govt. of Maharashtra or UGC.</p>
+                  <p class="text-xs text-[#3C4A42] mt-1">Your Profile: <span class="font-medium text-[#10241A]">Undergraduate Degree (B.Sc Computer Science, 2nd Year)</span></p>
+                </div>
+              </div>
+              <div class="shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5FAF7] text-[#1F6E43] border border-[#1F6E43]/30 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                Pass
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Explanation footnote for Partial / Non-matches -->
+          <div class="p-3.5 rounded-xl bg-[#FEF7EC] border border-[#F2A93B]/30 flex items-center gap-2.5 text-xs text-[#9A5B00]">
+            <svg class="w-4 h-4 shrink-0 text-[#F2A93B]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            <span>Have multiple siblings applying? Note: The scheme allows a maximum of two male children from the same family to receive benefits concurrently.</span>
+          </div>
+
+        </div>
+
+        <!-- TAB 3: REQUIRED DOCUMENTS (Module 6 Integration) -->
+        <div id="panel-documents" role="tabpanel" aria-labelledby="tab-btn-documents" class="hidden space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E7ECE3]">
+            <div>
+              <h3 class="font-serif text-xl font-semibold text-[#10241A]">Documentation Checklist</h3>
+              <p class="text-xs text-[#8A9A90] mt-0.5">Collect and scan these original papers before submitting to MahaDBT.</p>
+            </div>
+
+            <!-- "Add all to my checklist" Button with Temporary Feedback -->
+            <button id="addChecklistBtn" onclick="addToChecklist()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#1F6E43] bg-white text-[#1F6E43] hover:bg-[#F5FAF7] text-xs font-semibold shadow-sm transition-all group focus:outline-none focus:ring-2 focus:ring-[#1F6E43]/30">
+              <svg id="checklistAddIcon" class="w-3.5 h-3.5 text-[#1F6E43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span id="checklistAddText">Add all to my checklist</span>
+            </button>
+          </div>
+
+          <!-- Document Groups -->
+          <div class="space-y-6">
+            
+            <!-- Group 1: Identity & Domicile Proof -->
+            <div class="space-y-3">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#8A9A90]">Category 1 · Identity & Domicile Proof</h4>
+              
+              <div class="space-y-2">
+                <!-- Item 1 -->
+                <div class="p-3.5 rounded-xl bg-white border border-[#E7ECE3] flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-5 h-5 rounded border border-[#1F6E43] bg-[#1F6E43] text-white flex items-center justify-center text-xs">✓</div>
+                    <div>
+                      <span class="text-sm font-medium text-[#10241A]">Aadhaar Card (Linked with Mobile & Bank)</span>
+                      <span class="text-[11px] text-[#8A9A90] block">Aadhaar NPCI seed confirmation required for DBT</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#E8F2EC] text-[#1F6E43]">Mandatory</span>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="p-3.5 rounded-xl bg-white border border-[#E7ECE3] flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-5 h-5 rounded border border-[#1F6E43] bg-[#1F6E43] text-white flex items-center justify-center text-xs">✓</div>
+                    <div>
+                      <span class="text-sm font-medium text-[#10241A]">Maharashtra Domicile Certificate</span>
+                      <span class="text-[11px] text-[#8A9A90] block">Issued by Sub-Divisional Officer / Tehsildar office</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#E8F2EC] text-[#1F6E43]">Mandatory</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Group 2: Caste & Income Validation -->
+            <div class="space-y-3">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#8A9A90]">Category 2 · Caste & Income Proof</h4>
+              
+              <div class="space-y-2">
+                <!-- Item 3 -->
+                <div class="p-3.5 rounded-xl bg-white border border-[#E7ECE3] flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-5 h-5 rounded border border-[#1F6E43] bg-[#1F6E43] text-white flex items-center justify-center text-xs">✓</div>
+                    <div>
+                      <span class="text-sm font-medium text-[#10241A]">OBC Caste Certificate & Caste Validity</span>
+                      <span class="text-[11px] text-[#8A9A90] block">Caste certificate with barcoded digital signature (Pramaan Patra)</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#E8F2EC] text-[#1F6E43]">Mandatory</span>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="p-3.5 rounded-xl bg-white border border-[#E7ECE3] flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-5 h-5 rounded border border-[#1F6E43] bg-[#1F6E43] text-white flex items-center justify-center text-xs">✓</div>
+                    <div>
+                      <span class="text-sm font-medium text-[#10241A]">Income Certificate (Competent Authority)</span>
+                      <span class="text-[11px] text-[#8A9A90] block">Valid for FY 2025–2026 showing income &le; ₹1,50,000</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#E8F2EC] text-[#1F6E43]">Mandatory</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Group 3: Academic Records -->
+            <div class="space-y-3">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#8A9A90]">Category 3 · Academic & College Records</h4>
+              
+              <div class="space-y-2">
+                <!-- Item 5 -->
+                <div class="p-3.5 rounded-xl bg-white border border-[#E7ECE3] flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-5 h-5 rounded border border-[#E7ECE3] text-[#8A9A90] flex items-center justify-center text-xs"></div>
+                    <div>
+                      <span class="text-sm font-medium text-[#10241A]">Current Academic Year Fee Receipt & Bonafide Certificate</span>
+                      <span class="text-[11px] text-[#8A9A90] block">Issued by college registrar showing enrollment & fee structure</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-[#E8F2EC] text-[#1F6E43]">Mandatory</span>
+                </div>
+
+                <!-- Item 6 (Optional) -->
+                <div class="p-3.5 rounded-xl bg-white border border-[#E7ECE3] flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-5 h-5 rounded border border-[#E7ECE3] text-[#8A9A90] flex items-center justify-center text-xs"></div>
+                    <div>
+                      <span class="text-sm font-medium text-[#10241A]">Hostel Warden Certificate (If residing in recognized hostel)</span>
+                      <span class="text-[11px] text-[#8A9A90] block">Required only to claim higher ₹1,200/mo hosteller allowance</span>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-[#FBFBF6] text-[#8A9A90] border border-[#E7ECE3]">Optional</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 4: HOW TO APPLY -->
+        <div id="panel-how-to-apply" role="tabpanel" aria-labelledby="tab-btn-how-to-apply" class="hidden space-y-8">
+          
+          <div>
+            <h3 class="font-serif text-xl font-semibold text-[#10241A]">Step-by-Step Application Roadmap</h3>
+            <p class="text-xs text-[#8A9A90] mt-0.5">Follow this 4-step verified workflow to complete your MahaDBT submission.</p>
+          </div>
+
+          <!-- Custom Numbered Step List -->
+          <div class="relative pl-6 sm:pl-8 space-y-8 before:content-[''] before:absolute before:left-[17px] sm:before:left-[21px] before:top-3 before:bottom-3 before:w-0.5 before:bg-[#E7ECE3]">
+            
+            <!-- Step 1 -->
+            <div class="relative flex items-start space-x-4">
+              <div class="w-9 h-9 rounded-full bg-[#1F6E43] text-white font-bold text-sm flex items-center justify-center shrink-0 ring-4 ring-white shadow-sm z-10">
+                1
+              </div>
+              <div class="bg-[#FBFBF6] p-4 rounded-xl border border-[#E7ECE3] flex-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">Step 1 · Aadhaar Authentication</span>
+                <h4 class="text-sm font-semibold text-[#10241A] mt-0.5">Register on the MahaDBT Citizen Portal</h4>
+                <p class="text-xs text-[#3C4A42] mt-1">Visit mahadbt.maharashtra.gov.in and login using your Aadhaar OTP credentials. Verify that your bank account seeding status indicates "Active NPCI Mapping".</p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="relative flex items-start space-x-4">
+              <div class="w-9 h-9 rounded-full bg-[#1F6E43] text-white font-bold text-sm flex items-center justify-center shrink-0 ring-4 ring-white shadow-sm z-10">
+                2
+              </div>
+              <div class="bg-[#FBFBF6] p-4 rounded-xl border border-[#E7ECE3] flex-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">Step 2 · Profile Completion</span>
+                <h4 class="text-sm font-semibold text-[#10241A] mt-0.5">Fill Personal, Domicile & Income Details</h4>
+                <p class="text-xs text-[#3C4A42] mt-1">Upload verified PDF copies of your Domicile, Caste Certificate, and Tehsildar Income Certificate. Use the Saarthi Document Checklist to ensure zero discrepancies.</p>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="relative flex items-start space-x-4">
+              <div class="w-9 h-9 rounded-full bg-[#1F6E43] text-white font-bold text-sm flex items-center justify-center shrink-0 ring-4 ring-white shadow-sm z-10">
+                3
+              </div>
+              <div class="bg-[#FBFBF6] p-4 rounded-xl border border-[#E7ECE3] flex-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#1F6E43]">Step 3 · Scheme Selection</span>
+                <h4 class="text-sm font-semibold text-[#10241A] mt-0.5">Navigate to "Social Justice & Special Assistance"</h4>
+                <p class="text-xs text-[#3C4A42] mt-1">Select <em>"Post-Matric Scholarship for OBC Students"</em>. Select your college department, course name, and current academic year from the drop-downs.</p>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="relative flex items-start space-x-4">
+              <div class="w-9 h-9 rounded-full bg-[#F2A93B] text-white font-bold text-sm flex items-center justify-center shrink-0 ring-4 ring-white shadow-sm z-10">
+                4
+              </div>
+              <div class="bg-[#FEF7EC] p-4 rounded-xl border border-[#F2A93B]/40 flex-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#9A5B00]">Step 4 · Scrutiny & College Approval</span>
+                <h4 class="text-sm font-semibold text-[#10241A] mt-0.5">Submit Application & Track Application ID</h4>
+                <p class="text-xs text-[#3C4A42] mt-1">Download the generated application PDF receipt. College nodal officers complete verification within 7 working days, followed by District Social Welfare sanction.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Primary Anchor CTA Button -->
+          <div class="pt-4 border-t border-[#E7ECE3] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-xs text-[#8A9A90]">
+              <span class="font-medium text-[#10241A]">Need assistance?</span> Saarthi Voice AI can guide your MahaDBT application in Marathi or Hindi.
+            </div>
+            
+            <a href="https://mahadbt.maharashtra.gov.in" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#1F6E43] hover:bg-[#195A37] text-white font-medium text-base text-center shadow-lg shadow-emerald-900/15 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2" aria-label="Apply on official government portal (opens in a new tab)">
+              <span>Apply on official portal</span>
+              <span class="text-lg leading-none" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- 5. Related Schemes Row (SRS FR5.3 - 3 Column Scheme Cards) -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-serif text-xl sm:text-2xl font-semibold text-[#10241A]">Related Welfare Schemes</h3>
+        <a href="#" class="text-xs font-semibold text-[#1F6E43] hover:underline flex items-center gap-1">
+          Explore all education schemes →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <!-- Related Card 1 -->
+        <div class="scheme-card bg-white rounded-[20px] border border-[#E7ECE3] p-5 flex flex-col justify-between relative group">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="w-7 h-7 rounded-full bg-[#E8F2EC] flex items-center justify-center text-[#1F6E43]">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/></svg>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#1F6E43] text-white text-[11px] font-semibold">
+                ✓ Strong
+              </span>
+            </div>
+            <div>
+              <h4 class="font-serif text-base font-semibold text-[#10241A] line-clamp-2 group-hover:text-[#1F6E43] transition-colors">
+                Rajarshi Chhatrapati Shahu Maharaj EBC Fee Reimbursement
+              </h4>
+              <p class="text-xs text-[#8A9A90] mt-0.5">Higher & Technical Education Dept, Maharashtra</p>
+            </div>
+            <p class="text-xs text-[#3C4A42] line-clamp-2">
+              50% tuition and examination fee concession for professional diploma and degree students.
+            </p>
+          </div>
+          <div class="pt-4 mt-3 border-t border-[#E7ECE3] flex items-center justify-between">
+            <span class="text-xs font-bold text-[#1F6E43]">50% Tuition Off</span>
+            <span class="view-link text-xs font-medium text-[#1F6E43]">View details →</span>
+          </div>
+        </div>
+
+        <!-- Related Card 2 -->
+        <div class="scheme-card bg-white rounded-[20px] border border-[#E7ECE3] p-5 flex flex-col justify-between relative group">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="w-7 h-7 rounded-full bg-[#E8F2EC] flex items-center justify-center text-[#1F6E43]">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[#F2A93B] text-[#10241A] bg-[#FEF7EC] text-[11px] font-semibold">
+                ◐ Partial
+              </span>
+            </div>
+            <div>
+              <h4 class="font-serif text-base font-semibold text-[#10241A] line-clamp-2 group-hover:text-[#1F6E43] transition-colors">
+                Central Sector Scheme of Scholarship for College & University
+              </h4>
+              <p class="text-xs text-[#8A9A90] mt-0.5">Ministry of Education, Govt of India</p>
+            </div>
+            <p class="text-xs text-[#3C4A42] line-clamp-2">
+              Direct DBT grant of ₹12,000/yr for students scoring above the 80th percentile in Class 12 board.
+            </p>
+          </div>
+          <div class="pt-4 mt-3 border-t border-[#E7ECE3] flex items-center justify-between">
+            <span class="text-xs font-bold text-[#1F6E43]">₹12,000 / yr</span>
+            <span class="view-link text-xs font-medium text-[#1F6E43]">View details →</span>
+          </div>
+        </div>
+
+        <!-- Related Card 3 -->
+        <div class="scheme-card bg-white rounded-[20px] border border-[#E7ECE3] p-5 flex flex-col justify-between relative group">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="w-7 h-7 rounded-full bg-[#E8F2EC] flex items-center justify-center text-[#1F6E43]">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#1F6E43] text-white text-[11px] font-semibold">
+                ✓ Strong
+              </span>
+            </div>
+            <div>
+              <h4 class="font-serif text-base font-semibold text-[#10241A] line-clamp-2 group-hover:text-[#1F6E43] transition-colors">
+                Dr. Ambedkar Post-Matric Scholarship for EBC Students
+              </h4>
+              <p class="text-xs text-[#8A9A90] mt-0.5">Ministry of Social Justice & Empowerment</p>
+            </div>
+            <p class="text-xs text-[#3C4A42] line-clamp-2">
+              Centrally sponsored post-matric fellowship covering books, readers allowance, and fee waiver.
+            </p>
+          </div>
+          <div class="pt-4 mt-3 border-t border-[#E7ECE3] flex items-center justify-between">
+            <span class="text-xs font-bold text-[#1F6E43]">₹18,000 / yr</span>
+            <span class="view-link text-xs font-medium text-[#1F6E43]">View details →</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Persistent Floating Saarthi Assistant Chat Widget -->
+  <aside aria-label="Saarthi AI Assistant" class="fixed bottom-6 right-6 z-50">
+    <button class="w-14 h-14 rounded-full bg-[#1F6E43] hover:bg-[#195A37] text-white shadow-[0_8px_25px_rgba(31,110,67,0.35)] flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-[#1F6E43]/20" aria-label="Open Saarthi AI Assistant">
+      <svg class="w-6 h-6 transition-transform group-hover:rotate-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+      <!-- Subtle Idle Pulse Dot -->
+      <span class="absolute top-0 right-0 w-3.5 h-3.5 bg-[#F2A93B] border-2 border-white rounded-full"></span>
+    </button>
+  </aside>
+
+  <!-- Official Civic Footer -->
+  <footer class="bg-white border-t border-[#E7ECE3] mt-auto py-8 text-xs text-[#8A9A90]">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMF8cga0AzKhlLnJhagwyVCbJSRckBROK9DswGWXiLQjtdOKSptixhC85OND0o83mUy8L0eMS3su_sNjQJ1s20hVLClYsEIU2ZJ1jXv9oMvo118d1-Iih97nOCIYUlGe8L9Bk8KFjIkabvFtig1A0w9YdzC1-jyCNROd0DD3W6BkfFTja4kGNs5k7SEXIRObxZncWIHAxYBScHn7Qyf9PcipZ_g3Q5JYbR6uRHW4NnMjOlgGVC7HmgH3oy9LVTnGEzY1s" alt="Saarthi Logo" class="h-6 w-auto grayscale opacity-70">
+        <span>© 2026 Saarthi Civic Platform · Ministry of Electronics & IT · National Informatics Centre</span>
+      </div>
+      <div class="flex items-center space-x-6 text-[#3C4A42]">
+        <a href="#" class="hover:text-[#1F6E43]">Data Privacy & Consent</a>
+        <a href="#" class="hover:text-[#1F6E43]">Citizen Charter</a>
+        <a href="#" class="hover:text-[#1F6E43]">Accessibility (WCAG 2.1 AA)</a>
+        <a href="#" class="hover:text-[#1F6E43]">256-Bit Encrypted DBT</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Logic for Tabs, Bookmark & Checklist -->
+  <script>
+    function switchTab(tabId) {
+      const tabs = ['overview', 'eligibility', 'documents', 'how-to-apply'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const panel = document.getElementById(`panel-${t}`);
+        if (btn && panel) {
+          if (t === tabId) {
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+            panel.classList.remove('hidden');
+          } else {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+            panel.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    let isBookmarked = false;
+    function toggleBookmark() {
+      isBookmarked = !isBookmarked;
+      const btn = document.getElementById('bookmarkBtn');
+      const icon = document.getElementById('bookmarkIcon');
+      const text = document.getElementById('bookmarkText');
+      if (isBookmarked) {
+        btn.classList.add('bg-[#1F6E43]', 'text-white');
+        btn.classList.remove('bg-white', 'text-[#1F6E43]');
+        icon.classList.add('fill-current', 'anim-bounce');
+        icon.classList.remove('text-[#1F6E43]');
+        text.innerText = 'Saved';
+      } else {
+        btn.classList.remove('bg-[#1F6E43]', 'text-white');
+        btn.classList.add('bg-white', 'text-[#1F6E43]');
+        icon.classList.remove('fill-current', 'anim-bounce');
+        icon.classList.add('text-[#1F6E43]');
+        text.innerText = 'Save Scheme';
+      }
+    }
+
+    function addToChecklist() {
+      const btn = document.getElementById('addChecklistBtn');
+      const text = document.getElementById('checklistAddText');
+      const icon = document.getElementById('checklistAddIcon');
+      
+      text.innerText = 'Added ✓';
+      btn.classList.add('bg-[#E8F2EC]', 'border-[#1F6E43]');
+      
+      setTimeout(() => {
+        text.innerText = 'Add all to my checklist';
+        btn.classList.remove('bg-[#E8F2EC]');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

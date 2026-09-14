@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>Saarthi - Onboarding Step 2: Location</title>
+<!-- Tailwind CSS CDN with Forms & Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Fraunces (Headings) & Inter (UI Copy) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            saarthi: {
+              green: '#1F6E43',
+              'green-dark': '#10241A',
+              'green-light': '#E8F2EC',
+              'green-badge': '#2A7D4F',
+              gold: '#F2A93B',
+              'gold-light': '#FDF3E7',
+              cream: '#FBFBF6',
+              border: '#E7ECE3',
+              muted: '#5F7266',
+              text: '#10241A',
+              subtext: '#3C4A42',
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'clay': '0 8px 24px -4px rgba(16, 36, 26, 0.08), 0 2px 6px -1px rgba(16, 36, 26, 0.04)',
+            'btn-glow': '0 6px 18px -2px rgba(31, 110, 67, 0.35)',
+            'tag': '0 2px 8px rgba(16, 36, 26, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-resets">
+    /* Prevent rubber-banding and ensure native iOS feel */
+    html, body {
+      background-color: #E2E6E2;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      touch-action: manipulation;
+    }
+    
+    /* Device Frame Simulation for 390x844 iPhone */
+    .mobile-screen {
+      width: 100%;
+      max-width: 390px;
+      height: 100vh;
+      max-height: 844px;
+      margin: 0 auto;
+      background-color: #FBFBF6;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    @media (max-width: 480px) {
+      .mobile-screen {
+        max-height: 100dvh;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-0 sm:p-4">
+<!-- BEGIN: MobileContainer -->
+<div class="mobile-screen sm:rounded-[44px] sm:border-[8px] sm:border-[#10241A]/10 select-none flex flex-col justify-between" data-purpose="ios-container">
+<!-- BEGIN: TopBarAndHeader -->
+<header class="w-full bg-[#FBFBF6] shrink-0 pt-2 z-20" data-purpose="mobile-header">
+<!-- iOS Native Status Bar -->
+<div class="w-full px-7 pt-1 pb-1 flex justify-between items-center text-xs text-[#10241A] font-semibold tracking-tight" data-purpose="ios-status-bar">
+<span class="text-[13px]">9:41</span>
+<div class="w-28 h-4 bg-transparent rounded-full mx-auto flex items-center justify-center">
+<div class="w-20 h-4 bg-black/5 rounded-full"></div>
+</div>
+<div class="flex items-center space-x-1.5 text-[#10241A]">
+<!-- Signal Icon -->
+<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+<path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zm0 2c3.87 0 7 3.13 7 7 0 1.54-.5 2.97-1.35 4.14L12 19.64l-5.65-3.5C5.5 14.97 5 13.54 5 12c0-3.87 3.13-7 7-7z" opacity="0.1"></path>
+<rect height="5" rx="1" width="3" x="2" y="16"></rect>
+<rect height="8" rx="1" width="3" x="7" y="13"></rect>
+<rect height="12" rx="1" width="3" x="12" y="9"></rect>
+<rect height="16" rx="1" width="3" x="17" y="5"></rect>
+</svg>
+<!-- Wifi Icon -->
+<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+<path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.78 0 7.21 1.5 9.74 3.96L12 19.26 2.26 11.46C4.79 9 8.22 7.5 12 7.5z"></path>
+</svg>
+<!-- Battery Icon -->
+<div class="flex items-center">
+<div class="w-5 h-2.5 border border-[#10241A] rounded-sm p-0.5 flex items-center">
+<div class="h-full w-3 bg-[#10241A] rounded-2xs"></div>
+</div>
+<div class="w-0.5 h-1 bg-[#10241A] rounded-r-xs"></div>
+</div>
+</div>
+</div>
+<!-- Compact Navigation Bar -->
+<div class="px-5 py-2.5 flex items-center justify-between" data-purpose="brand-navigation">
+<div class="flex items-center space-x-2.5">
+<!-- Saarthi Emblem SVG -->
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr-R9u5wbA0kTtp0CIc8jhjsHqSHVcuyeFjsCecWH285c72ZQLktwwkIb9npWHWukuTswfXD8NlKiZ8p608Fhx1bL4wkGvzptpWzxgsbU543HGX3QfIGfDkDSWdBQo2OHNiFqdl4WgCB_6COdrRkQUFsFYiHH9lUJ_WuwWBtRiPPnqQQznAvkJHl1pnaqYE7wwPuF_t-O7u18z5Bt98HnqT6deTLHxrH1WhAwyXgbrc1f5r5vhwiKKfEA2WyGtgPPWsoo" alt="Saarthi Logo" class="h-8 w-auto object-contain shrink-0">
+<div class="flex flex-col">
+<span class="font-serif font-bold text-sm tracking-wide text-saarthi-green leading-none">Saarthi</span>
+<span class="text-[9px] tracking-wider text-saarthi-muted font-semibold uppercase mt-0.5">Civic Portal</span>
+</div>
+</div>
+<!-- Save & Exit Pill Button -->
+<button class="text-xs font-medium text-saarthi-subtext bg-saarthi-border/60 hover:bg-saarthi-border transition-colors px-3 py-1.5 rounded-full flex items-center space-x-1" data-purpose="save-exit-btn" type="button">
+<span class="">Save &amp; exit</span>
+</button>
+</div>
+<!-- Segmented Multi-step Progress Bar -->
+<div class="px-5 pt-1 pb-2" data-purpose="step-progress-tracker">
+<div class="grid grid-cols-6 gap-1.5">
+<!-- Segment 1: Completed -->
+<div class="h-1.5 rounded-full bg-saarthi-green"></div>
+<!-- Segment 2: Current Active (Saffron Gold) -->
+<div class="h-1.5 rounded-full bg-saarthi-gold"></div>
+<!-- Segments 3-6: Upcoming -->
+<div class="h-1.5 rounded-full bg-saarthi-border"></div>
+<div class="h-1.5 rounded-full bg-saarthi-border"></div>
+<div class="h-1.5 rounded-full bg-saarthi-border"></div>
+<div class="h-1.5 rounded-full bg-saarthi-border"></div>
+</div>
+<div class="flex justify-between items-center mt-2">
+<span class="text-[12px] font-semibold text-saarthi-green tracking-tight">Step 2 of 6</span>
+<span class="text-[12px] font-medium text-saarthi-muted">Location Details</span>
+</div>
+</div>
+</header>
+<!-- END: TopBarAndHeader -->
+<!-- BEGIN: ScrollableMainContent -->
+<main class="flex-1 overflow-y-auto px-5 pb-4 space-y-4" data-purpose="main-content-flow">
+<!-- Claymorphic Visual Hero Banner -->
+<section class="relative w-full h-44 rounded-2xl overflow-hidden bg-gradient-to-b from-[#175232] to-[#10241A] shadow-inner flex items-center justify-center" data-purpose="visual-hero">
+<img alt="3D clay render of citizen beside India map with glowing pin" class="w-full h-full object-cover object-center transform scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBCn3M-PPWRR1JSbAdjXvw2JtsZ_51KXnDJg7tr5swBq9EwEsJAKfFnjqemfTvmZE9an9B1x0LjRnUsljZvGHyvX6XGi0-E6ZJv8MzFu51ZOFL9El-2zd6pzSxM9a7QDrzF-Cel8vO5BZnKCthKCBnOocsrepTHej7TRWrbCjlo8D_EqgMKFhKDLkAjXEMV7PaZ_n7Y3Xvv3nYqbhbJQ9HNE_Jkh7MflfUga-Gz6GseIORjX5AeJEGug">
+<!-- Ambient Clay Vignette Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#10241A]/70 via-transparent to-transparent pointer-events-none"></div>
+<!-- Floating Badge Chip -->
+<div class="absolute top-3 left-3 bg-saarthi-green-dark/80 backdrop-blur-md border border-white/20 px-2.5 py-1 rounded-full flex items-center space-x-1.5 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-saarthi-gold animate-pulse"></span>
+<span class="text-[11px] font-medium text-[#FBFBF6] tracking-wide">State &amp; District Discovery</span>
+</div>
+</section>
+<!-- Location Selection Form Card -->
+<section class="bg-white rounded-3xl p-5 border border-saarthi-border shadow-clay space-y-4" data-purpose="location-card">
+<div>
+<h1 class="font-serif text-[24px] leading-tight font-bold text-saarthi-text">
+            Where do you live?
+          </h1>
+<p class="text-sm text-saarthi-subtext mt-1 leading-snug">
+            Matches schemes available specifically in your state and district.
+          </p>
+</div>
+<!-- Selectable Inputs -->
+<div class="space-y-3 pt-1">
+<!-- State Selector -->
+<div class="space-y-1.5">
+<label class="text-[11px] uppercase tracking-wider font-bold text-saarthi-muted pl-1">Select State / UT</label>
+<div class="w-full h-13 px-4 py-3 bg-[#FBFBF6] border border-saarthi-border hover:border-saarthi-green focus:border-saarthi-green rounded-2xl flex items-center justify-between transition-all group cursor-pointer active:scale-[0.99]" role="button" tabindex="0">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-xl bg-saarthi-green-light flex items-center justify-center text-saarthi-green">
+<!-- Landmark icon -->
+<svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div>
+<span class="text-xs text-saarthi-muted block -mb-0.5">State</span>
+<span class="text-base font-semibold text-saarthi-text tracking-tight">Maharashtra</span>
+</div>
+</div>
+<div class="flex items-center space-x-1">
+<span class="text-xs font-semibold text-saarthi-green group-hover:underline">Change</span>
+<svg class="w-4 h-4 text-saarthi-muted group-hover:text-saarthi-green transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- District Selector -->
+<div class="space-y-1.5">
+<label class="text-[11px] uppercase tracking-wider font-bold text-saarthi-muted pl-1">Select District</label>
+<div class="w-full h-13 px-4 py-3 bg-[#FBFBF6] border border-saarthi-border hover:border-saarthi-green focus:border-saarthi-green rounded-2xl flex items-center justify-between transition-all group cursor-pointer active:scale-[0.99]" role="button" tabindex="0">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-xl bg-saarthi-gold-light flex items-center justify-center text-saarthi-gold">
+<!-- Location Pin icon -->
+<svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div>
+<span class="text-xs text-saarthi-muted block -mb-0.5">District</span>
+<span class="text-base font-semibold text-saarthi-text tracking-tight">Pune</span>
+</div>
+</div>
+<div class="flex items-center space-x-1">
+<span class="text-xs font-semibold text-saarthi-green group-hover:underline">Change</span>
+<svg class="w-4 h-4 text-saarthi-muted group-hover:text-saarthi-green transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Dynamic Results Counter Pill Badge -->
+<div class="bg-saarthi-green-light border border-saarthi-green/20 rounded-2xl p-3 flex items-center space-x-2.5">
+<div class="w-6 h-6 rounded-full bg-saarthi-green text-white flex items-center justify-center shrink-0">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div class="text-xs font-medium text-saarthi-text">
+<span class="font-bold text-saarthi-green">184 Schemes Found</span> for Pune, Maharashtra.
+          </div>
+</div>
+<!-- Convenience micro-copy indicator -->
+<div class="pt-1 text-center">
+<span class="inline-flex items-center text-[12px] text-saarthi-muted space-x-1">
+<svg class="w-3.5 h-3.5 text-saarthi-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">You can change this anytime from Profile settings</span>
+</span>
+</div>
+</section>
+</main>
+<!-- END: ScrollableMainContent -->
+<!-- BEGIN: FixedFooterNavigationBar -->
+<footer class="w-full bg-[#FBFBF6] border-t border-saarthi-border px-5 pt-3 pb-6 shrink-0 z-30" data-purpose="mobile-footer">
+<div class="flex items-center space-x-3">
+<!-- Back Button -->
+<button aria-label="Previous step" class="w-12 h-12 rounded-full border border-saarthi-border bg-white text-saarthi-text flex items-center justify-center hover:bg-saarthi-border/40 active:scale-95 transition-all shadow-sm" data-purpose="back-btn" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+<!-- Continue Button CTA -->
+<button class="flex-1 h-12 bg-saarthi-green hover:bg-[#185936] text-white font-medium text-base rounded-full flex items-center justify-center space-x-2 shadow-btn-glow active:scale-[0.98] transition-all" data-purpose="continue-cta-btn" type="button">
+<span class="">Continue</span>
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</button>
+</div>
+<!-- iOS Home Indicator -->
+<div class="w-32 h-1 bg-[#10241A]/20 rounded-full mx-auto mt-4" data-purpose="home-indicator"></div>
+</footer>
+<!-- END: FixedFooterNavigationBar -->
+</div>
+<!-- END: MobileContainer -->
+
+
+</body></html>

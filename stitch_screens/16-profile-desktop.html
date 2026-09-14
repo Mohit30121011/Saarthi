@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saarthi - Profile View &amp; Edit | Digital Public Infrastructure</title>
+<!-- Google Fonts: Fraunces & Inter (System General Sans fallback) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'saarthi-green': '#1F6E43',
+            'saarthi-green-hover': '#195A37',
+            'saarthi-green-soft': '#EBF5EE',
+            'saarthi-gold': '#F2A93B',
+            'saarthi-ink': '#10241A',
+            'saarthi-body': '#3C4A42',
+            'saarthi-muted': '#8A9A90',
+            'saarthi-bg': '#FBFBF6',
+            'saarthi-border': '#E7ECE3',
+            'saarthi-red': '#C0473B',
+            'saarthi-red-soft': '#FDF2F0',
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          borderRadius: {
+            'card': '20px',
+            'pill': '9999px',
+          },
+          boxShadow: {
+            'civic': '0 4px 20px -2px rgba(16, 36, 26, 0.05), 0 1px 3px 0 rgba(16, 36, 26, 0.03)',
+            'toast': '0 12px 32px -4px rgba(16, 36, 26, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.08)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-sliders">
+    /* Range Slider Styling */
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #F2A93B;
+      cursor: pointer;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      margin-top: -7px;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #F2A93B;
+      cursor: pointer;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: #D5E4DB;
+      border-radius: 4px;
+    }
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: #D5E4DB;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-saarthi-bg text-saarthi-body font-sans antialiased min-h-screen selection:bg-saarthi-green-soft selection:text-saarthi-green">
+<!-- BEGIN: CivicTopStrip -->
+<div class="bg-[#10241A] text-xs text-saarthi-muted py-2 border-b border-white/10" data-purpose="civic-header-strip">
+<div class="max-w-[1440px] mx-auto px-8 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-saarthi-gold animate-pulse"></span>
+<span class="text-gray-200 font-medium tracking-wide">GOV.IN SUITE</span>
+<span class="text-white/30">|</span>
+<span>राष्ट्रीय नागरिक सेवा पोर्टल · Digital Public Infrastructure for Welfare Entitlements</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1.5 text-gray-300">
+<svg class="w-3.5 h-3.5 text-saarthi-gold" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Toll-Free Helpline: <strong class="text-white font-semibold">1800-11-7788</strong></span>
+</div>
+<span class="text-white/30">|</span>
+<div class="flex items-center gap-2 text-gray-300">
+<span class="hover:text-white cursor-pointer font-medium text-white underline underline-offset-4">English</span>
+<span class="text-white/30">/</span>
+<span class="hover:text-white cursor-pointer transition-colors">हिन्दी</span>
+</div>
+</div>
+</div>
+</div>
+<!-- END: CivicTopStrip -->
+<!-- BEGIN: MainNavbar -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-saarthi-border h-[72px]" data-purpose="primary-navbar">
+<div class="max-w-[1440px] mx-auto h-full px-8 flex items-center justify-between">
+<!-- Brand & Title Left -->
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-3 group" href="#">
+<img alt="Saarthi Official Emblem" class="h-9 w-auto object-contain transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdPiXJo9aj6P5UwAMZGaNJbP95eootLjrC2QrS_1GsFANO0MwrGjcA-veM6KlgE-kq5jMwxgbIyctr4loNSP91hapxzur4aD5SpXRjZ283oGcELHxREaJBbeQFbBgR608gtzRt7_znXHLidumbDf7skY3GH9fhJRBVe5nh3pNACVKc8IEjKE8LeiZCYeqxx58EPSYXYsFKyE7WATjETByH-vkZEbRjPbBOy71CnSx-tZ94du7UXXQi7qVH4cRiATO59Tw"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-serif font-bold text-2xl text-saarthi-ink tracking-tight leading-none">Saarthi</span>
+<span class="bg-[#EEF7F1] text-saarthi-green text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-pill border border-saarthi-green/20">CIVIC PLATFORM</span>
+</div>
+<span class="text-[11px] text-saarthi-muted leading-tight mt-0.5 font-medium">Empowering Welfare Delivery</span>
+</div>
+</a>
+</div>
+<!-- Navigation Center -->
+<nav class="flex items-center gap-8 h-full" data-purpose="desktop-nav-links">
+<a class="text-[14px] font-medium text-saarthi-body hover:text-saarthi-ink transition-colors" href="#">Dashboard</a>
+<a class="text-[14px] font-medium text-saarthi-body hover:text-saarthi-ink transition-colors" href="#">Explorer</a>
+<a class="text-[14px] font-medium text-saarthi-body hover:text-saarthi-ink transition-colors" href="#">Checklist</a>
+<a class="text-[14px] font-medium text-saarthi-body hover:text-saarthi-ink transition-colors" href="#">Bookmarks</a>
+<a class="text-[14px] font-semibold text-saarthi-green h-full flex items-center relative border-b-2 border-saarthi-green pt-0.5" href="#">
+          Profile
+        </a>
+</nav>
+<!-- Right Controls & Citizen Profile -->
+<div class="flex items-center gap-4">
+<!-- Search bar -->
+<div class="relative w-48 xl:w-56">
+<input class="w-full bg-[#F5F8F6] border-none text-xs rounded-full pl-8 pr-3 py-2 text-saarthi-ink placeholder:text-saarthi-muted focus:ring-1 focus:ring-saarthi-green" placeholder="Search schemes, IDs..." type="text"/>
+<svg class="w-4 h-4 text-saarthi-muted absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<!-- Notification Bell -->
+<button aria-label="Notifications" class="relative p-2 text-saarthi-body hover:text-saarthi-ink transition-colors rounded-full hover:bg-gray-100">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span class="absolute top-1.5 right-1.5 bg-saarthi-red text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">3</span>
+</button>
+<div class="h-6 w-px bg-saarthi-border"></div>
+<!-- Citizen Avatar & Details -->
+<div class="flex items-center gap-3 pl-1">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-saarthi-green to-[#2e9e62] text-white flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white">
+            AK
+          </div>
+<div class="flex flex-col text-left">
+<div class="flex items-center gap-1.5">
+<span class="text-sm font-semibold text-saarthi-ink leading-none">Ananya K.</span>
+<svg aria-label="Verified Citizen" class="w-4 h-4 text-saarthi-green" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<span class="text-[11px] text-saarthi-muted mt-0.5 font-medium">Pune, MH · Verified</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: MainNavbar -->
+<!-- BEGIN: MainContentContainer -->
+<main class="max-w-[720px] mx-auto py-10 px-4 sm:px-6 relative">
+<!-- Breadcrumb navigation -->
+<nav class="flex items-center gap-2 text-xs text-saarthi-muted mb-4" data-purpose="breadcrumbs">
+<a class="hover:text-saarthi-ink transition-colors" href="#">Home</a>
+<span>/</span>
+<a class="hover:text-saarthi-ink transition-colors" href="#">Account</a>
+<span>/</span>
+<span class="text-saarthi-ink font-medium">Profile</span>
+</nav>
+<!-- Header Section -->
+<section class="mb-8" data-purpose="profile-header">
+<h1 class="font-serif font-bold text-3xl text-saarthi-ink tracking-tight mb-2">Your profile</h1>
+<p class="text-[15px] text-saarthi-body leading-relaxed mb-4">
+        Keep this up to date so we can find every scheme you qualify for.
+      </p>
+<!-- Profile summary pill strip -->
+<div class="flex flex-wrap items-center gap-2.5 pt-1">
+<!-- DigiLocker Synced -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#EEF7F1] text-saarthi-green text-xs font-semibold rounded-pill border border-saarthi-green/20">
+<svg class="w-3.5 h-3.5 text-saarthi-green" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+          DigiLocker Synced
+        </span>
+<!-- Aadhaar eKYC Verified -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-saarthi-ink text-xs font-semibold rounded-pill border border-saarthi-border shadow-xs">
+<svg class="w-3.5 h-3.5 text-[#1F6E43]" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"></path>
+</svg>
+          Aadhaar eKYC Verified
+        </span>
+<!-- Citizen ID -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-saarthi-muted text-xs font-mono rounded-pill border border-saarthi-border">
+<span class="text-saarthi-ink font-medium">Citizen ID:</span> MH-2026-883921
+        </span>
+</div>
+</section>
+<!-- BEGIN: FiveProfileCards -->
+<div class="space-y-4" data-purpose="profile-cards-stack">
+<!-- Card 1: Basic Info (Read-only) -->
+<article class="bg-white rounded-card p-6 border border-saarthi-border shadow-civic hover:border-saarthi-green/30 transition-all duration-200">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-saarthi-green-soft flex items-center justify-center text-saarthi-green">
+<!-- Calendar Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+</div>
+<h2 class="font-serif font-semibold text-lg text-saarthi-ink">Basic Info</h2>
+</div>
+<button class="text-xs font-semibold text-saarthi-green hover:text-saarthi-green-hover px-3 py-1.5 rounded-full hover:bg-saarthi-green-soft transition-colors flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Edit
+          </button>
+</div>
+<div class="pl-12">
+<p class="text-base text-saarthi-ink font-medium">14 Aug 2001 (23 yrs) · Female · Unmarried</p>
+<div class="mt-2 flex items-center gap-2 text-xs text-saarthi-muted">
+<span class="inline-flex items-center gap-1 text-[#1F6E43]">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+              Age &amp; Gender authenticated via UIDAI
+            </span>
+</div>
+</div>
+</article>
+<!-- Card 2: Location (Read-only) -->
+<article class="bg-white rounded-card p-6 border border-saarthi-border shadow-civic hover:border-saarthi-green/30 transition-all duration-200">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-saarthi-green-soft flex items-center justify-center text-saarthi-green">
+<!-- Map-Pin Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+<circle cx="12" cy="10" r="3"></circle>
+</svg>
+</div>
+<h2 class="font-serif font-semibold text-lg text-saarthi-ink">Location</h2>
+</div>
+<button class="text-xs font-semibold text-saarthi-green hover:text-saarthi-green-hover px-3 py-1.5 rounded-full hover:bg-saarthi-green-soft transition-colors flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Edit
+          </button>
+</div>
+<div class="pl-12">
+<p class="text-base text-saarthi-ink font-medium">Maharashtra · Pune (Urban)</p>
+<p class="text-xs text-saarthi-muted mt-1">PIN Code: <span class="font-mono text-saarthi-ink">411001</span> · Native Domicile Verified via MahaOnline</p>
+</div>
+</article>
+<!-- Card 3: Income & Occupation (EXPANDED EDIT MODE DEMO) -->
+<article class="bg-white rounded-card p-6 border-2 border-saarthi-green shadow-civic relative overflow-hidden ring-4 ring-saarthi-green/5" data-purpose="card-edit-mode-active">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-saarthi-green text-white flex items-center justify-center">
+<!-- Indian Rupee / Briefcase Icon -->
+<span class="font-bold text-sm leading-none">₹</span>
+</div>
+<div>
+<h2 class="font-serif font-semibold text-lg text-saarthi-ink leading-tight">Income &amp; Occupation</h2>
+<span class="text-[11px] text-saarthi-gold font-semibold uppercase tracking-wider">Editing currently</span>
+</div>
+</div>
+<button class="text-xs font-medium text-saarthi-muted hover:text-saarthi-ink px-2 py-1 transition-colors">
+            Discard
+          </button>
+</div>
+<div class="space-y-6 pt-2">
+<!-- Income Slider Block -->
+<div class="bg-[#F8FAF9] p-4 rounded-xl border border-saarthi-border">
+<div class="flex items-center justify-between mb-2">
+<label class="text-xs font-semibold uppercase tracking-wider text-saarthi-muted" for="income-range">Annual Family Income</label>
+<span class="text-xs font-semibold text-saarthi-green bg-saarthi-green-soft px-2.5 py-0.5 rounded-full">
+                Below ₹1.5L creamy layer threshold
+              </span>
+</div>
+<div class="flex items-baseline gap-2 mb-3">
+<span class="text-2xl font-serif font-bold text-saarthi-ink">₹1,40,000</span>
+<span class="text-xs text-saarthi-body font-medium">/ year</span>
+</div>
+<!-- Custom visual range slider -->
+<input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-saarthi-green/30" id="income-range" max="1000000" min="0" step="10000" type="range" value="140000"/>
+<div class="flex justify-between text-[11px] text-saarthi-muted mt-2 font-mono">
+<span>₹0</span>
+<span>₹2.5L</span>
+<span>₹5L</span>
+<span>₹8L (Creamy limit)</span>
+<span>₹10L+</span>
+</div>
+</div>
+<!-- Occupation Selector Chips -->
+<div>
+<label class="block text-xs font-semibold uppercase tracking-wider text-saarthi-muted mb-2.5">
+              Primary Occupation
+            </label>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+<!-- Selected: Student -->
+<button class="flex items-center justify-between p-3 rounded-xl border-2 border-saarthi-green bg-saarthi-green-soft/60 text-left transition-all" type="button">
+<div class="flex items-center gap-2.5">
+<div class="w-5 h-5 rounded-full bg-saarthi-green text-white flex items-center justify-center text-xs">✓</div>
+<span class="text-sm font-semibold text-saarthi-ink">Student</span>
+</div>
+<span class="text-[11px] font-medium text-saarthi-green bg-white px-2 py-0.5 rounded border border-saarthi-green/20">Selected</span>
+</button>
+<!-- Salaried Worker -->
+<button class="flex items-center justify-between p-3 rounded-xl border border-saarthi-border bg-white hover:border-saarthi-green/50 text-left transition-all" type="button">
+<div class="flex items-center gap-2.5">
+<div class="w-5 h-5 rounded-full border border-gray-300"></div>
+<span class="text-sm font-medium text-saarthi-body">Salaried Worker</span>
+</div>
+</button>
+<!-- Self-Employed / Small Business -->
+<button class="flex items-center justify-between p-3 rounded-xl border border-saarthi-border bg-white hover:border-saarthi-green/50 text-left transition-all" type="button">
+<div class="flex items-center gap-2.5">
+<div class="w-5 h-5 rounded-full border border-gray-300"></div>
+<span class="text-sm font-medium text-saarthi-body">Self-Employed / Business</span>
+</div>
+</button>
+<!-- Farmer / Agriculture -->
+<button class="flex items-center justify-between p-3 rounded-xl border border-saarthi-border bg-white hover:border-saarthi-green/50 text-left transition-all" type="button">
+<div class="flex items-center gap-2.5">
+<div class="w-5 h-5 rounded-full border border-gray-300"></div>
+<span class="text-sm font-medium text-saarthi-body">Farmer / Agriculture</span>
+</div>
+</button>
+<!-- Daily Wage Earner -->
+<button class="flex items-center justify-between p-3 rounded-xl border border-saarthi-border bg-white hover:border-saarthi-green/50 text-left transition-all sm:col-span-2" type="button">
+<div class="flex items-center gap-2.5">
+<div class="w-5 h-5 rounded-full border border-gray-300"></div>
+<span class="text-sm font-medium text-saarthi-body">Daily Wage Earner / Informal Sector</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Rationale Helper Callout -->
+<div class="flex items-start gap-2.5 p-3.5 bg-[#FFF9F2] rounded-xl border border-saarthi-gold/30">
+<svg class="w-4 h-4 text-saarthi-gold mt-0.5 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path>
+</svg>
+<p class="text-xs text-saarthi-body leading-relaxed">
+<strong class="text-saarthi-ink font-semibold">Why we ask:</strong> Most state scholarships and tuition waivers strictly evaluate the exact income ceiling certified by your Tahsildar / Revenue Authority.
+            </p>
+</div>
+<!-- Form Actions -->
+<div class="flex items-center justify-end gap-3 pt-2 border-t border-saarthi-border">
+<button class="px-5 py-2.5 rounded-full text-xs font-semibold text-saarthi-body hover:text-saarthi-ink transition-colors" type="button">
+              Cancel
+            </button>
+<button class="px-6 py-2.5 rounded-full bg-saarthi-green hover:bg-saarthi-green-hover text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition-all" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Save Changes
+            </button>
+</div>
+</div>
+</article>
+<!-- Card 4: Category & Education (Read-only) -->
+<article class="bg-white rounded-card p-6 border border-saarthi-border shadow-civic hover:border-saarthi-green/30 transition-all duration-200">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-saarthi-green-soft flex items-center justify-center text-saarthi-green">
+<!-- Graduation Cap Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+<path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+</svg>
+</div>
+<h2 class="font-serif font-semibold text-lg text-saarthi-ink">Category &amp; Education</h2>
+</div>
+<button class="text-xs font-semibold text-saarthi-green hover:text-saarthi-green-hover px-3 py-1.5 rounded-full hover:bg-saarthi-green-soft transition-colors flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Edit
+          </button>
+</div>
+<div class="pl-12 space-y-1">
+<p class="text-base text-saarthi-ink font-medium">OBC (Other Backward Class) · Non-Creamy Layer</p>
+<p class="text-xs text-saarthi-muted">Certificate Valid: <span class="text-saarthi-ink font-semibold">FY 2026–27</span> · MahaDBT ID linked</p>
+<div class="pt-2">
+<span class="text-xs text-saarthi-body font-medium bg-gray-100 px-2.5 py-1 rounded-md">
+              🎓 Undergraduate Student (Final Year Engineering)
+            </span>
+</div>
+</div>
+</article>
+<!-- Card 5: Additional Details (Read-only) -->
+<article class="bg-white rounded-card p-6 border border-saarthi-border shadow-civic hover:border-saarthi-green/30 transition-all duration-200">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-saarthi-green-soft flex items-center justify-center text-saarthi-green">
+<!-- Sliders/Shield Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h2 class="font-serif font-semibold text-lg text-saarthi-ink">Additional Details <span class="text-xs font-normal text-saarthi-muted font-sans">(Optional)</span></h2>
+</div>
+<button class="text-xs font-semibold text-saarthi-green hover:text-saarthi-green-hover px-3 py-1.5 rounded-full hover:bg-saarthi-green-soft transition-colors flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Edit
+          </button>
+</div>
+<div class="pl-12">
+<p class="text-sm text-saarthi-body leading-relaxed">
+<span class="text-saarthi-ink font-medium">Disability:</span> None · 
+            <span class="text-saarthi-ink font-medium">Ration Card:</span> Yellow Card (BPL Tier) · 
+            <span class="text-saarthi-ink font-medium">Minority Status:</span> No
+          </p>
+</div>
+</article>
+</div>
+<!-- END: FiveProfileCards -->
+<!-- BEGIN: AccountAndSecuritySection -->
+<section class="mt-12 pt-8 border-t border-saarthi-border" data-purpose="account-security">
+<div class="mb-6">
+<h2 class="font-serif font-semibold text-xl text-saarthi-ink">Account &amp; Security</h2>
+<p class="text-xs text-saarthi-muted mt-0.5">Manage your credentials, synced login methods, and device sessions.</p>
+</div>
+<div class="bg-white rounded-card border border-saarthi-border shadow-civic divide-y divide-saarthi-border overflow-hidden">
+<!-- Email Row -->
+<div class="p-5 flex items-center justify-between">
+<div>
+<span class="block text-xs font-medium uppercase text-saarthi-muted tracking-wider">Email Address</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-sm font-semibold text-saarthi-ink">ananya.kulkarni@gmail.com</span>
+<span class="inline-flex items-center gap-1 text-[11px] font-medium text-saarthi-green bg-saarthi-green-soft px-2 py-0.5 rounded-full">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg>
+                Primary
+              </span>
+</div>
+</div>
+<button class="text-xs font-semibold text-saarthi-green hover:underline">Change email</button>
+</div>
+<!-- Password Row -->
+<div class="p-5 flex items-center justify-between">
+<div>
+<span class="block text-xs font-medium uppercase text-saarthi-muted tracking-wider">Security Key &amp; Password</span>
+<p class="text-sm text-saarthi-body mt-1">Password last updated 2 months ago (MFA Enabled)</p>
+</div>
+<button class="text-xs font-semibold px-3.5 py-1.5 rounded-full border border-saarthi-border hover:bg-gray-50 text-saarthi-ink transition-colors">
+            Change password
+          </button>
+</div>
+<!-- Logout All Devices Row -->
+<div class="p-5 bg-saarthi-red-soft/40">
+<div class="flex items-start justify-between">
+<div>
+<button class="text-sm font-bold text-saarthi-red hover:underline flex items-center gap-1.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Log out of all devices
+              </button>
+<p class="text-xs text-saarthi-red/80 mt-1 max-w-md leading-relaxed">
+                Are you sure? You will be logged out of active sessions on desktop and mobile. Aadhaar OTP or password will be required to re-enter.
+              </p>
+</div>
+<button class="text-xs font-semibold text-saarthi-red border border-saarthi-red/30 px-3 py-1.5 rounded-full hover:bg-saarthi-red hover:text-white transition-all">
+              Confirm Logout
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- END: AccountAndSecuritySection -->
+</main>
+<!-- END: MainContentContainer -->
+<!-- BEGIN: FloatingReMatchingToast -->
+<aside class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto" data-purpose="toast-notification">
+<div class="bg-saarthi-ink text-white px-5 py-3.5 rounded-xl shadow-toast border border-white/10 flex items-center gap-3.5 min-w-[420px] max-w-lg">
+<!-- Subtle spinning civic checkmark icon -->
+<div class="relative flex items-center justify-center w-6 h-6 flex-shrink-0">
+<svg class="animate-spin w-6 h-6 text-saarthi-gold" fill="none" viewbox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor"></path>
+</svg>
+<span class="absolute text-[9px] font-bold text-saarthi-gold">✓</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-medium text-gray-200">
+          Profile updated — <span class="text-white font-semibold">refreshing your matched schemes</span>
+</p>
+<p class="text-[11px] text-saarthi-muted mt-0.5">
+          11 schemes recalculated with new criteria.
+        </p>
+</div>
+<a class="text-xs font-bold text-saarthi-gold hover:underline whitespace-nowrap pl-2 border-l border-white/10" href="#">
+        View (11) →
+      </a>
+</div>
+</aside>
+<!-- END: FloatingReMatchingToast -->
+<!-- BEGIN: AssistantChatWidget -->
+<div class="fixed bottom-6 right-8 z-40" data-purpose="floating-assistant">
+<button class="group flex items-center gap-3 bg-saarthi-green text-white p-3 pr-4 rounded-full shadow-lg hover:bg-saarthi-green-hover transition-all duration-300 hover:shadow-xl ring-4 ring-white/60">
+<div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+<!-- Chat icon -->
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="text-left">
+<span class="block text-xs font-bold leading-tight">Saarthi Sathi</span>
+<span class="block text-[10px] text-white/80 leading-none">AI Eligibility Guide</span>
+</div>
+</button>
+</div>
+<!-- END: AssistantChatWidget -->
+<!-- BEGIN: MainFooter -->
+<footer class="mt-20 bg-white border-t border-saarthi-border pt-12 pb-16 text-saarthi-body text-xs" data-purpose="civic-footer">
+<div class="max-w-[1440px] mx-auto px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-saarthi-border">
+<!-- Col 1: Platform identity -->
+<div class="space-y-3 md:col-span-1">
+<div class="flex items-center gap-2">
+<img alt="Saarthi Logo" class="h-7 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfHRCFjIfN-Lgh7m3TFzqSFFKwz_SrA3jIQCbyniqUN_q1HwdTCr-3pa0WELEhWnraN4hZU7AAa3geAWFGETBe7sPGSdEP0GxWkt2jkErFspyp91RQFqIr1L32GxAzohvce-_7ZTT6t1WM80JvOqhCVcDDyhY7a7VW0EZrgCXH-ZsPlSCoW5mNxbNi3UCrvTZNTcZm8CblM2e3FumG81gpgH6i2hJDo0iYaTz4-1TcNKssppfka1TgA9VbUH7Ye3bXMvI"/>
+<span class="font-serif font-bold text-lg text-saarthi-ink">Saarthi</span>
+</div>
+<p class="text-[12px] text-saarthi-muted leading-relaxed">
+            National Entitlement &amp; Direct Benefit Transfer Navigation Framework. Built for inclusive, accessible, and transparent public welfare.
+          </p>
+</div>
+<!-- Col 2: Schemes Directory -->
+<div>
+<h4 class="font-semibold text-saarthi-ink uppercase text-[11px] tracking-wider mb-3">Entitlement Sectors</h4>
+<ul class="space-y-2 text-saarthi-body text-[12px]">
+<li><a class="hover:text-saarthi-green" href="#">Higher Education &amp; Fellowships</a></li>
+<li><a class="hover:text-saarthi-green" href="#">Women &amp; Child Development</a></li>
+<li><a class="hover:text-saarthi-green" href="#">Agriculture &amp; DBT Subsidies</a></li>
+<li><a class="hover:text-saarthi-green" href="#">Social Security &amp; Pensions</a></li>
+</ul>
+</div>
+<!-- Col 3: Technical & Compliance -->
+<div>
+<h4 class="font-semibold text-saarthi-ink uppercase text-[11px] tracking-wider mb-3">Gov.in Frameworks</h4>
+<ul class="space-y-2 text-saarthi-body text-[12px]">
+<li><a class="hover:text-saarthi-green" href="#">DigiLocker Integration</a></li>
+<li><a class="hover:text-saarthi-green" href="#">Aadhaar Data Vault Security</a></li>
+<li><a class="hover:text-saarthi-green" href="#">National Scholarship Portal (NSP)</a></li>
+<li><a class="hover:text-saarthi-green" href="#">WCAG 2.1 AA Compliance Report</a></li>
+</ul>
+</div>
+<!-- Col 4: Help & Redressal -->
+<div>
+<h4 class="font-semibold text-saarthi-ink uppercase text-[11px] tracking-wider mb-3">Grievance &amp; Support</h4>
+<p class="text-saarthi-muted text-[12px] mb-2">Central Citizen Support Desk available 24x7 in 12 regional languages.</p>
+<div class="font-mono text-saarthi-ink font-semibold">1800-11-7788 (Toll Free)</div>
+<a class="text-saarthi-green text-[12px] hover:underline block mt-1" href="mailto:support@saarthi.gov.in">support@saarthi.gov.in</a>
+</div>
+</div>
+<!-- Bottom Compliance Disclaimer -->
+<div class="pt-6 flex flex-col md:flex-row items-center justify-between text-saarthi-muted text-[11px] gap-4">
+<p>© 2026 Ministry of Electronics and Information Technology (MeitY) &amp; DBT Mission, Government of India.</p>
+<div class="flex items-center gap-4">
+<a class="hover:underline" href="#">Privacy Policy</a>
+<span>·</span>
+<a class="hover:underline" href="#">Terms of Service</a>
+<span>·</span>
+<a class="hover:underline" href="#">Hyperlinking Policy</a>
+<span>·</span>
+<a class="hover:underline" href="#">Accessibility Statement</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>

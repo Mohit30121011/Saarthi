@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - AI Assistant Chatbot Widget (Desktop)</title>
+  <!-- Google Fonts: Fraunces & General Sans / Inter fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#1F6E43',
+              hover: '#195A37',
+              accent: '#F2A93B',
+              ink: '#10241A',
+              body: '#3C4A42',
+              muted: '#8A9A90',
+              bg: '#FBFBF6',
+              surface: '#FFFFFF',
+              border: '#E7ECE3',
+              tint: '#E8F2EC',
+              warning: '#FDF7E7',
+              warningBorder: '#F2A93B',
+              warningInk: '#6B4A00',
+              error: '#C0473B'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif']
+          },
+          boxShadow: {
+            'custom': '0 12px 36px rgba(31,110,67,0.12)',
+            'widget': '0 16px 48px -4px rgba(16,36,26,0.22), 0 0 0 1px rgba(31,110,67,0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FBFBF6;
+      color: #3C4A42;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #D1DBCF;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #8A9A90;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-brand-bg relative overflow-x-hidden text-brand-body antialiased selection:bg-brand-tint selection:text-brand-primary">
+
+  <!-- GOV.IN Top Bar -->
+  <div class="bg-brand-ink text-xs text-white/80 py-1.5 px-6 flex justify-between items-center border-b border-brand-ink/40 z-20 relative">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-wide">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span> GOV.IN SUITE &bull; राष्ट्रीय नागरिक सेवा पोर्टल
+      </span>
+      <span class="hidden md:inline text-white/40">|</span>
+      <span class="hidden md:inline text-[11px] text-white/70">Digital Public Infrastructure for Welfare Entitlements</span>
+    </div>
+    <div class="flex items-center gap-4 text-[11px]">
+      <span class="text-white/70">Toll-Free Helpline: <strong class="text-white font-semibold">1800-11-7788</strong></span>
+      <span class="text-white/40">|</span>
+      <div class="flex gap-2">
+        <span class="text-white font-medium underline underline-offset-2 cursor-pointer">English</span>
+        <span class="text-white/60 hover:text-white cursor-pointer">हिन्दी</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Top Navigation Bar (72px fixed aesthetic) -->
+  <header class="h-[72px] bg-white border-b border-brand-border px-8 flex items-center justify-between sticky top-0 z-30 shadow-[0_4px_20px_rgba(31,110,67,0.04)]">
+    <div class="flex items-center gap-10">
+      <!-- Logo Lockup -->
+      <div class="flex items-center gap-3">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqZqhEW2qFLMr0RBPGHwbUtworAlUNTa9R6V4OYoPT68YmE0CCFZwQWw_JQwKjRiMHYXtvcVAXL_uPzsp4wPSLamHSo79qQPfhD_q8NbhKfsh7nRx1aAcYyu4-bNdOoXW8OAz6C0UaPwTvsfhNin-evoSQznwEU-sZy7ZPXef90OdOD7BN45Kf3eEOslfUTU5DNXN0o_EO5ImTYkj9jUL1znapkZbx08Wyu-bajPGXhLrB4yI1jiR_oIfnGjuwZNpY-xk" alt="Saarthi Emblem" class="h-10 w-auto object-contain" />
+        <span class="inline-block px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase bg-brand-tint text-brand-primary rounded border border-brand-primary/20">
+          Civic Platform
+        </span>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium" aria-label="Main Navigation">
+        <a href="#dashboard" class="text-brand-primary relative py-2 font-semibold">
+          Dashboard
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-primary rounded-full"></span>
+        </a>
+        <a href="#explorer" class="text-brand-body hover:text-brand-ink transition-colors py-2">Explorer</a>
+        <a href="#checklist" class="text-brand-body hover:text-brand-ink transition-colors py-2">Checklist</a>
+        <a href="#bookmarks" class="text-brand-body hover:text-brand-ink transition-colors py-2">Bookmarks</a>
+        <a href="#profile" class="text-brand-body hover:text-brand-ink transition-colors py-2">Profile</a>
+      </nav>
+    </div>
+
+    <!-- Right utility controls -->
+    <div class="flex items-center gap-5">
+      <!-- Search input -->
+      <div class="relative hidden lg:block w-72">
+        <input type="text" placeholder="Search schemes, grants, DBT..." class="w-full bg-brand-bg border border-brand-border rounded-full py-2 pl-9 pr-4 text-xs text-brand-ink placeholder:text-brand-muted focus:outline-none focus:border-brand-primary" />
+        <svg class="w-4 h-4 text-brand-muted absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
+
+      <!-- Notification Bell -->
+      <button class="relative p-2 text-brand-body hover:text-brand-ink rounded-full hover:bg-brand-bg transition-colors" aria-label="Notifications, 3 unread">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+      </button>
+
+      <!-- Avatar Profile -->
+      <div class="flex items-center gap-2.5 pl-3 border-l border-brand-border">
+        <div class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-xs">
+          AK
+        </div>
+        <div class="hidden sm:block text-left text-xs">
+          <p class="font-semibold text-brand-ink flex items-center gap-1">
+            Ananya K.
+            <svg class="w-3 h-3 text-brand-primary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          </p>
+          <p class="text-[10px] text-brand-muted">Pune, MH &bull; Verified</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Background Dashboard Content (Contextual Page Beneath Widget) -->
+  <main class="max-w-7xl mx-auto px-6 py-8 pb-28 opacity-75 filter blur-[0.3px] pointer-events-none select-none" aria-hidden="true">
+    <!-- Breadcrumb & Welcome -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <div>
+        <p class="text-xs text-brand-muted uppercase font-semibold tracking-wider mb-1">Citizen Portal &bull; Overview</p>
+        <h1 class="font-serif text-3xl md:text-4xl font-bold text-brand-ink">Welcome back, Ananya</h1>
+        <p class="text-sm text-brand-body mt-1">Based on your verified profile (OBC, Pune, &lt; ₹1.5L Income), you qualify for 11 civic schemes.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 text-xs px-3.5 py-1.5 rounded-full border border-emerald-200/80 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Aadhaar eKYC Verified
+        </span>
+      </div>
+    </div>
+
+    <!-- Metric Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+        <span class="text-xs font-semibold text-brand-muted uppercase">Matched Entitlements</span>
+        <div class="flex items-baseline gap-2 mt-2">
+          <span class="text-3xl font-serif font-bold text-brand-ink">11 Schemes</span>
+          <span class="text-xs text-brand-primary font-medium">8 Strong &bull; 3 Partial</span>
+        </div>
+        <p class="text-xs text-brand-body mt-2">₹1,24,000 potential annual direct benefits</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+        <span class="text-xs font-semibold text-brand-muted uppercase">Document Checklist</span>
+        <div class="flex items-baseline gap-2 mt-2">
+          <span class="text-3xl font-serif font-bold text-brand-ink">8 of 15 Ready</span>
+          <span class="text-xs bg-brand-tint text-brand-primary font-semibold px-2 py-0.5 rounded-full">53% Complete</span>
+        </div>
+        <p class="text-xs text-brand-body mt-2">3 certificates verified via DigiLocker sync</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+        <span class="text-xs font-semibold text-brand-muted uppercase">Application Deadlines</span>
+        <div class="flex items-baseline gap-2 mt-2">
+          <span class="text-3xl font-serif font-bold text-brand-ink">2 Approaching</span>
+          <span class="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-medium">Next: 5 Days</span>
+        </div>
+        <p class="text-xs text-brand-body mt-2">Post-Matric OBC scholarship portal closing soon</p>
+      </div>
+    </div>
+
+    <!-- Representative Scheme Cards -->
+    <div class="mb-6">
+      <h2 class="font-serif text-xl font-bold text-brand-ink mb-4">Priority Matched Schemes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-2xl p-5 border border-brand-border relative">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-[11px] font-semibold text-brand-muted uppercase tracking-wider">Higher Education</span>
+            <span class="inline-flex items-center gap-1 bg-brand-primary text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              Strong Match
+            </span>
+          </div>
+          <h3 class="font-serif text-lg font-bold text-brand-ink line-clamp-1">Post-Matric Scholarship for OBC Students</h3>
+          <p class="text-xs text-brand-muted mt-0.5">Dept. of Social Justice & Special Assistance, MH</p>
+          <p class="text-xs text-brand-body mt-2.5 line-clamp-2">100% tuition and exam fee waiver credited directly to college + monthly maintenance DBT.</p>
+          <div class="mt-4 pt-3 border-t border-brand-border/60 flex justify-between items-center text-xs">
+            <span class="font-semibold text-brand-ink">₹24,000 / year</span>
+            <span class="text-brand-primary font-medium">View details &rarr;</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-2xl p-5 border border-brand-border relative">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-[11px] font-semibold text-brand-muted uppercase tracking-wider">Social Security</span>
+            <span class="inline-flex items-center gap-1 bg-brand-primary text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              Strong Match
+            </span>
+          </div>
+          <h3 class="font-serif text-lg font-bold text-brand-ink line-clamp-1">Rajarshi Chhatrapati Shahu Maharaj Concession</h3>
+          <p class="text-xs text-brand-muted mt-0.5">Higher & Technical Education Dept</p>
+          <p class="text-xs text-brand-body mt-2.5 line-clamp-2">50% tuition fee reimbursement for recognized professional degree courses for EBC citizens.</p>
+          <div class="mt-4 pt-3 border-t border-brand-border/60 flex justify-between items-center text-xs">
+            <span class="font-semibold text-brand-ink">50% Fee Waiver</span>
+            <span class="text-brand-primary font-medium">View details &rarr;</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-2xl p-5 border border-brand-border relative">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-[11px] font-semibold text-brand-muted uppercase tracking-wider">Healthcare</span>
+            <span class="inline-flex items-center gap-1 bg-brand-accent/20 text-brand-ink text-[11px] font-medium px-2.5 py-0.5 rounded-full border border-brand-accent/40">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-accent"></span>
+              Partial Match
+            </span>
+          </div>
+          <h3 class="font-serif text-lg font-bold text-brand-ink line-clamp-1">Ayushman Bharat - PM-JAY Health Cover</h3>
+          <p class="text-xs text-brand-muted mt-0.5">National Health Authority</p>
+          <p class="text-xs text-brand-body mt-2.5 line-clamp-2">Cashless hospitalization up to ₹5,00,000 per family per year at all empaneled public & private hospitals.</p>
+          <div class="mt-4 pt-3 border-t border-brand-border/60 flex justify-between items-center text-xs">
+            <span class="font-semibold text-brand-ink">₹5,00,000 Cover</span>
+            <span class="text-brand-primary font-medium">View details &rarr;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- FLOATING AI CHATBOT WIDGET OVERLAY (Module 8: FR8.1 - FR8.12)           -->
+  <!-- Anchored Bottom-Right: 380px wide x 560px tall                          -->
+  <!-- ========================================================================= -->
+  <div class="fixed bottom-6 right-8 z-50 flex flex-col items-end" role="dialog" aria-modal="true" aria-label="Saarthi AI Assistant Chat Window">
+
+    <!-- Active Chat Window Container (380px x 560px) -->
+    <section class="w-[380px] h-[560px] bg-white rounded-2xl shadow-widget flex flex-col overflow-hidden border border-brand-border/80 transition-all duration-300 transform origin-bottom-right" style="box-shadow: 0 20px 50px -6px rgba(16,36,26,0.28), 0 0 0 1px rgba(31,110,67,0.12);">
+
+      <!-- 1. Header Bar (Primary Green, white text, online status, close button) -->
+      <header class="bg-brand-primary text-white px-4 py-3.5 flex items-center justify-between shadow-sm select-none">
+        <div class="flex items-center gap-3">
+          <!-- Bot Avatar Thumbnail -->
+          <div class="relative w-8 h-8 rounded-full overflow-hidden bg-white/10 ring-1 ring-white/30 flex-shrink-0 flex items-center justify-center">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQuDu6BDHrUwQH-LUdEGEA3S3g4Sm3zXEnKZ5kwpvbZNOX5upuDZ1mkEvoSRd_WV7sQqJwHM_tpDyIrvGeOrV4FfpigoZy8dGKBmFldNT0qdc1pdvAKxqLlLPNeQ64KhE4sCP53L1E8yr7sG9K8QbcObqRgbaPsz2cvgOUF5uP0BJaCJ5QKun1ZXc7jxYWovtNszlKXMcUI2ZAf8d1AA52uSUF7XuZzLjmEvv8jdWxTio7u9laZV4GeQ" alt="Saarthi AI Assistant" class="w-full h-full object-cover" />
+            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-brand-primary" title="Online and grounded" aria-label="Status: Online"></span>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h2 class="font-semibold text-sm leading-tight text-white">Saarthi Assistant</h2>
+              <span class="text-[10px] bg-white/20 text-white font-medium px-1.5 py-0.2 rounded text-center tracking-wide">AI GUIDE</span>
+            </div>
+            <p class="text-[11px] text-white/80 flex items-center gap-1">
+              <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
+              Grounded on Verified Govt Schemes
+            </p>
+          </div>
+        </div>
+
+        <!-- Controls: Minimize & Close -->
+        <div class="flex items-center gap-1">
+          <button class="p-1 text-white/80 hover:text-white hover:bg-white/10 rounded-md transition-colors" title="Minimize window" aria-label="Minimize chat">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"/></svg>
+          </button>
+          <button class="p-1 text-white/80 hover:text-white hover:bg-white/10 rounded-md transition-colors" title="Close window (Esc)" aria-label="Close chat window">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Provenance Context Banner (Subtle trust bar) -->
+      <div class="bg-brand-tint/60 border-b border-brand-border/60 px-3.5 py-1.5 flex items-center justify-between text-[11px] text-brand-body">
+        <span class="flex items-center gap-1 text-brand-ink font-medium">
+          <svg class="w-3.5 h-3.5 text-brand-primary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          Official Rules Grounding Active
+        </span>
+        <span class="text-brand-muted text-[10px]">Indexed: MahaDBT &bull; NSP FY26</span>
+      </div>
+
+      <!-- 2. Scrollable Message Area (white/light warm bg, 16px padding) -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-brand-bg/40 custom-scroll" id="chat-messages" role="log" aria-live="polite">
+
+        <!-- Welcome Message (FR8.6 with Claymorphism 3D Avatar & Chips) -->
+        <div class="flex items-start gap-2.5">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQuDu6BDHrUwQH-LUdEGEA3S3g4Sm3zXEnKZ5kwpvbZNOX5upuDZ1mkEvoSRd_WV7sQqJwHM_tpDyIrvGeOrV4FfpigoZy8dGKBmFldNT0qdc1pdvAKxqLlLPNeQ64KhE4sCP53L1E8yr7sG9K8QbcObqRgbaPsz2cvgOUF5uP0BJaCJ5QKun1ZXc7jxYWovtNszlKXMcUI2ZAf8d1AA52uSUF7XuZzLjmEvv8jdWxTio7u9laZV4GeQ" alt="Assistant Avatar" class="w-8 h-8 rounded-full border border-brand-border object-cover flex-shrink-0 shadow-xs mt-1" />
+          <div class="flex-1">
+            <div class="bg-white border border-brand-border rounded-2xl rounded-tl-sm p-3.5 shadow-xs text-[13px] text-brand-ink leading-relaxed">
+              <p class="font-medium text-brand-primary mb-1">Namaste Ananya! 🙏</p>
+              <p>I am your <strong>Saarthi Welfare Assistant</strong>. I can cross-check your eligibility rules, list mandatory Tahsildar certificates, or explain DBT scholarship disbursement timelines.</p>
+            </div>
+            
+            <!-- Quick Suggestion Chips (Tappable pills per FR8.6) -->
+            <div class="flex flex-wrap gap-1.5 mt-2.5">
+              <button class="bg-white hover:bg-brand-tint border border-brand-border text-brand-body text-[11px] font-medium py-1 px-2.5 rounded-full transition-colors shadow-2xs hover:border-brand-primary/40 text-left">
+                💡 Am I eligible for 100% tuition waiver?
+              </button>
+              <button class="bg-white hover:bg-brand-tint border border-brand-border text-brand-body text-[11px] font-medium py-1 px-2.5 rounded-full transition-colors shadow-2xs hover:border-brand-primary/40 text-left">
+                📄 What documents do I need for OBC scholarship?
+              </button>
+              <button class="bg-white hover:bg-brand-tint border border-brand-border text-brand-body text-[11px] font-medium py-1 px-2.5 rounded-full transition-colors shadow-2xs hover:border-brand-primary/40 text-left">
+                ⏱️ What is the application deadline for MahaDBT?
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Message Example 1 -->
+        <div class="flex items-end justify-end">
+          <div class="bg-brand-tint text-brand-ink rounded-2xl rounded-br-sm py-2.5 px-3.5 max-w-[84%] text-[13px] leading-relaxed shadow-2xs border border-brand-primary/15">
+            <p>Does the Post-Matric OBC scholarship cover private college hostel fees?</p>
+            <span class="block text-[10px] text-brand-muted text-right mt-1">10:42 AM</span>
+          </div>
+        </div>
+
+        <!-- Bot Response 1: Grounded & Verified Response (Section 5.6 & FR8.8) -->
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-brand-tint border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-xs flex-shrink-0 mt-1">
+            SA
+          </div>
+          <div class="flex-1">
+            <!-- Bubble with grounded styling -->
+            <div class="bg-white border border-brand-border rounded-2xl rounded-tl-sm p-3.5 shadow-xs text-[13px] text-brand-ink leading-relaxed">
+              <p>
+                Yes! Under the <a href="#scheme-detail" class="text-brand-primary font-semibold underline underline-offset-2 hover:text-brand-hover">Post-Matric Scholarship for OBC Students</a>, approved hostellers in recognized professional institutions receive:
+              </p>
+              <ul class="list-disc list-inside mt-2 space-y-1 text-brand-body text-[12.5px]">
+                <li><strong>Maintenance Allowance:</strong> Up to ₹1,200/month for hostellers (vs ₹550/month for day scholars).</li>
+                <li><strong>Tuition & Exam Fees:</strong> 100% reimbursement transferred directly via DBT.</li>
+              </ul>
+              <p class="mt-2 text-brand-body text-[12px]">
+                <em>Note: Private unrecognized private PG accommodations require a registered Tahsildar rent receipt & college bonafide.</em>
+              </p>
+
+              <!-- Provenance Verification Line (Anti-hallucination requirement) -->
+              <div class="mt-3 pt-2.5 border-t border-brand-border/60 flex items-center justify-between text-[10.5px] text-brand-muted">
+                <span class="flex items-center gap-1 text-emerald-700 font-medium">
+                  <svg class="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  Verified against MahaDBT GR #OBC-2024/CR-18
+                </span>
+                <span class="text-brand-muted">Updated: Oct 2024</span>
+              </div>
+            </div>
+
+            <!-- Mandatory Disclaimer (FR8.9) -->
+            <p class="text-[10px] text-brand-muted mt-1 px-1">
+              * Confirm final eligibility & quota allotments on the official MahaDBT portal before applying.
+            </p>
+          </div>
+        </div>
+
+        <!-- User Message Example 2 (Asking an uncertain edge question) -->
+        <div class="flex items-end justify-end">
+          <div class="bg-brand-tint text-brand-ink rounded-2xl rounded-br-sm py-2.5 px-3.5 max-w-[84%] text-[13px] leading-relaxed shadow-2xs border border-brand-primary/15">
+            <p>Will I also get free study laptop distribution this academic year?</p>
+            <span class="block text-[10px] text-brand-muted text-right mt-1">10:44 AM</span>
+          </div>
+        </div>
+
+        <!-- Bot Response 2: Hedged / Uncertain Response (FR8.4 Grounding Honesty) -->
+        <!-- Distinct Soft Accent-Gold Tinted background + Question-mark Badge -->
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 font-bold text-xs flex-shrink-0 mt-1" aria-label="Uncertain response icon">
+            ?
+          </div>
+          <div class="flex-1">
+            <div class="bg-[#FFFDF6] border border-amber-200/90 rounded-2xl rounded-tl-sm p-3.5 shadow-xs text-[13px] leading-relaxed">
+              <!-- Distinctive Hedged Alert Header -->
+              <div class="flex items-center gap-1.5 text-amber-900 font-semibold text-xs mb-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                <span class="sr-only">Uncertain claim: </span>
+                No Official Verification Found (Hedged Notice)
+              </div>
+              <p class="text-brand-ink text-[12.5px]">
+                I do not have verified documentation confirming a statewide free laptop distribution scheme for OBC college students in Maharashtra for the current FY26 intake.
+              </p>
+              <div class="mt-2 text-brand-body text-[12px] bg-white/70 p-2 rounded-lg border border-amber-100">
+                <p><strong>What is verified:</strong> Free device distribution programs are currently restricted to specific tribal development (TRTI) and STEM-specialized merit grants.</p>
+              </div>
+
+              <!-- Provenance Hedged Status -->
+              <div class="mt-2.5 pt-2 border-t border-amber-200/50 flex items-center justify-between text-[10.5px] text-amber-800/80">
+                <span>Database check: 18 Central & State catalogs</span>
+                <span class="font-medium text-amber-900">0 Matching Provisions</span>
+              </div>
+            </div>
+
+            <!-- Disclaimer line (FR8.9) -->
+            <p class="text-[10px] text-brand-muted mt-1 px-1">
+              * Please consult your college grievance nodal officer or district social welfare commissioner.
+            </p>
+          </div>
+        </div>
+
+        <!-- Typing Indicator State (Pulsing 3 dots in bot bubble) -->
+        <div class="flex items-start gap-2.5 pt-1">
+          <div class="w-7 h-7 rounded-full bg-brand-tint border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-[10px] flex-shrink-0">
+            SA
+          </div>
+          <div class="bg-white border border-brand-border rounded-2xl rounded-tl-sm px-3.5 py-2.5 shadow-2xs flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-brand-primary/60 animate-bounce" style="animation-delay: 0ms;"></span>
+            <span class="w-2 h-2 rounded-full bg-brand-primary/60 animate-bounce" style="animation-delay: 150ms;"></span>
+            <span class="w-2 h-2 rounded-full bg-brand-primary/60 animate-bounce" style="animation-delay: 300ms;"></span>
+            <span class="text-[11px] text-brand-muted ml-1.5">Verifying scheme rules…</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scroll to bottom / New message pill (Shown if user scrolls up) -->
+      <div class="relative w-full flex justify-center -mb-3 z-10 pointer-events-none">
+        <button class="pointer-events-auto bg-brand-ink text-white text-[10.5px] font-medium py-1 px-3 rounded-full shadow-md hover:bg-black transition-all flex items-center gap-1.5 transform hover:-translate-y-0.5">
+          <svg class="w-3 h-3 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+          Latest grounded updates
+        </button>
+      </div>
+
+      <!-- 4. Pinned Bottom Input Row (Rounded input, placeholder, circular send button) -->
+      <footer class="p-3 bg-white border-t border-brand-border flex flex-col gap-1.5 select-none">
+        <form class="flex items-center gap-2" onsubmit="event.preventDefault()">
+          <div class="relative flex-1">
+            <input 
+              type="text" 
+              value="Can I link DigiLocker to auto-verify my income certificate?"
+              placeholder="Ask about a scheme or eligibility requirement…" 
+              class="w-full bg-brand-bg border border-brand-border rounded-xl py-2.5 pl-3.5 pr-8 text-[13px] text-brand-ink placeholder:text-brand-muted focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all"
+            />
+            <button type="button" class="absolute right-2.5 top-3 text-brand-muted hover:text-brand-ink" title="Voice Input (English / हिन्दी / मराठी)" aria-label="Microphone voice query">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            </button>
+          </div>
+          <!-- Circular Send Button (52px ergonomic target or 38px inline) -->
+          <button 
+            type="submit" 
+            class="w-10 h-10 rounded-xl bg-brand-primary hover:bg-brand-hover active:scale-95 text-white flex items-center justify-center shadow-sm transition-all flex-shrink-0"
+            aria-label="Send query"
+          >
+            <svg class="w-4 h-4 transform rotate-45 -translate-y-0.5 -translate-x-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
+          </button>
+        </form>
+
+        <!-- Rate-limit status and Privacy footnote (FR8.11) -->
+        <div class="flex items-center justify-between text-[10px] text-brand-muted px-1">
+          <span class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            18 of 20 daily queries remaining
+          </span>
+          <span class="text-brand-muted/80">Never share Aadhaar OTP</span>
+        </div>
+      </footer>
+
+    </section>
+
+    <!-- Collapsed Floating Launcher Bubble Button (56px circle, Primary-green) -->
+    <!-- Shown morphing underneath / serving as persistent anchor -->
+    <div class="mt-3 flex items-center gap-3">
+      <!-- Transient First-Load Tooltip Callout (auto-dismisses per spec) -->
+      <div class="hidden xl:flex items-center gap-2 bg-brand-ink text-white px-3.5 py-1.5 rounded-full text-xs shadow-lg border border-brand-ink/40 animate-fade-in">
+        <span class="text-brand-accent">✨</span>
+        <span>Have questions about eligibility rules?</span>
+        <button class="text-white/60 hover:text-white ml-1 text-xs" aria-label="Dismiss hint">&times;</button>
+      </div>
+
+      <!-- 56px Floating Bubble Trigger -->
+      <button 
+        class="w-14 h-14 rounded-full bg-brand-primary hover:bg-brand-hover text-white shadow-custom flex items-center justify-center relative transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-brand-primary/30"
+        aria-expanded="true"
+        aria-label="Toggle Saarthi AI Chatbot Assistant"
+      >
+        <!-- Custom Chat Bubble with emblem notch -->
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+          <circle cx="8" cy="10" r="1.5"/>
+          <circle cx="12" cy="10" r="1.5"/>
+          <circle cx="16" cy="10" r="1.5"/>
+        </svg>
+        <!-- Unread / AI online indicator dot -->
+        <span class="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-brand-accent border-2 border-white ring-1 ring-brand-primary"></span>
+      </button>
+    </div>
+
+  </div>
+
+</body>
+</html>

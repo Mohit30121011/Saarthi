@@ -1,0 +1,294 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Log in — Saarthi | Personalized Citizen Scheme Portal</title>
+<!-- Google Fonts: Fraunces (Headings) & Inter (UI/Body fallback for General Sans) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration Script -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'saarthi-green': '#1F6E43',
+            'saarthi-green-hover': '#195A37',
+            'saarthi-ink': '#10241A',
+            'saarthi-saffron': '#F2A93B',
+            'saarthi-body': '#3C4A42',
+            'saarthi-muted': '#8A9A90',
+            'saarthi-bg': '#FBFBF6',
+            'saarthi-border': '#E7ECE3',
+            'saarthi-error': '#C0473B',
+            'saarthi-alert-bg': '#FDF3E7',
+          },
+          fontFamily: {
+            fraunces: ['Fraunces', 'serif'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'saarthi-card': '0 16px 36px rgba(31, 110, 67, 0.12)',
+            'saarthi-btn': '0 8px 20px rgba(31, 110, 67, 0.22)',
+            'saarthi-bezel': '0 25px 50px -12px rgba(16, 36, 26, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.1)',
+          }
+        }
+      }
+    };
+  </script>
+<!-- Custom Typography & Specific State Styles -->
+<style data-purpose="typography">
+    .font-fraunces {
+      font-family: 'Fraunces', Georgia, serif;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+  </style>
+<!-- Custom Focus and Layout Polish Styles -->
+<style data-purpose="custom-focus-and-accents">
+    .saarthi-input-focus:focus {
+      outline: none;
+      border-color: #1F6E43;
+      box-shadow: 0 0 0 3.5px rgba(31, 110, 67, 0.30);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #E7ECE3;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="h-full bg-saarthi-bg text-saarthi-body font-sans antialiased selection:bg-saarthi-green/15 selection:text-saarthi-ink flex flex-col justify-center items-center min-h-screen p-3 sm:p-6 lg:p-8">
+<!-- BEGIN: DesktopCanvasWrapper -->
+<!-- 1440px primary presentation canvas -->
+<main class="w-full max-w-[1440px] bg-white rounded-[36px] overflow-hidden flex flex-col lg:flex-row min-h-[860px]" data-purpose="primary-login-canvas">
+<!-- BEGIN: LeftAuthenticationPanel (45% on desktop) -->
+<section class="w-full lg:w-[46%] xl:w-[45%] bg-white flex flex-col justify-between p-7 sm:p-10 xl:p-14 relative z-10 custom-scroll overflow-y-auto" data-purpose="auth-form-column">
+<div>
+<!-- BEGIN: TopBrandingLockup -->
+<header class="flex items-center justify-between gap-3 mb-8" data-purpose="brand-header">
+<a class="inline-flex items-center gap-3 group" href="#" title="Saarthi Home">
+<!-- Saarthi Emblem Source Markup Embed -->
+<span class="shrink-0 transition-transform duration-200 group-hover:scale-105 flex items-center"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtZgtmm_hG3rpibfgpqIV3rNKOr2DcLJIdsI_MmdPXvJDOOibYODdiRM4jP7b1xJvvpLTuety80nhAD9cL0tn6p5sb8edZMCqs8h0BsuQBK2IT-7-HyHObLo1qc_xvXEGvOevElVc-l9rqCavc3f9IPb45c1Kc45q2kytE3s0YoQ6fEujswc7Ll66e_TqawWzd88mOutt06iakykHxHXenpLbrojeT91QkA-xQYG1OY1AUXG3D_v3hku9UwS1PVVBzBB8" alt="Saarthi Logo" class="h-10 w-auto object-contain"></span>
+<span class="flex flex-col">
+<span class="font-sans font-semibold text-[22px] tracking-tight text-saarthi-ink leading-none">Saarthi</span>
+<span class="text-[10.5px] uppercase tracking-wider text-saarthi-green font-medium mt-1">सारथी</span>
+</span>
+</a>
+<!-- Citizen Portal Pill Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-saarthi-bg border border-saarthi-border text-[12px] font-medium text-saarthi-ink/80" data-purpose="portal-badge">
+<span aria-hidden="true" class="w-2 h-2 rounded-full bg-saarthi-saffron inline-block animate-pulse"></span>
+<span class="">नागरिक सेवा पोर्टल</span>
+</div>
+</header>
+<!-- END: TopBrandingLockup -->
+<!-- BEGIN: StateBanner (SRS FR1.8: Rate limit warning) -->
+<div class="mb-7 rounded-2xl bg-saarthi-alert-bg border-l-[4px] border-saarthi-saffron p-3.5 sm:p-4 shadow-sm flex items-start gap-3 transition-all duration-200" data-purpose="locked-state-banner" id="rate-limit-alert" role="alert">
+<span aria-hidden="true" class="mt-0.5 text-saarthi-saffron shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M12 7v5l3 3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<div class="flex-1">
+<p class="text-xs sm:text-[13px] font-medium text-saarthi-ink leading-snug">
+<strong class="font-semibold text-saarthi-ink">Security Notice:</strong> Too many attempts. Try again in 12 minutes.
+            </p>
+</div>
+<button aria-label="Dismiss security notice" class="text-saarthi-muted hover:text-saarthi-ink p-1 -mr-1 -mt-1 rounded-md transition-colors" onclick="document.getElementById('rate-limit-alert').style.display='none'" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- END: StateBanner -->
+<!-- BEGIN: FormHeadingGroup -->
+<div class="mb-7">
+<h1 class="font-fraunces text-3xl sm:text-[40px] font-bold text-saarthi-ink leading-tight tracking-tight">
+            Welcome back
+          </h1>
+<p class="mt-2 text-sm sm:text-base text-saarthi-body font-normal">
+            Log in to see personalized schemes and benefits you qualify for.
+          </p>
+</div>
+<!-- END: FormHeadingGroup -->
+<!-- BEGIN: LoginForm -->
+<form action="#" class="space-y-5" data-purpose="citizen-login-form" method="POST" onsubmit="event.preventDefault();">
+<!-- Email Address Input Group -->
+<div class="space-y-1.5" data-purpose="input-group-email">
+<label class="block text-sm font-medium text-saarthi-ink" for="email">
+              Email address
+            </label>
+<div class="relative">
+<input autocomplete="email" class="w-full h-[52px] px-4.5 rounded-[16px] bg-saarthi-bg border-[1.5px] border-saarthi-border text-saarthi-ink placeholder-saarthi-muted text-sm sm:text-[15px] transition duration-150 saarthi-input-focus" id="email" name="email" placeholder="you@example.com" required="" type="email">
+</div>
+<p class="text-[12px] text-saarthi-muted leading-tight pt-0.5">
+              Used to notify you of newly launched central &amp; state scheme benefits
+            </p>
+</div>
+<!-- Password Input Group -->
+<div class="space-y-1.5" data-purpose="input-group-password">
+<div class="flex items-center justify-between">
+<label class="block text-sm font-medium text-saarthi-ink" for="password">
+                Password
+              </label>
+<a class="text-xs sm:text-[13px] font-medium text-saarthi-saffron hover:underline transition-all underline-offset-2" href="#forgot">
+                Forgot password?
+              </a>
+</div>
+<div class="relative">
+<input autocomplete="current-password" class="w-full h-[52px] pl-4.5 pr-12 rounded-[16px] bg-saarthi-bg border-[1.5px] border-saarthi-border text-saarthi-ink placeholder-saarthi-muted text-sm sm:text-[15px] transition duration-150 saarthi-input-focus" id="password" name="password" placeholder="••••••••••••" required="" type="password">
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-saarthi-muted hover:text-saarthi-ink transition-colors" id="toggle-password-btn" type="button">
+<!-- Eye Icon -->
+<svg class="w-5 h-5" fill="none" id="eye-icon" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Remember Me Checkbox -->
+<div class="flex items-center justify-between pt-0.5">
+<label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+<input class="w-4 h-4 rounded text-saarthi-green border-saarthi-border focus:ring-saarthi-green/30 cursor-pointer" name="remember" type="checkbox">
+<span class="text-xs sm:text-[13px] text-saarthi-body">Keep me logged in for 30 days</span>
+</label>
+</div>
+<!-- Primary Submit Button -->
+<div class="pt-2">
+<button class="w-full h-[52px] rounded-full bg-saarthi-green hover:bg-saarthi-green-hover text-white font-medium text-base tracking-normal shadow-saarthi-btn transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md flex items-center justify-center gap-2 group" data-purpose="submit-btn" type="submit">
+<span class="">Log in</span>
+<svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</form>
+<!-- END: LoginForm -->
+<!-- BEGIN: SocialOrDigiLockerDivider -->
+<div class="my-6 flex items-center gap-4" data-purpose="auth-divider">
+<div class="h-px bg-saarthi-border flex-1"></div>
+<span class="text-[12px] uppercase tracking-wider font-medium text-saarthi-muted shrink-0">or continue with</span>
+<div class="h-px bg-saarthi-border flex-1"></div>
+</div>
+<!-- END: SocialOrDigiLockerDivider -->
+<!-- BEGIN: AlternativeCivicAuth -->
+<div class="space-y-3" data-purpose="alternate-identity-providers">
+<!-- DigiLocker / MeriPehchaan Auth Button -->
+<button class="w-full h-[48px] rounded-full border border-saarthi-border hover:border-saarthi-green/50 bg-saarthi-bg/60 hover:bg-white text-saarthi-ink text-sm font-medium transition-all duration-150 flex items-center justify-center gap-3 group" type="button">
+<!-- Civic Identity Emblem / DigiLocker Style badge -->
+<span class="w-5 h-5 rounded-full bg-saarthi-green/10 flex items-center justify-center text-saarthi-green">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"></path>
+</svg>
+</span>
+<span class="">Continue with DigiLocker / MeriPehchaan</span>
+</button>
+</div>
+<!-- END: AlternativeCivicAuth -->
+</div>
+<!-- BEGIN: LeftPanelFooter -->
+<footer class="pt-8 text-center" data-purpose="auth-card-footer">
+<p class="text-sm text-saarthi-body">
+          New here?
+          <a class="font-semibold text-saarthi-green hover:underline decoration-2 underline-offset-4 ml-1 transition-all" href="#register">
+            Create an account
+          </a>
+</p>
+</footer>
+<!-- END: LeftPanelFooter -->
+</section>
+<!-- END: LeftAuthenticationPanel -->
+<!-- BEGIN: RightHeroDisplayPanel (55% on desktop) -->
+<section class="w-full lg:w-[54%] xl:w-[55%] bg-[#1F6E43] bg-gradient-to-br from-[#1F6E43] via-[#1B5E39] to-[#10241A] p-6 sm:p-10 xl:p-12 flex flex-col justify-between relative overflow-hidden text-white select-none rounded-[32px]" data-purpose="hero-clay-presentation">
+<!-- Ambient radial glow behind the mock tablet bezel -->
+<div aria-hidden="true" class="absolute -top-24 -right-24 w-96 h-96 bg-saarthi-saffron/15 rounded-full blur-3xl pointer-events-none"></div>
+<div aria-hidden="true" class="absolute -bottom-24 -left-24 w-96 h-96 bg-black/30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Hero Header Highlights -->
+<div class="relative z-10 flex items-center justify-between mb-4">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs text-saarthi-bg">
+<span class="w-1.5 h-1.5 rounded-full bg-[#F2A93B]"></span>
+<span class="">Verified Citizen Portal 2025</span>
+</div>
+<div class="hidden sm:flex items-center gap-2 text-xs text-white/70">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="">Fast, secure, end-to-end encrypted</span>
+</div>
+</div>
+<!-- BEGIN: Signature Clay Bezel Frame Mockup -->
+<div class="relative z-10 flex-1 flex items-center justify-center py-4" data-purpose="hero-mockup-container">
+<!-- Thick Clay Tablet Bezel (12px frame with radius 32px) -->
+<div class="relative w-full max-w-[620px] bg-[#10241A] p-3 sm:p-3.5 rounded-[32px] shadow-saarthi-bezel border border-white/10 transition-transform duration-500 hover:scale-[1.008]">
+<!-- Bezel camera notch dot -->
+<div aria-hidden="true" class="absolute top-2 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white/10 z-20"></div>
+<!-- Clay Hero Render inside device frame -->
+<div class="relative rounded-[22px] overflow-hidden bg-[#10241A] aspect-[4/3] flex items-center justify-center">
+<img alt="3D claymorphic soft matte render of an Indian citizen sitting at a desk with a laptop surrounded by floating scheme verification badges and coin" class="w-full h-full object-cover object-center transform scale-[1.01]" loading="eager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ3KGX9_ST3WpdsxEGCgO_e6pobzlqxICZ7Rsz9apFYrWbe0_37lza2jKsMEdp5s06zs50LWON2tns7gWrjU1AVWb5ozm2jD2m5RfTy-zj5XYA7Z2egfARZWrn2--t7djXRMV7yyeC2QCcbJaSpKQgObR0l2-V3dOmf6841dbQ28enRDlIShIDySTcZuzpaNJZYRff0GGu5C2B1SUIBWfVcLUh4pibUqu3EHZ4GcQn">
+<!-- Subtle contextual glass chip in top corner of screen -->
+<div class="absolute top-4 left-4 bg-[#10241A]/75 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/15 shadow-sm hidden sm:flex items-center gap-2">
+<span class="text-saarthi-saffron font-bold text-xs">₹</span>
+<span class="text-[11px] font-medium text-white/90">Direct Benefit Transfer Ready</span>
+</div>
+</div>
+<!-- BEGIN: Asymmetric Overlapping Floating Scheme Badge -->
+<div class="absolute -bottom-5 -right-2 sm:-right-4 bg-white text-saarthi-ink px-4 sm:px-5 py-3 rounded-2xl shadow-xl border border-saarthi-border flex items-center gap-3.5 z-30 animate-fade-in" data-purpose="floating-stat-badge">
+<div class="w-10 h-10 rounded-xl bg-[#FDF3E7] border border-saarthi-saffron/40 flex items-center justify-center text-saarthi-saffron shrink-0">
+<!-- Saffron Star / Shield Icon -->
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15l-3.5-3.5 1.42-1.42L11 13.17l5.08-5.08 1.42 1.42L11 16z"></path>
+</svg>
+</div>
+<div>
+<p class="font-bold text-sm text-saarthi-ink leading-none">450+ Verified Schemes</p>
+<p class="text-[11.5px] text-saarthi-body mt-1">Central &amp; State subsidies unlocked</p>
+</div>
+</div>
+<!-- END: Asymmetric Overlapping Floating Scheme Badge -->
+</div>
+</div>
+<!-- END: Signature Clay Bezel Frame Mockup -->
+<!-- BEGIN: HeroBottomSocialProof -->
+<footer class="relative z-10 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-white/80 border-t border-white/10" data-purpose="hero-footer-trust">
+<div class="flex items-center gap-2 text-xs">
+<svg class="w-4 h-4 text-saarthi-saffron" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="">Aadhaar, PAN &amp; Ration Card Compatible</span>
+</div>
+<p class="text-[11px] text-white/60 tracking-wide">
+          Official Direct Benefit Discovery Framework
+        </p>
+</footer>
+<!-- END: HeroBottomSocialProof -->
+</section>
+<!-- END: RightHeroDisplayPanel -->
+</main>
+<!-- END: DesktopCanvasWrapper -->
+<!-- BEGIN: ClientInteractivityScript -->
+<script data-purpose="event-handlers">
+    // Password visibility toggle handler
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggleBtn = document.getElementById('toggle-password-btn');
+      const passwordInput = document.getElementById('password');
+
+      if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', function () {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          
+          // Toggle aria and icon subtle opacity
+          this.classList.toggle('text-saarthi-green', isPassword);
+          this.classList.toggle('text-saarthi-muted', !isPassword);
+        });
+      }
+    });
+  </script>
+<!-- END: ClientInteractivityScript -->
+
+
+
+
+</body></html>

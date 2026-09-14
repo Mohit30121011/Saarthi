@@ -1,0 +1,19 @@
+# Eclipse workspace metadata (this folder is the Eclipse workspace root)
+.metadata/
+.settings/
+.project
+.classpath
+
+# Compiled backend output + local DB credentials
+backend/WebContent/WEB-INF/classes/com/
+backend/WebContent/WEB-INF/classes/db.properties
+
+# Frontend (once scaffolded)
+node_modules/
+dist/
+.env
+.env.local
+
+# OS
+Thumbs.db
+.DS_Store

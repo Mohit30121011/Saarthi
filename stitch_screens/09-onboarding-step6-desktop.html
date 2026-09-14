@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - Onboarding Step 6 (Desktop)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1F6E43',
+            'primary-hover': '#195A37',
+            accent: '#F2A93B',
+            ink: '#10241A',
+            body: '#3C4A42',
+            muted: '#8A9A90',
+            bgbase: '#FBFBF6',
+            bordercol: '#E7ECE3',
+            cardbg: '#FFFFFF',
+            lightgreen: '#E8F2EC'
+          },
+          fontFamily: {
+            fraunces: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'General Sans', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #F4F7F2;
+      background-image: radial-gradient(#1F6E43 0.75px, transparent 0.75px);
+      background-size: 24px 24px;
+      color: #3C4A42;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .device-bezel {
+      box-shadow: 0 24px 60px -12px rgba(16, 36, 26, 0.22), 0 0 0 1px rgba(16, 36, 26, 0.08);
+    }
+    .custom-row-transition {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .custom-row-transition:hover {
+      background-color: #FAFBF9;
+      border-color: #D1DDD5;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between py-6 px-4 selection:bg-primary selection:text-white">
+
+  <!-- GOV.IN Civic Micro Bar -->
+  <header class="w-full max-w-6xl mx-auto flex items-center justify-between text-xs text-body mb-4 px-2">
+    <div class="flex items-center space-x-3">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-100/70 border border-emerald-300/60 text-primary font-semibold text-[11px] tracking-wide">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> GOV.IN
+      </span>
+      <span class="text-ink font-medium">सारथी • राष्ट्रीय नागरिक सेवा पोर्टल</span>
+      <span class="text-muted hidden sm:inline">|</span>
+      <span class="text-muted hidden sm:inline">Digital Public Infrastructure for Social Entitlements</span>
+    </div>
+    <div class="flex items-center space-x-5 text-muted text-xs">
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+        Toll-Free: <strong class="text-ink font-semibold">1800-SAARTHI</strong> (1800-722784)
+      </span>
+      <span class="text-ink font-semibold cursor-pointer hover:text-primary">EN / <span class="text-muted font-normal">हिन्दी</span></span>
+    </div>
+  </header>
+
+  <!-- Master Unified Bezel Frame (Centered Full-Width Architecture) -->
+  <main class="w-full max-w-[1100px] mx-auto overflow-hidden relative">
+    
+    <!-- Top Chrome Row inside bezel -->
+    <div class="px-8 pt-7 pb-4 border-bordercol/60 flex items-center justify-between">
+      <!-- Brand Lockup -->
+      <div class="flex items-center gap-3">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpkIARxbYIpuZIzG9y5xmt9R1cdmfr8HJ8KKKeX2gDgTOJ59EY_qP8EEWmw8c77iFB-cUyRruwNMY-pfMn1tizmXspaSEQImJyVxMjt6-oQmCDml8X1s55B7EMoYM9h7RjGUHQaWFDPgdesKyuRDnHhvVim3FsPR20fowY_dQyN0bWsnwb41gu2KsWbTkyFA1tMGGwEYfsIuei_0E6dxR5mngO57ci3DVVh6wHJ8vqws3x0VZhiNdJJ5Jk1r22eSC54R4" alt="Saarthi Logo" class="h-9 w-auto object-contain">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-fraunces font-bold text-ink text-xl tracking-tight">Saarthi</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-lightgreen text-primary border border-emerald-200">CIVIC</span>
+          </div>
+          <p class="text-[11px] text-muted font-medium tracking-wide uppercase">Civic Entitlements Portal</p>
+        </div>
+      </div>
+
+      <!-- Segmented Progress & Status -->
+      <div class="flex items-center gap-6">
+        <div class="flex flex-col items-end">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-primary">Step 6 of 6 — Review</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80">100% COMPLETED</span>
+          </div>
+          <!-- 6-pill progress bar: All 6 filled Primary green, 6th outlined in gold -->
+          <div class="flex items-center gap-1.5 w-48">
+            <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+            <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+            <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+            <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+            <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+            <!-- Segment 6: Primary green fill with Accent gold outline signifying active review milestone -->
+            <div class="h-1.5 flex-1 rounded-full bg-primary ring-2 ring-accent ring-offset-1"></div>
+          </div>
+        </div>
+
+        <div class="h-8 w-px bg-bordercol"></div>
+
+        <a href="#save-exit" class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-ink font-medium px-3 py-1.5 rounded-lg border border-bordercol hover:border-gray-300 transition">
+          <svg class="w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+          Save &amp; exit
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content Container: Centered 720px max-width -->
+    <div class="w-full max-w-[720px] mx-auto px-6 py-10">
+
+      <!-- Active Review State -->
+      <div id="review-content" class="transition-opacity duration-300">
+        
+        <!-- Decorative Claymorphic Icons Strip (Replacing Right Panel with 5 Symbolic Clay Artifacts) -->
+        <div class="flex flex-col items-center justify-center mb-5">
+          <div class="relative w-full max-w-[460px] h-20 flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-[#F9FAF7] to-white border border-bordercol/80 px-4 shadow-sm">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyioF7c-vdqyrhcVn3j8p6NPWZYDZtgAVd1DbgNKH-KmLfty-b40ikGV75aJKo4vf1ysEnlBkK89XgszM_5NGlcM9F61qZMv2tdo3uMLEgidX85VpQ4tX2yzpSOKVKn1nhvZZ9RZWmoOVKFh_HYH1OgyRDLwjhN7kK54SkBFYZV5emAdrBhbMvvy4ypgqILGLvqsZSa0LGXnJQZUEko9NZIFyKIJwOp05hslepAs7yE8Q2qZ7HLRFlaA" alt="Claymorphic 3D milestone props" class="h-16 object-contain filter drop-shadow-sm transform hover:scale-105 transition-transform duration-300">
+            <!-- Subtle badge overlay -->
+            <span class="absolute bottom-1.5 right-3 text-[10px] font-semibold text-primary/80 uppercase tracking-widest bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-md border border-emerald-100">
+              5 Milestones Collected
+            </span>
+          </div>
+        </div>
+
+        <!-- Headline & Conversational Subtext -->
+        <div class="text-center mb-8">
+          <h1 class="font-fraunces font-bold text-3xl sm:text-[34px] text-ink tracking-tight mb-2.5">
+            You're all set — let's check
+          </h1>
+          <p class="text-body text-[15px] max-w-lg mx-auto leading-relaxed">
+            Review your details below. You can edit anything before our matching engine calculates your eligible government schemes.
+          </p>
+        </div>
+
+        <!-- Summary Cards List (5 horizontal cards with 12px gaps) -->
+        <div class="space-y-3 mb-10" role="list" aria-label="Profile summary sections">
+          
+          <!-- Card 1: Basic Info -->
+          <div class="custom-row-transition bg-white border border-bordercol rounded-2xl p-4 sm:px-5 flex items-center justify-between shadow-sm group">
+            <div class="flex items-center gap-3.5">
+              <!-- Clay Style Themed Icon: Calendar / Age -->
+              <div class="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200/70 flex items-center justify-center text-accent shrink-0 shadow-inner">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                  <path d="M12 14l1.5 2 3-3" stroke-width="2.2"></path>
+                </svg>
+              </div>
+              <div>
+                <span class="block text-[11px] font-bold text-muted uppercase tracking-wider">Step 1 • Basic Info</span>
+                <span class="text-ink font-semibold text-[15px]">14 Aug 2001 (23 years) · Female</span>
+              </div>
+            </div>
+            <a href="#edit-step-1" aria-label="Edit Basic Info" class="text-sm font-semibold text-primary hover:text-primary-hover px-3 py-1.5 rounded-lg hover:bg-lightgreen transition flex items-center gap-1">
+              <span class="">Edit</span>
+              <svg class="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+          <!-- Card 2: Location -->
+          <div class="custom-row-transition bg-white border border-bordercol rounded-2xl p-4 sm:px-5 flex items-center justify-between shadow-sm group">
+            <div class="flex items-center gap-3.5">
+              <!-- Clay Style Themed Icon: Location Pin -->
+              <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200/70 flex items-center justify-center text-primary shrink-0 shadow-inner">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <div>
+                <span class="block text-[11px] font-bold text-muted uppercase tracking-wider">Step 2 • Location</span>
+                <span class="text-ink font-semibold text-[15px]">Pune, Maharashtra</span>
+              </div>
+            </div>
+            <a href="#edit-step-2" aria-label="Edit Location" class="text-sm font-semibold text-primary hover:text-primary-hover px-3 py-1.5 rounded-lg hover:bg-lightgreen transition flex items-center gap-1">
+              <span class="">Edit</span>
+              <svg class="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+          <!-- Card 3: Income & Occupation -->
+          <div class="custom-row-transition bg-white border border-bordercol rounded-2xl p-4 sm:px-5 flex items-center justify-between shadow-sm group">
+            <div class="flex items-center gap-3.5">
+              <!-- Clay Style Themed Icon: Rupee Currency -->
+              <div class="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200/70 flex items-center justify-center text-accent shrink-0 shadow-inner">
+                <span class="font-fraunces font-bold text-lg text-accent leading-none">₹</span>
+              </div>
+              <div>
+                <span class="block text-[11px] font-bold text-muted uppercase tracking-wider">Step 3 • Income &amp; Occupation</span>
+                <span class="text-ink font-semibold text-[15px]">₹3,50,000 / year · Self-Employed</span>
+              </div>
+            </div>
+            <a href="#edit-step-3" aria-label="Edit Income and Occupation" class="text-sm font-semibold text-primary hover:text-primary-hover px-3 py-1.5 rounded-lg hover:bg-lightgreen transition flex items-center gap-1">
+              <span class="">Edit</span>
+              <svg class="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+          <!-- Card 4: Category & Education -->
+          <div class="custom-row-transition bg-white border border-bordercol rounded-2xl p-4 sm:px-5 flex items-center justify-between shadow-sm group">
+            <div class="flex items-center gap-3.5">
+              <!-- Clay Style Themed Icon: Graduation Cap -->
+              <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200/70 flex items-center justify-center text-primary shrink-0 shadow-inner">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+              </div>
+              <div>
+                <span class="block text-[11px] font-bold text-muted uppercase tracking-wider">Step 4 • Category &amp; Education</span>
+                <span class="text-ink font-semibold text-[15px]">OBC (Non-Creamy) · Graduate</span>
+              </div>
+            </div>
+            <a href="#edit-step-4" aria-label="Edit Category and Education" class="text-sm font-semibold text-primary hover:text-primary-hover px-3 py-1.5 rounded-lg hover:bg-lightgreen transition flex items-center gap-1">
+              <span class="">Edit</span>
+              <svg class="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+          <!-- Card 5: Additional Details (Special Case: Optional Attributes Configured) -->
+          <div class="custom-row-transition bg-white border border-bordercol rounded-2xl p-4 sm:px-5 flex items-center justify-between shadow-sm group">
+            <div class="flex items-center gap-3.5">
+              <!-- Clay Style Themed Icon: Heart & Inclusion -->
+              <div class="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200/70 flex items-center justify-center text-accent shrink-0 shadow-inner">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </div>
+              <div>
+                <span class="block text-[11px] font-bold text-muted uppercase tracking-wider">Step 5 • Additional Criteria</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-ink font-semibold text-[15px]">Differently-Abled (Divyangjan)</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100/80 text-primary border border-emerald-200">
+                    Active Criteria
+                  </span>
+                </div>
+              </div>
+            </div>
+            <a href="#edit-step-5" aria-label="Edit Additional Criteria" class="text-sm font-semibold text-primary hover:text-primary-hover px-3 py-1.5 rounded-lg hover:bg-lightgreen transition flex items-center gap-1">
+              <span class="">Edit</span>
+              <svg class="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Real-time Preview Pill Box -->
+        <div class="mb-8 p-3.5 rounded-xl bg-lightgreen/70 border border-emerald-200/70 flex items-center justify-between text-xs text-primary">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="">Matching profile ready against <strong>5,400+ Central &amp; State Schemes</strong></span>
+          </div>
+          <span class="font-semibold underline cursor-pointer hover:text-primary-hover">Privacy Guarantee &amp; Privacy Terms</span>
+        </div>
+
+        <!-- Culminating Action: Large 56px Pill Button -->
+        <div class="flex flex-col items-center justify-center">
+          <button id="find-schemes-btn" onclick="startMatchingAnimation()" class="w-full sm:w-[380px] h-14 rounded-full bg-primary hover:bg-primary-hover text-white font-semibold text-base shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-primary/25 cursor-pointer">
+            <span id="btn-text" class="tracking-wide">Find my schemes</span>
+            <svg id="btn-icon" class="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <div id="btn-spinner" class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          </button>
+          
+          <p class="text-xs text-muted mt-3 font-medium flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            This takes just a moment. Your answers remain confidential under DBT norms.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Synchronous Matching Engine Transition Overlay (SRS FR3.1) -->
+      <div id="loading-state" class="hidden py-16 flex flex-col items-center justify-center text-center" aria-live="polite">
+        <!-- Pulsing Clay Badge Motif -->
+        <div class="relative mb-6">
+          <div class="w-24 h-24 rounded-full bg-lightgreen border-2 border-primary/20 flex items-center justify-center animate-pulse">
+            <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/30">
+              <svg class="w-8 h-8 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+              </svg>
+            </div>
+          </div>
+          <span class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold shadow">
+            ★
+          </span>
+        </div>
+
+        <h2 class="font-fraunces font-bold text-2xl sm:text-3xl text-ink mb-2">
+          Finding your schemes…
+        </h2>
+        <p class="text-sm text-body max-w-md mx-auto leading-relaxed">
+          Evaluating your profile against Central Ministries, Maharashtra State welfare registries, and Direct Benefit Transfer (DBT) grant catalogues.
+        </p>
+
+        <!-- Simulated Matching Progress Chips -->
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-2 max-w-md">
+          <span class="px-2.5 py-1 rounded-full text-xs bg-gray-100 text-ink/70 border border-gray-200">Checking Age Bracket... ✓</span>
+          <span class="px-2.5 py-1 rounded-full text-xs bg-gray-100 text-ink/70 border border-gray-200">District Pune Norms... ✓</span>
+          <span class="px-2.5 py-1 rounded-full text-xs bg-emerald-50 text-primary border border-emerald-200 animate-pulse">Scoring Divyangjan Grants...</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Accessibility & Navigation Helper Bar -->
+    <div class="px-8 py-3.5 border-t border-bordercol flex items-center justify-between text-xs text-muted">
+      <div class="flex items-center gap-4">
+        <a href="#step-5" class="inline-flex items-center gap-1 text-muted hover:text-ink font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          Back to Step 5 (Additional Details)
+        </a>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="">Citizen Support: 1800-722784</span>
+        <span class="">•</span>
+        <span class="text-primary font-medium">Data Encryption 256-bit AES</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Legal & Ministry Civic Footer -->
+  <footer class="w-full max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-muted mt-5 px-4 gap-2">
+    <div class="">
+      © 2025 Saarthi Civic Platform • Ministry of Electronics &amp; IT • Government of India
+    </div>
+    <div class="flex items-center space-x-5">
+      <a href="#privacy" class="hover:text-ink transition">Data Privacy &amp; Consent</a>
+      <span class="">•</span>
+      <a href="#charter" class="hover:text-ink transition">Citizen Charter</a>
+      <span class="">•</span>
+      <a href="#accessibility" class="hover:text-ink transition">Accessibility Statement</a>
+    </div>
+  </footer>
+
+  <script>
+    function startMatchingAnimation() {
+      const btn = document.getElementById('find-schemes-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnIcon = document.getElementById('btn-icon');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const reviewContent = document.getElementById('review-content');
+      const loadingState = document.getElementById('loading-state');
+
+      // Button inline loading state
+      btnText.textContent = 'Calculating eligibility...';
+      btnIcon.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
+      btn.disabled = true;
+      btn.classList.add('opacity-90', 'cursor-wait');
+
+      // Seamless transition to the Synchronous Engine screen
+      setTimeout(() => {
+        reviewContent.classList.add('opacity-0');
+        setTimeout(() => {
+          reviewContent.classList.add('hidden');
+          loadingState.classList.remove('hidden');
+        }, 200);
+      }, 700);
+    }
+  </script>
+
+
+
+
+
+</body></html>

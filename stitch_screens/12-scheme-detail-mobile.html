@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - Scheme Detail (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#1F6E43',
+              'green-hover': '#195A37',
+              'green-tint': '#F5FAF7',
+              'green-subtle': '#E8F2EC',
+              gold: '#F2A93B',
+              'gold-tint': '#FEF7EC',
+              ink: '#10241A',
+              body: '#3C4A42',
+              muted: '#8A9A90',
+              bg: '#FBFBF6',
+              border: '#E7ECE3'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FBFBF6;
+      color: #3C4A42;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-serif {
+      font-family: 'Fraunces', serif;
+    }
+    .tab-btn.active {
+      color: #10241A;
+      font-weight: 600;
+      border-bottom: 2.5px solid #1F6E43;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#FBFBF6] text-[#3C4A42] flex flex-col min-h-screen pb-20">
+
+  <!-- Mobile Top Gov Header -->
+  <div class="bg-[#10241A] text-white text-[11px] px-4 py-1 flex items-center justify-between">
+    <span class="flex items-center gap-1.5 font-medium">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+      GOV.IN · सारथी पोर्टल
+    </span>
+    <span class="text-white/70">Toll-Free: 1800-722784</span>
+  </div>
+
+  <!-- Collapsible Mobile Top App Bar (72px) -->
+  <header class="sticky top-0 z-30 bg-white border-b border-[#E7ECE3] px-4 h-16 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-3">
+      <a href="#" class="flex items-center gap-2">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjNbUzzsXNmULC25y_Kh3YHT1DHY0qrodouZjtxv0-DNlHXma-ywEaKYbSXGaNNo3GfV2qiqMq5L8vdRytSk9EN-MUcYa07-cD3PtM6ljK5ACAbYXFkmRz06x4WgcLvjgvU__YVzqU5psVNb53C4ATWoN9Gsn945syIT7wdMTiuUfq0ck6TLfzoXRTNATE8TDUv96I1BGIL-rWXC5UPlXBExs2ph0QHGRVWOrQWvD7Z4sJz8ZGvjJsQeTinrbqlQU_Tl8" alt="Saarthi Logo" class="h-8 w-auto">
+        <span class="text-[10px] font-bold text-[#1F6E43] bg-[#E8F2EC] px-1.5 py-0.5 rounded border border-[#1F6E43]/20">CIVIC</span>
+      </a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="p-1.5 text-[#3C4A42]" aria-label="Notifications">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      </button>
+      <div class="w-7 h-7 rounded-full bg-[#1F6E43] text-white flex items-center justify-center text-xs font-bold">
+        AK
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Scrollable Mobile Body -->
+  <main class="px-4 pt-4 space-y-4">
+    
+    <!-- Mobile Breadcrumb / Back -->
+    <a href="#" class="inline-flex items-center gap-1 text-xs text-[#1F6E43] font-medium">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Back to Explorer
+    </a>
+
+    <!-- Mobile Header Block (Stacked Vertically) -->
+    <section class="bg-white rounded-2xl border border-[#E7ECE3] p-4 space-y-3">
+      <!-- Badges Row -->
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#E8F2EC] text-[#1F6E43] text-[11px] font-semibold uppercase">
+          Education & Higher Studies
+        </span>
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#1F6E43] text-white text-[11px] font-semibold">
+          ✓ Strong Match
+        </span>
+      </div>
+
+      <!-- Title -->
+      <h1 class="font-serif text-xl font-bold text-[#10241A] leading-tight">
+        Post-Matric Scholarship for OBC Students
+      </h1>
+
+      <!-- Issuing Authority -->
+      <div class="text-xs text-[#8A9A90] space-y-0.5">
+        <p class="text-[#3C4A42] font-medium">Dept. of Social Justice & Special Assistance</p>
+        <p class="text-[#1F6E43]">Government of Maharashtra</p>
+      </div>
+
+      <!-- Action Buttons Row (Full Width Stack) -->
+      <div class="pt-3 border-t border-[#E7ECE3] flex items-center justify-between gap-2">
+        <button id="mobileBookmarkBtn" onclick="toggleMobileBookmark()" class="flex-1 py-2 rounded-full border border-[#1F6E43] text-[#1F6E43] font-medium text-xs flex items-center justify-center gap-1.5 bg-white">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          <span id="mobileBookmarkText">Save</span>
+        </button>
+
+        <div class="flex items-center gap-1 text-[11px] text-[#8A9A90]">
+          <svg class="w-3.5 h-3.5 text-[#1F6E43]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Verified 12 Aug 2026</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Plain Language Eligibility Banner (Mobile Prominence) -->
+    <section class="bg-[#F5FAF7] border-2 border-[#1F6E43]/30 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 rounded-full bg-[#1F6E43] text-white flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#1F6E43] block">Why You Qualify (FR5.1)</span>
+          <p class="font-serif text-sm font-semibold text-[#10241A] mt-0.5 leading-snug">
+            “You qualify because you are under 25, a student, and from Maharashtra.”
+          </p>
+          <span class="text-[11px] text-[#3C4A42] block mt-1">Matched against 5 verified profile rules</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mobile Scrollable Tabs Bar -->
+    <div class="bg-white rounded-2xl border border-[#E7ECE3] p-4">
+      <div class="flex space-x-6 overflow-x-auto no-scrollbar border-b border-[#E7ECE3] pb-2 text-xs font-medium text-[#8A9A90]">
+        <button id="m-tab-overview" onclick="switchMobileTab('overview')" class="tab-btn active shrink-0 pb-1 text-[#10241A]">Overview</button>
+        <button id="m-tab-eligibility" onclick="switchMobileTab('eligibility')" class="tab-btn shrink-0 pb-1">Eligibility (5/5)</button>
+        <button id="m-tab-documents" onclick="switchMobileTab('documents')" class="tab-btn shrink-0 pb-1">Documents (4)</button>
+        <button id="m-tab-apply" onclick="switchMobileTab('apply')" class="tab-btn shrink-0 pb-1">How to Apply</button>
+      </div>
+
+      <!-- Mobile Tab Content -->
+      <div class="pt-4 text-xs">
+        
+        <!-- Mobile Overview Panel -->
+        <div id="m-panel-overview" class="space-y-4">
+          <p class="text-[#3C4A42] leading-relaxed">
+            Full tuition waiver and monthly maintenance allowance for post-matriculation OBC students enrolled in recognized courses in Maharashtra colleges.
+          </p>
+
+          <div class="bg-[#FBFBF6] p-3 rounded-xl border border-[#E7ECE3] space-y-2">
+            <h4 class="font-bold text-[#10241A]">Key Entitlements</h4>
+            <div class="flex items-start gap-2">
+              <span class="text-[#1F6E43]">✓</span>
+              <span>100% Tuition & Exam Fee reimbursement</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[#1F6E43]">✓</span>
+              <span>Up to ₹1,200/month living stipend via Direct Benefit Transfer</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Eligibility Panel -->
+        <div id="m-panel-eligibility" class="hidden space-y-3">
+          <div class="p-2.5 rounded-lg bg-[#FBFBF6] border border-[#E7ECE3] flex items-center justify-between">
+            <span>Social Category: OBC</span>
+            <span class="text-[#1F6E43] font-bold">✓ Pass</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-[#FBFBF6] border border-[#E7ECE3] flex items-center justify-between">
+            <span>Domicile: Maharashtra</span>
+            <span class="text-[#1F6E43] font-bold">✓ Pass</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-[#FBFBF6] border border-[#E7ECE3] flex items-center justify-between">
+            <span>Annual Income: &le; ₹1.5 Lakh</span>
+            <span class="text-[#1F6E43] font-bold">✓ Pass</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-[#FBFBF6] border border-[#E7ECE3] flex items-center justify-between">
+            <span>Age: Under 30 years</span>
+            <span class="text-[#1F6E43] font-bold">✓ Pass</span>
+          </div>
+        </div>
+
+        <!-- Mobile Documents Panel -->
+        <div id="m-panel-documents" class="hidden space-y-3">
+          <button onclick="this.innerText='Added to Checklist ✓'" class="w-full py-2 rounded-full border border-[#1F6E43] text-[#1F6E43] text-xs font-semibold bg-[#F5FAF7]">
+            Add all to my checklist +
+          </button>
+          <ul class="space-y-2 pt-1 text-xs">
+            <li class="flex items-center justify-between p-2 rounded bg-[#FBFBF6] border border-[#E7ECE3]">
+              <span>1. Aadhaar Card (Linked)</span>
+              <span class="text-[10px] font-bold text-[#1F6E43]">Mandatory</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded bg-[#FBFBF6] border border-[#E7ECE3]">
+              <span>2. Maharashtra Domicile</span>
+              <span class="text-[10px] font-bold text-[#1F6E43]">Mandatory</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded bg-[#FBFBF6] border border-[#E7ECE3]">
+              <span>3. OBC Caste Certificate</span>
+              <span class="text-[10px] font-bold text-[#1F6E43]">Mandatory</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded bg-[#FBFBF6] border border-[#E7ECE3]">
+              <span>4. Income Certificate</span>
+              <span class="text-[10px] font-bold text-[#1F6E43]">Mandatory</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Mobile How to Apply Panel -->
+        <div id="m-panel-apply" class="hidden space-y-3">
+          <div class="space-y-2 text-xs">
+            <p><strong>1. Register:</strong> Login with Aadhaar on mahadbt.maharashtra.gov.in.</p>
+            <p><strong>2. Upload:</strong> Submit scanned caste and income certificates.</p>
+            <p><strong>3. Select:</strong> Choose Post-Matric Scholarship for OBC Students.</p>
+          </div>
+        </div>
+
+        <!-- Sticky Bottom CTA in Panel -->
+        <div class="pt-4 mt-4 border-t border-[#E7ECE3]">
+          <a href="https://mahadbt.maharashtra.gov.in" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-full bg-[#1F6E43] text-white font-semibold text-center text-xs flex items-center justify-center gap-1 shadow-md">
+            Apply on official portal ↗
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Related Schemes (Mobile Horizontal Scroll) -->
+    <section class="space-y-2 pt-2">
+      <h3 class="font-serif text-base font-semibold text-[#10241A]">Related Schemes</h3>
+      <div class="flex space-x-3 overflow-x-auto no-scrollbar pb-2">
+        
+        <!-- Card 1 -->
+        <div class="w-64 shrink-0 bg-white p-4 rounded-xl border border-[#E7ECE3] space-y-2">
+          <span class="text-[10px] font-bold text-[#1F6E43] bg-[#E8F2EC] px-2 py-0.5 rounded-full">Strong</span>
+          <h4 class="font-serif text-xs font-bold text-[#10241A] line-clamp-2">Rajarshi Chhatrapati Shahu Maharaj EBC Fee Reimbursement</h4>
+          <p class="text-[11px] text-[#1F6E43] font-bold">50% Tuition Off</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="w-64 shrink-0 bg-white p-4 rounded-xl border border-[#E7ECE3] space-y-2">
+          <span class="text-[10px] font-bold text-[#9A5B00] bg-[#FEF7EC] px-2 py-0.5 rounded-full">Partial</span>
+          <h4 class="font-serif text-xs font-bold text-[#10241A] line-clamp-2">Central Sector Scheme of Scholarship for College</h4>
+          <p class="text-[11px] text-[#1F6E43] font-bold">₹12,000 / yr</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Floating Assistant Bubble -->
+  <aside class="fixed bottom-16 right-4 z-40">
+    <button class="w-12 h-12 rounded-full bg-[#1F6E43] text-white shadow-lg flex items-center justify-center">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+    </button>
+  </aside>
+
+  <!-- Fixed Mobile Bottom Navigation Bar (5-Tabs) -->
+  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-[#E7ECE3] py-2 px-6 flex items-center justify-between text-[11px] text-[#8A9A90]">
+    <a href="#" class="flex flex-col items-center gap-0.5">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      <span>Dashboard</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-0.5 text-[#1F6E43] font-semibold">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <span>Explorer</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-0.5">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      <span>Checklist</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-0.5">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+      <span>Saved</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-0.5">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    function switchMobileTab(tab) {
+      const tabs = ['overview', 'eligibility', 'documents', 'apply'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`m-tab-${t}`);
+        const panel = document.getElementById(`m-panel-${t}`);
+        if (btn && panel) {
+          if (t === tab) {
+            btn.classList.add('active', 'text-[#10241A]');
+            panel.classList.remove('hidden');
+          } else {
+            btn.classList.remove('active', 'text-[#10241A]');
+            panel.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    let mBookmarked = false;
+    function toggleMobileBookmark() {
+      mBookmarked = !mBookmarked;
+      const text = document.getElementById('mobileBookmarkText');
+      const btn = document.getElementById('mobileBookmarkBtn');
+      if (mBookmarked) {
+        text.innerText = 'Saved';
+        btn.classList.add('bg-[#1F6E43]', 'text-white');
+      } else {
+        text.innerText = 'Save';
+        btn.classList.remove('bg-[#1F6E43]', 'text-white');
+      }
+    }
+  </script>
+</body>
+</html>

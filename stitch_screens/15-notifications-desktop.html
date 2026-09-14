@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - Notifications (Desktop)</title>
+  <!-- Google Fonts: Fraunces & Inter / General Sans fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#1F6E43',
+              primaryHover: '#195A37',
+              accent: '#F2A93B',
+              ink: '#10241A',
+              body: '#3C4A42',
+              muted: '#8A9A90',
+              bgBase: '#FBFBF6',
+              cardSurface: '#FFFFFF',
+              border: '#E7ECE3',
+              tint: '#F5FAF7',
+              tintActive: '#E8F5EE'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['General Sans', 'Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            'civic': '0 4px 20px rgba(31, 110, 67, 0.08)',
+            'dropdown': '0 12px 36px rgba(16, 36, 26, 0.14), 0 4px 12px rgba(31, 110, 67, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FBFBF6;
+      color: #3C4A42;
+      font-family: 'General Sans', 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-fraunces {
+      font-family: 'Fraunces', serif;
+    }
+    /* Notification dot animation */
+    @keyframes pulse-subtle {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.85; }
+    }
+    .unread-pulse {
+      animation: pulse-subtle 3s infinite ease-in-out;
+    }
+    /* Custom scrollbar for dropdown */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F1F4EE;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #CCD5C7;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative bg-[#FBFBF6] text-brand-body">
+
+  <!-- TOP CONTEXT STRIP (Gov.in Suite & Citizen Helpline) -->
+  <header class="w-full bg-[#10241A] text-[#C9D6CE] text-[12px] py-1.5 px-8 border-b border-[#1A382A]">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 font-medium text-[#E8F2EC]">
+          <span class="w-2 h-2 rounded-full bg-brand-primary inline-block"></span>
+          GOV.IN SUITE &bull; राष्ट्रीय नागरिक सेवा पोर्टल
+        </span>
+        <span class="text-[#5D7A6C]">|</span>
+        <span class="hidden sm:inline text-[#A4B8AC]">Digital Public Infrastructure for Welfare Entitlements</span>
+      </div>
+      <div class="flex items-center gap-4 text-[12px]">
+        <span class="flex items-center gap-1 text-[#E0EBE4]">
+          <svg class="w-3.5 h-3.5 text-brand-accent" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 4V3z"/>
+          </svg>
+          Toll-Free Helpline: 1800-SAARTHI (1800-722784)
+        </span>
+        <span class="text-[#5D7A6C]">|</span>
+        <div class="flex items-center gap-1.5 text-xs text-[#E8F2EC]">
+          <span class="font-medium underline cursor-pointer">English</span>
+          <span class="text-[#5D7A6C]">/</span>
+          <span class="hover:text-white cursor-pointer transition-colors">हिन्दी</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APP TOP NAVIGATION BAR (Fixed 72px) -->
+  <nav class="sticky top-0 z-40 w-full bg-white border-b border-brand-border h-[72px] shadow-civic transition-shadow">
+    <div class="max-w-7xl mx-auto h-full px-6 md:px-8 flex items-center justify-between">
+      
+      <!-- Left: Official Saarthi Logo Lockup -->
+      <div class="flex items-center gap-8">
+        <a href="#" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-brand-primary/40 rounded-lg p-1">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRimxIHg8OjSaM4nKGrbTO1ROFXSnDI5zk4rTFKJUYmwyisfSse6RhgOZ02ZFXKyiENVphqAZ5a6iF-l2E74EF-BOv4ygKaKXMh93HdUFgRYOQTjVclTkHEuwtvf6AMV0oJ3sLuXAaYAqJZ916Wghi84WCD5ZopuH3hseNU6lkvxnD7eR0VhBkwXlcLSYgO1Fv3hSPOVhgpDpepCoDFp9plAyg7bwMH1lZqbK-dsM1RYVxDFNUBdYH1EFMmZesrDDbTYM" alt="Saarthi Logo" class="h-9 w-auto object-contain transition-transform group-hover:scale-[1.02]">
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="font-fraunces text-xl font-bold tracking-tight text-brand-ink leading-none">Saarthi</span>
+              <span class="bg-[#E8F2EC] text-brand-primary text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full border border-brand-primary/20">Civic Platform</span>
+            </div>
+            <span class="text-[11px] text-brand-muted font-normal tracking-wide">Citizen Entitlement Engine</span>
+          </div>
+        </a>
+
+        <!-- Center-left: Primary Nav Links -->
+        <div class="hidden md:flex items-center gap-7 text-[14px] font-medium text-brand-body pt-0.5">
+          <a href="#" class="hover:text-brand-primary transition-colors py-1">Dashboard</a>
+          <a href="#" class="hover:text-brand-primary transition-colors py-1">Explorer</a>
+          <a href="#" class="hover:text-brand-primary transition-colors py-1">Checklist</a>
+          <a href="#" class="hover:text-brand-primary transition-colors py-1">Bookmarks</a>
+        </div>
+      </div>
+
+      <!-- Right: Search quick bar, Notifications Bell Trigger + Avatar -->
+      <div class="flex items-center gap-4">
+        <!-- Search bar -->
+        <div class="relative hidden lg:block w-64">
+          <input type="text" placeholder="Search schemes, grants…" class="w-full bg-[#FBFBF6] text-[13px] text-brand-ink placeholder:text-brand-muted pl-8 pr-3 py-1.5 rounded-xl border border-brand-border focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all">
+          <svg class="w-4 h-4 text-brand-muted absolute left-2.5 top-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+
+        <div class="h-6 w-[1px] bg-brand-border hidden sm:block"></div>
+
+        <!-- Notification Bell Icon (Interactive Trigger with Active Badge) -->
+        <div class="relative">
+          <button id="bellTrigger" aria-label="Notifications, 3 unread" aria-haspopup="true" aria-expanded="true" class="relative p-2 rounded-full hover:bg-brand-tint border border-brand-primary/30 bg-brand-tint text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <!-- Red dot indicator badge (3 unread) -->
+            <span class="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#C0473B] text-[10px] font-bold text-white ring-2 ring-white">
+              3
+            </span>
+          </button>
+
+          <!-- ========================================================= -->
+          <!-- SURFACE A: NOTIFICATION DROPDOWN (Anchored Component)     -->
+          <!-- 360px wide, 16px radius, soft tinted shadow, internal scroll -->
+          <!-- ========================================================= -->
+          <div id="notificationDropdown" role="dialog" aria-labelledby="dropdownTitle" class="absolute right-0 mt-3 w-[360px] bg-white rounded-2xl border border-brand-border shadow-dropdown z-50 overflow-hidden transform origin-top-right transition-all">
+            
+            <!-- Header Row -->
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-brand-border bg-[#FBFBF6]">
+              <div class="flex items-center gap-2">
+                <h3 id="dropdownTitle" class="font-sans font-semibold text-[15px] text-brand-ink">Notifications</h3>
+                <span class="bg-[#1F6E43]/10 text-brand-primary text-[11px] font-bold px-2 py-0.5 rounded-full">3 New</span>
+              </div>
+              <button onclick="markAllDropdownRead()" class="text-[13px] font-medium text-brand-primary hover:text-brand-primaryHover hover:underline focus:outline-none">
+                Mark all as read
+              </button>
+            </div>
+
+            <!-- Row List (Max height 360px scrollable) -->
+            <div class="max-h-[350px] overflow-y-auto custom-scroll divide-y divide-[#F1F4EE]" id="dropdownList">
+              
+              <!-- Row 1: Unread New Match -->
+              <div class="p-3.5 bg-brand-tint hover:bg-[#EAF3EE] transition-colors cursor-pointer group flex items-start gap-3 relative">
+                <div class="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0 unread-pulse"></div>
+                <!-- Icon badge for NEW_MATCH -->
+                <div class="w-8 h-8 rounded-full bg-[#E8F2EC] text-brand-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-1">
+                    <p class="text-[13.5px] font-medium text-brand-ink truncate group-hover:text-brand-primary transition-colors">New 100% Match: OBC Post-Matric</p>
+                    <span class="text-[11px] text-brand-muted whitespace-nowrap">18m ago</span>
+                  </div>
+                  <p class="text-[12.5px] text-brand-muted truncate mt-0.5">Higher Education Dept. opened FY26-27 DBT portal.</p>
+                </div>
+              </div>
+
+              <!-- Row 2: Unread Deadline Approaching -->
+              <div class="p-3.5 bg-brand-tint hover:bg-[#EAF3EE] transition-colors cursor-pointer group flex items-start gap-3 relative">
+                <div class="w-2 h-2 rounded-full bg-brand-accent mt-1.5 flex-shrink-0 unread-pulse"></div>
+                <!-- Icon badge for DEADLINE_APPROACHING -->
+                <div class="w-8 h-8 rounded-full bg-[#FFF4E5] text-[#D9822B] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-1">
+                    <p class="text-[13.5px] font-medium text-brand-ink truncate group-hover:text-brand-primary transition-colors">Deadline: PM-KISAN KYC in 5 Days</p>
+                    <span class="text-[11px] text-brand-muted whitespace-nowrap">2h ago</span>
+                  </div>
+                  <p class="text-[12.5px] text-brand-muted truncate mt-0.5">Mandatory biometric re-attestation before 31 Oct.</p>
+                </div>
+              </div>
+
+              <!-- Row 3: Unread Document Verification -->
+              <div class="p-3.5 bg-brand-tint hover:bg-[#EAF3EE] transition-colors cursor-pointer group flex items-start gap-3 relative">
+                <div class="w-2 h-2 rounded-full bg-brand-primary mt-1.5 flex-shrink-0"></div>
+                <div class="w-8 h-8 rounded-full bg-[#E8F2EC] text-brand-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-1">
+                    <p class="text-[13.5px] font-medium text-brand-ink truncate group-hover:text-brand-primary transition-colors">DigiLocker Synced 6 Documents</p>
+                    <span class="text-[11px] text-brand-muted whitespace-nowrap">5h ago</span>
+                  </div>
+                  <p class="text-[12.5px] text-brand-muted truncate mt-0.5">Caste & Domicile certificates verified for MahaDBT.</p>
+                </div>
+              </div>
+
+              <!-- Row 4: Read Scheme Change -->
+              <div class="p-3.5 bg-white hover:bg-[#FBFBF6] transition-colors cursor-pointer group flex items-start gap-3 relative">
+                <div class="w-2 h-2 rounded-full opacity-0 mt-1.5 flex-shrink-0"></div>
+                <div class="w-8 h-8 rounded-full bg-[#F1F4EE] text-brand-body flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-1">
+                    <p class="text-[13.5px] font-normal text-brand-body truncate group-hover:text-brand-primary transition-colors">Income Threshold Updated</p>
+                    <span class="text-[11px] text-brand-muted whitespace-nowrap">1d ago</span>
+                  </div>
+                  <p class="text-[12.5px] text-brand-muted truncate mt-0.5">Central Sector Scheme ceiling adjusted to ₹2.5L/yr.</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Footer: Link to Full Notifications Page -->
+            <div class="p-3 text-center border-t border-brand-border bg-[#FAFAF6]">
+              <a href="#fullPageSection" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand-primary hover:text-brand-primaryHover transition-colors">
+                View all notifications
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Citizen Profile Avatar -->
+        <div class="flex items-center gap-2 pl-2 cursor-pointer group">
+          <div class="w-9 h-9 rounded-full bg-[#10241A] text-white flex items-center justify-center font-bold text-xs tracking-wider ring-2 ring-brand-primary/20 group-hover:ring-brand-primary/50 transition-all">
+            AK
+          </div>
+          <div class="hidden xl:flex flex-col text-left leading-tight">
+            <span class="text-xs font-semibold text-brand-ink flex items-center gap-1">
+              Ananya K.
+              <svg class="w-3 h-3 text-brand-primary" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+            </span>
+            <span class="text-[10px] text-brand-muted">Pune, MH &bull; Verified</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- SURFACE B — FULL NOTIFICATIONS PAGE (`/notifications`)                    -->
+  <!-- Centered container max-w-720px, 40px top padding                          -->
+  <!-- ========================================================================= -->
+  <main id="fullPageSection" class="flex-1 w-full max-w-[760px] mx-auto px-4 sm:px-6 pt-10 pb-20">
+    
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-[13px] text-brand-muted mb-4" aria-label="Breadcrumb">
+      <a href="#" class="hover:text-brand-primary transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-brand-ink font-medium">Notifications</span>
+    </nav>
+
+    <!-- Page Header (Fraunces Bold 30px + Mark All As Read Button) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-brand-border">
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="font-fraunces text-3xl font-bold text-brand-ink tracking-tight">Notifications</h1>
+          <span class="bg-[#E8F2EC] text-brand-primary text-xs font-semibold px-2.5 py-0.5 rounded-full border border-brand-primary/20">
+            3 Unread
+          </span>
+        </div>
+        <p class="text-[14px] text-brand-body mt-1">
+          Real-time welfare scheme alerts, application deadlines, and certificate validation updates.
+        </p>
+      </div>
+
+      <!-- Mark all as read button (Outlined pill, Primary green) -->
+      <button onclick="markAllNotificationsPageRead()" class="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand-primary text-brand-primary text-[13px] font-medium hover:bg-brand-primary hover:text-white transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/30 active:scale-95">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span>Mark all as read</span>
+      </button>
+    </div>
+
+    <!-- Filter Tabs: Underline style "All" and "Unread" (SRS Section 0 & 3) -->
+    <div class="flex items-center gap-8 border-b border-brand-border mt-4 mb-6">
+      <button id="tabAll" onclick="filterTab('all')" class="relative pb-3 text-[14px] font-medium text-brand-primary border-b-2 border-brand-primary transition-colors flex items-center gap-2">
+        <span>All Notifications</span>
+        <span class="bg-[#E8F2EC] text-brand-primary text-[11px] font-bold px-1.5 py-0.2 rounded-full">7</span>
+      </button>
+      <button id="tabUnread" onclick="filterTab('unread')" class="relative pb-3 text-[14px] font-medium text-brand-muted hover:text-brand-ink border-b-2 border-transparent transition-colors flex items-center gap-2">
+        <span>Unread Only</span>
+        <span class="bg-[#C0473B]/10 text-[#C0473B] text-[11px] font-bold px-1.5 py-0.2 rounded-full">3</span>
+      </button>
+    </div>
+
+    <!-- Grouped Notification Stream -->
+    <div class="space-y-8" id="notificationStream">
+
+      <!-- ================= GROUP 1: TODAY ================= -->
+      <section aria-labelledby="group-today">
+        <div class="flex items-center justify-between mb-3">
+          <h2 id="group-today" class="text-[12px] font-semibold uppercase tracking-wider text-brand-muted font-sans">
+            Today
+          </h2>
+          <span class="text-[11px] text-brand-muted">2 new alerts</span>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- ITEM 1: NEW_MATCH (Unread) -->
+          <article class="notification-item unread p-4 sm:p-5 rounded-2xl bg-brand-tint border border-brand-border hover:border-brand-primary/40 hover:shadow-sm transition-all relative flex flex-col sm:flex-row items-start justify-between gap-4">
+            <div class="flex items-start gap-3.5">
+              <!-- Unread indicator dot -->
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-primary mt-1.5 flex-shrink-0 unread-pulse" title="Unread notification"></span>
+              
+              <!-- Star icon badge for NEW_MATCH -->
+              <div class="w-10 h-10 rounded-full bg-[#E8F2EC] text-brand-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              </div>
+
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-brand-primary bg-[#E8F2EC] px-2 py-0.5 rounded-full">
+                    New 100% Match
+                  </span>
+                  <span class="text-[12px] text-brand-muted">&bull; 18 minutes ago</span>
+                </div>
+                <h3 class="font-fraunces font-semibold text-[17px] text-brand-ink mt-1">
+                  Post-Matric Scholarship for Other Backward Class (OBC) Students
+                </h3>
+                <p class="text-[14px] text-brand-body leading-relaxed mt-1">
+                  Department of Social Justice, Maharashtra has initiated FY26-27 disbursements. Your verified profile matches all 5 eligibility rules.
+                </p>
+                <div class="mt-3 flex items-center gap-4">
+                  <a href="#" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand-primary hover:text-brand-primaryHover hover:underline">
+                    View scheme details
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                  </a>
+                  <button onclick="toggleSingleRead(this)" class="text-[12px] text-brand-muted hover:text-brand-ink transition-colors">
+                    Mark as read
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ITEM 2: DEADLINE_APPROACHING (Unread) -->
+          <article class="notification-item unread p-4 sm:p-5 rounded-2xl bg-brand-tint border border-brand-border hover:border-brand-primary/40 hover:shadow-sm transition-all relative flex flex-col sm:flex-row items-start justify-between gap-4">
+            <div class="flex items-start gap-3.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-accent mt-1.5 flex-shrink-0 unread-pulse" title="Unread deadline"></span>
+              
+              <!-- Clock icon badge for DEADLINE_APPROACHING -->
+              <div class="w-10 h-10 rounded-full bg-[#FFF4E5] text-[#D9822B] flex items-center justify-center flex-shrink-0 shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[#9C5811] bg-[#FFECCC] px-2 py-0.5 rounded-full border border-brand-accent/30">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                    5 Days Left &bull; Intake Closes 31 Oct
+                  </span>
+                  <span class="text-[12px] text-brand-muted">&bull; 2 hours ago</span>
+                </div>
+                <h3 class="font-fraunces font-semibold text-[17px] text-brand-ink mt-1">
+                  PM-KISAN Samman Nidhi — Mandatory Biometric eKYC
+                </h3>
+                <p class="text-[14px] text-brand-body leading-relaxed mt-1">
+                  Installment #17 requires active OTP Aadhaar verification or CSC biometric authentication to avoid disbursement holds.
+                </p>
+                <div class="mt-3 flex items-center gap-4">
+                  <a href="#" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand-primary hover:text-brand-primaryHover hover:underline">
+                    Complete eKYC verification →
+                  </a>
+                  <button onclick="toggleSingleRead(this)" class="text-[12px] text-brand-muted hover:text-brand-ink transition-colors">
+                    Mark as read
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ================= GROUP 2: YESTERDAY ================= -->
+      <section aria-labelledby="group-yesterday">
+        <div class="flex items-center justify-between mb-3">
+          <h2 id="group-yesterday" class="text-[12px] font-semibold uppercase tracking-wider text-brand-muted font-sans">
+            Yesterday
+          </h2>
+          <span class="text-[11px] text-brand-muted">1 unread, 1 read</span>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- ITEM 3: DOCUMENT_SYNC (Unread) -->
+          <article class="notification-item unread p-4 sm:p-5 rounded-2xl bg-brand-tint border border-brand-border hover:border-brand-primary/40 hover:shadow-sm transition-all relative flex flex-col sm:flex-row items-start justify-between gap-4">
+            <div class="flex items-start gap-3.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-primary mt-1.5 flex-shrink-0" title="Unread notification"></span>
+              <div class="w-10 h-10 rounded-full bg-[#E8F2EC] text-brand-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-brand-primary bg-[#E8F2EC] px-2 py-0.5 rounded-full">
+                    Document Sync
+                  </span>
+                  <span class="text-[12px] text-brand-muted">&bull; Yesterday at 4:20 PM</span>
+                </div>
+                <h3 class="font-fraunces font-semibold text-[17px] text-brand-ink mt-1">
+                  DigiLocker Synced: Maharashtra Domicile & Caste Validity
+                </h3>
+                <p class="text-[14px] text-brand-body leading-relaxed mt-1">
+                  6 certificates were securely ingested into your Saarthi Locker. 3 previously pending checklist items are now verified.
+                </p>
+                <div class="mt-3 flex items-center gap-4">
+                  <a href="#" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand-primary hover:text-brand-primaryHover hover:underline">
+                    Inspect Checklist (8/15 Ready) →
+                  </a>
+                  <button onclick="toggleSingleRead(this)" class="text-[12px] text-brand-muted hover:text-brand-ink transition-colors">
+                    Mark as read
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ITEM 4: SCHEME_UPDATE (Read) -->
+          <article class="notification-item read p-4 sm:p-5 rounded-2xl bg-white border border-brand-border hover:border-brand-primary/30 transition-all relative flex flex-col sm:flex-row items-start justify-between gap-4 opacity-90">
+            <div class="flex items-start gap-3.5">
+              <span class="w-2.5 h-2.5 rounded-full opacity-0 mt-1.5 flex-shrink-0"></span>
+              <div class="w-10 h-10 rounded-full bg-[#F1F4EE] text-brand-body flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-medium uppercase tracking-wider text-brand-muted bg-[#F1F4EE] px-2 py-0.5 rounded-full">
+                    Policy Revision
+                  </span>
+                  <span class="text-[12px] text-brand-muted">&bull; Yesterday at 10:15 AM</span>
+                </div>
+                <h3 class="font-fraunces font-semibold text-[17px] text-brand-ink mt-1">
+                  Central Sector Scheme of Scholarship — Income Ceiling Revised
+                </h3>
+                <p class="text-[14px] text-brand-body leading-relaxed mt-1">
+                  Ministry of Education elevated the annual household income limit to ₹2,50,000 for upcoming degree admissions.
+                </p>
+                <div class="mt-3 flex items-center gap-4">
+                  <a href="#" class="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-body hover:text-brand-primary underline">
+                    Review modified guidelines
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ================= GROUP 3: EARLIER THIS WEEK ================= -->
+      <section aria-labelledby="group-earlier">
+        <div class="flex items-center justify-between mb-3">
+          <h2 id="group-earlier" class="text-[12px] font-semibold uppercase tracking-wider text-brand-muted font-sans">
+            Earlier This Week
+          </h2>
+          <span class="text-[11px] text-brand-muted">2 read</span>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- ITEM 5: MATCH_STATUS_CHANGED (Read) -->
+          <article class="notification-item read p-4 sm:p-5 rounded-2xl bg-white border border-brand-border hover:border-brand-primary/30 transition-all relative flex flex-col sm:flex-row items-start justify-between gap-4 opacity-90">
+            <div class="flex items-start gap-3.5">
+              <span class="w-2.5 h-2.5 rounded-full opacity-0 mt-1.5 flex-shrink-0"></span>
+              <div class="w-10 h-10 rounded-full bg-[#FFF4E5] text-[#D9822B] flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-medium uppercase tracking-wider text-[#9C5811] bg-[#FFF4E5] px-2 py-0.5 rounded-full">
+                    Match Recalibrated
+                  </span>
+                  <span class="text-[12px] text-brand-muted">&bull; 4 days ago</span>
+                </div>
+                <h3 class="font-fraunces font-semibold text-[17px] text-brand-ink mt-1">
+                  Ayushman Bharat (PM-JAY) &bull; Domicile Cross-Check Verified
+                </h3>
+                <p class="text-[14px] text-brand-body leading-relaxed mt-1">
+                  Health Assurance Society confirmed eligible golden-card issuance status for your family ration registry.
+                </p>
+                <div class="mt-3 flex items-center gap-4">
+                  <a href="#" class="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-body hover:text-brand-primary underline">
+                    View Health Cover Details →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ITEM 6: RE-VERIFICATION NOTICE (Read) -->
+          <article class="notification-item read p-4 sm:p-5 rounded-2xl bg-white border border-brand-border hover:border-brand-primary/30 transition-all relative flex flex-col sm:flex-row items-start justify-between gap-4 opacity-90">
+            <div class="flex items-start gap-3.5">
+              <span class="w-2.5 h-2.5 rounded-full opacity-0 mt-1.5 flex-shrink-0"></span>
+              <div class="w-10 h-10 rounded-full bg-[#F1F4EE] text-brand-body flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-medium uppercase tracking-wider text-brand-muted bg-[#F1F4EE] px-2 py-0.5 rounded-full">
+                    Calendar Reminder
+                  </span>
+                  <span class="text-[12px] text-brand-muted">&bull; 5 days ago</span>
+                </div>
+                <h3 class="font-fraunces font-semibold text-[17px] text-brand-ink mt-1">
+                  Rajarshi Chhatrapati Shahu Maharaj Fee Reimbursement
+                </h3>
+                <p class="text-[14px] text-brand-body leading-relaxed mt-1">
+                  Upcoming semester college fee receipt upload portal opens next Monday for 50% tuition waiver grants.
+                </p>
+                <div class="mt-3 flex items-center gap-4">
+                  <a href="#" class="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-body hover:text-brand-primary underline">
+                    Add Reminder to Checklist →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ================= EMPTY STATE SPECIFICATION CONTAINER ================= -->
+      <!-- Clean claymorphic all-caught-up illustration panel (revealed when empty) -->
+      <div id="allCaughtUpIllustration" class="p-8 bg-white rounded-3xl border border-brand-border shadow-sm text-center my-8">
+        <div class="max-w-[220px] mx-auto mb-4 overflow-hidden rounded-2xl">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE_6SOth16yRwbAXTvOlE9qb69ATGYpilfxlAaZDrIvCDSd7nfONeGg6fAeZF_B4D-XZYAN49OQ86gnwUM21PJWBpNktTsScrA3U5LqTZ_z60g0Vf6YU_NPeWeWEIoytCPY5bq2qiT7NfiI8Ft6fKy1a1nhxVmd2jbgWBKmJLmnlJWxmGstw-mhgv52dWaKTVcyBdlRCXjrSYATsbABQA3rvEvww9rQ0oTukq4tMJKagvYisbqQCo3lg" alt="All caught up illustration" class="w-full h-auto object-cover">
+        </div>
+        <h3 class="font-fraunces text-2xl font-bold text-brand-ink">You're All Caught Up!</h3>
+        <p class="text-[14px] text-brand-muted max-w-md mx-auto mt-1 leading-relaxed">
+          We'll automatically alert you when new schemes match your verified profile or critical application deadlines approach.
+        </p>
+        <div class="mt-5 flex items-center justify-center gap-3">
+          <a href="#" class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-brand-primary text-white text-[13px] font-medium hover:bg-brand-primaryHover transition-all shadow-sm">
+            <span>Explore All 1,842 Schemes</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER (Consistent with Saarthi Civic Suite) -->
+  <footer class="w-full bg-[#10241A] text-[#A4B8AC] text-[13px] py-10 px-8 mt-auto border-t border-[#1C3B2C]">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnCBQiUI9yS2p7YCafI7eDd8gAbujniliMZHE02UVcHuDdJ9elvCIm5GdK0O5zOl3Y2_ZaERPeizDarOCGN8t525f9DEP-q-MQ7tbiDcxUJITJ5HFuzZfCykrePl7R7U-XRtcw9Q27smjQwy_t9ruIPdKA-B70plsZAQxhd3lfG3ZbHCxxkz_NdmwLNic55vwBmg_PzrY2Pru441hiuX2_n5n4OkXCp-g3Edi4Flh2LDLn_G_CBgWc5NV1cSeRSGch7nE" alt="Saarthi Emblem" class="h-8 w-auto object-contain brightness-110">
+        <div>
+          <span class="font-fraunces text-white font-bold text-lg tracking-tight">Saarthi</span>
+          <p class="text-[12px] text-[#7E9688]">National Public Welfare Scheme Discovery Platform &bull; NIC & MeitY</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-6 text-[12px]">
+        <a href="#" class="hover:text-white transition-colors">Privacy Statement</a>
+        <a href="#" class="hover:text-white transition-colors">Terms of Entitlement</a>
+        <a href="#" class="hover:text-white transition-colors">Direct Benefit Transfer (DBT)</a>
+        <a href="#" class="hover:text-white transition-colors">WCAG 2.1 AA Compliant</a>
+      </div>
+      <div class="text-[12px] text-[#7E9688]">
+        &copy; 2026 Government of India &bull; UIDAI & NIC Certified
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING CHAT ASSISTANT WIDGET (Module 8 integration) -->
+  <div class="fixed bottom-6 right-6 z-30">
+    <button class="w-14 h-14 rounded-full bg-brand-primary text-white flex items-center justify-center shadow-dropdown hover:scale-105 hover:bg-brand-primaryHover transition-all focus:outline-none focus:ring-4 focus:ring-brand-primary/30" title="Ask Saarthi Assistant">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- INTERACTIVITY SCRIPT -->
+  <script>
+    // Toggle dropdown open / close
+    const bellBtn = document.getElementById('bellTrigger');
+    const dropdown = document.getElementById('notificationDropdown');
+    
+    bellBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target) && !bellBtn.contains(e.target)) {
+        // Keep visible for demonstration purposes on canvas, or uncomment to enable outside click dismiss:
+        // dropdown.classList.add('hidden');
+      }
+    });
+
+    // Mark single notification read
+    function toggleSingleRead(btn) {
+      const article = btn.closest('.notification-item');
+      if (article) {
+        article.classList.remove('unread', 'bg-brand-tint');
+        article.classList.add('read', 'bg-white');
+        const dot = article.querySelector('.unread-pulse');
+        if (dot) dot.classList.add('opacity-0');
+        btn.textContent = 'Read ✓';
+        btn.classList.add('text-brand-primary');
+      }
+    }
+
+    // Mark all dropdown items read
+    function markAllDropdownRead() {
+      const unreadRows = document.querySelectorAll('#dropdownList .bg-brand-tint');
+      unreadRows.forEach(row => {
+        row.classList.remove('bg-brand-tint');
+        row.classList.add('bg-white');
+        const dot = row.querySelector('.unread-pulse');
+        if (dot) dot.classList.add('opacity-0');
+      });
+      const badge = document.querySelector('#dropdownTitle + span');
+      if (badge) badge.textContent = '0 New';
+      const bellDot = document.querySelector('#bellTrigger span');
+      if (bellDot) bellDot.classList.add('hidden');
+    }
+
+    // Mark all notifications page read with staggered animation
+    function markAllNotificationsPageRead() {
+      const unreadItems = document.querySelectorAll('.notification-item.unread');
+      unreadItems.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.remove('unread', 'bg-brand-tint');
+          item.classList.add('read', 'bg-white');
+          const dot = item.querySelector('.unread-pulse');
+          if (dot) dot.classList.add('opacity-0');
+        }, index * 120);
+      });
+      const bellDot = document.querySelector('#bellTrigger span');
+      if (bellDot) bellDot.classList.add('hidden');
+      const headerBadge = document.querySelector('h1 + span');
+      if (headerBadge) {
+        headerBadge.textContent = 'All Read';
+        headerBadge.className = 'bg-[#F1F4EE] text-brand-muted text-xs font-medium px-2.5 py-0.5 rounded-full';
+      }
+    }
+
+    // Tab Filtering
+    function filterTab(type) {
+      const tabAll = document.getElementById('tabAll');
+      const tabUnread = document.getElementById('tabUnread');
+      const items = document.querySelectorAll('.notification-item');
+
+      if (type === 'all') {
+        tabAll.className = 'relative pb-3 text-[14px] font-medium text-brand-primary border-b-2 border-brand-primary transition-colors flex items-center gap-2';
+        tabUnread.className = 'relative pb-3 text-[14px] font-medium text-brand-muted hover:text-brand-ink border-b-2 border-transparent transition-colors flex items-center gap-2';
+        items.forEach(el => el.classList.remove('hidden'));
+      } else {
+        tabUnread.className = 'relative pb-3 text-[14px] font-medium text-brand-primary border-b-2 border-brand-primary transition-colors flex items-center gap-2';
+        tabAll.className = 'relative pb-3 text-[14px] font-medium text-brand-muted hover:text-brand-ink border-b-2 border-transparent transition-colors flex items-center gap-2';
+        items.forEach(el => {
+          if (el.classList.contains('read')) {
+            el.classList.add('hidden');
+          } else {
+            el.classList.remove('hidden');
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

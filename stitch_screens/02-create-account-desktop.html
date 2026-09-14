@@ -1,0 +1,303 @@
+<!DOCTYPE html><html class="h-full bg-[#FBFBF6]" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Saarthi - Create Account</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Fraunces & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#1F6E43',
+              hover: '#195A37',
+              gold: '#F2A93B',
+              ink: '#10241A',
+              body: '#3C4A42',
+              muted: '#8A9A90',
+              cream: '#FBFBF6',
+              surface: '#FFFFFF',
+              border: '#E7ECE3',
+              brick: '#C0473B'
+            }
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+          },
+          boxShadow: {
+            'brand-green': '0 16px 40px rgba(31, 110, 67, 0.12)',
+            'brand-subtle': '0 8px 24px rgba(16, 36, 26, 0.08)',
+            'device-glow': '0 25px 60px -15px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Layout & Component Styles -->
+<style data-purpose="layout-and-surfaces">
+    /* Subtle radial green ambient spotlight on visual hero column */
+    .bg-civic-gradient {
+      background: radial-gradient(circle at 45% 45%, #24814f 0%, #175433 55%, #0d1e15 100%);
+    }
+    
+    /* Device frame customized bezel */
+    .tablet-bezel {
+      border: 12px solid #10241A;
+      box-shadow: 0 24px 48px -12px rgba(10, 26, 18, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+  </style>
+<style data-purpose="typography-adjustments">
+    .font-fraunces {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: 'opsz' 36, 'wght' 700;
+    }
+    .font-fraunces-sub {
+      font-family: 'Fraunces', Georgia, serif;
+      font-variation-settings: 'opsz' 24, 'wght' 600;
+    }
+  </style>
+</head>
+<body class="h-full font-sans antialiased text-brand-body bg-[#FBFBF6] flex items-center justify-center min-h-screen p-0 sm:p-4 lg:p-8">
+<!-- BEGIN: ApplicationCanvas -->
+<main class="w-full max-w-[1440px] min-h-[960px] rounded-none sm:rounded-[36px] overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+<!-- BEGIN: LeftHeroPanel (Showcase & Civic Trust) -->
+<section class="relative hidden lg:flex flex-col justify-between bg-civic-gradient p-10 xl:p-14 overflow-hidden text-white select-none rounded-[32px]" data-purpose="brand-showcase-panel">
+<!-- Ambient background glow accents -->
+<div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#2da364]/20 blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-brand-gold/15 blur-3xl pointer-events-none"></div>
+<!-- Top Civic Trust Header Badge -->
+<header class="relative z-10 flex items-center justify-between">
+<div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-brand-ink/40 backdrop-blur-md border border-white/10 text-xs font-medium text-[#FBFBF6] tracking-wide">
+<span class="inline-block w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
+<span class="">🇮🇳 Direct Citizen Discovery • Free &amp; Verified</span>
+</div>
+<div class="inline-flex items-center gap-1.5 text-xs text-[#FBFBF6]/80 bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+<span class="">Official 2025 Registry</span>
+</div>
+</header>
+<!-- Centerpiece: Device Frame with Hero Claymorphic Render -->
+<div class="relative z-10 my-auto py-6 flex flex-col items-center justify-center">
+<!-- Device Frame Mockup Container -->
+<div class="relative w-full max-w-[530px] rounded-[32px] tablet-bezel bg-brand-ink overflow-hidden shadow-device-glow">
+<!-- Inner screen pill badge: Direct Benefit Transfer Ready -->
+<div class="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-brand-ink/80 backdrop-blur-md border border-white/15 px-3 py-1 rounded-full shadow-sm">
+<span class="text-brand-gold font-bold text-xs">₹</span>
+<span class="text-[11px] font-medium text-[#FBFBF6] tracking-wide">Direct Benefit Transfer Ready</span>
+</div>
+<!-- Hero Image -->
+<div class="relative aspect-[4/3] w-full overflow-hidden bg-[#10241A]">
+<img alt="Young Indian citizen checking schemes on mobile phone with clay rupee coins and verified badge" class="w-full h-full object-cover object-center transform scale-[1.02] hover:scale-105 transition-transform duration-700 ease-out" loading="eager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkthtG8Y0JOqR6Z2xOLubRATPCqmRVp88saqAzSWYnh6yBcuhK0K5Y-7GFWM02B50eek91oFCr29R6RjFO25f_mUWV_TXg_xY4AKqv1nwICfCdlVy6UMDQlWMSh7-iXDE_XuhOqoZ34mU5Lgn_sAaGtyYOeB0WAM5W_lAWS8BM12zkgVhJrxoJNUAYVtKQQg1wjr-9RewhwUcO3DXTTQYIxCQfK4VUMdmI2ZxtH8LWBSYOdhOi8TdHEw">
+</div>
+</div>
+<!-- Floating Asymmetric Value Callout Card -->
+<div class="absolute -bottom-2 right-2 xl:right-6 z-30 max-w-[320px] bg-white text-brand-ink p-4 rounded-2xl shadow-brand-green border border-brand-border flex items-start gap-3 transition-transform hover:-translate-y-1 duration-200">
+<div class="w-10 h-10 rounded-xl bg-amber-50 border border-brand-gold/30 flex items-center justify-center shrink-0 text-lg">
+            ✨
+          </div>
+<div>
+<div class="text-[13px] font-bold text-brand-ink leading-snug">
+              ₹28,400+ Avg. Entitlement
+            </div>
+<p class="text-[12px] text-brand-body leading-tight mt-0.5">
+              Identified per verified household across Central &amp; State schemes.
+            </p>
+</div>
+</div>
+</div>
+<!-- Bottom Civic Verification Footer Tag -->
+<footer class="relative z-10 flex items-center justify-between text-xs text-[#FBFBF6]/75 border-t border-white/10 pt-5 mt-2">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="">Aadhaar, PAN &amp; Ration Card Compatible</span>
+</div>
+<span class="text-[11px] text-[#FBFBF6]/60">Government Scheme Registry 2025</span>
+</footer>
+</section>
+<!-- END: LeftHeroPanel -->
+<!-- BEGIN: RightFormPanel (Create Account) -->
+<section class="flex flex-col justify-between p-8 sm:p-12 lg:p-14 xl:px-20 bg-white overflow-y-auto" data-purpose="registration-form-panel">
+<!-- Top Brand Lockup & Civic Status Badge -->
+<div class="flex items-center justify-between mb-8">
+<!-- Logo Brand Lockup -->
+<a class="group flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-brand-green/30 rounded-lg p-0.5" href="/">
+<img alt="Saarthi Brand Emblem" class="h-10 w-auto object-contain transition-transform group-hover:scale-105 duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpBW1zo66097Ke6LmDH6Yv7_Dq0Dr05ZPu3Z8J653BQXl_gskfetDTcx1xoPOadBT-uIEJ40Hmt1YA0dkPHmjBqpUmGMPv27f0-xlP4yPmc7Bs22b48smAyN-dHsDO709wflnLbseLM5V0zwVck82tfZ8TxKEKpShJ8Q-8zQfmJoDi0mloxuZN_qbBuedyR0Zq4r3rmJn91S8oi0IRbgGeqOgDRgdxgdzE8eagVibELWL5iu7V8egFb0D1B4sqVnV5uFY">
+<div class="flex flex-col">
+<span class="font-serif text-2xl font-bold tracking-tight text-brand-ink leading-none">Saarthi</span>
+<span class="text-[10px] uppercase font-semibold tracking-wider text-brand-green">सारथी पोर्टल</span>
+</div>
+</a>
+<!-- Regional Registration Indicator Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50/80 border border-brand-gold/40 text-[11px] font-medium text-amber-900 shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-gold"></span>
+<span class="">नागरिक पंजीकरण</span>
+</div>
+</div>
+<!-- Main Heading & Onboarding Context -->
+<div class="max-w-md w-full mx-auto lg:mx-0 mb-6">
+<h1 class="font-fraunces text-3xl sm:text-[34px] xl:text-4xl text-brand-ink leading-[1.18] tracking-tight mb-2">
+          Find every scheme you qualify for
+        </h1>
+<p class="text-base text-brand-body leading-relaxed">
+          Create your account — it takes less than a minute.
+        </p>
+</div>
+<!-- Registration Form -->
+<form action="#" class="max-w-md w-full mx-auto lg:mx-0 space-y-4" method="POST" onsubmit="event.preventDefault();">
+<!-- Field 1: Full Name -->
+<div data-purpose="form-field-name">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-sm font-semibold text-brand-ink" for="full_name">
+              Full name
+            </label>
+<span class="text-[11px] text-brand-muted hover:text-brand-green transition-colors cursor-help" title="Matches government ID records for instant verification">
+              Why we ask? (Matches ID records)
+            </span>
+</div>
+<input class="w-full px-4 py-3 text-sm rounded-2xl bg-[#FBFBF6]/60 border border-brand-border text-brand-ink placeholder:text-brand-muted/80 focus:bg-white focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 outline-none transition duration-150" id="full_name" name="full_name" placeholder="As per your Aadhaar or voter ID" required="" type="text">
+</div>
+<!-- Field 2: Email Address -->
+<div data-purpose="form-field-email">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-sm font-semibold text-brand-ink" for="email">
+              Email address
+            </label>
+</div>
+<input class="w-full px-4 py-3 text-sm rounded-2xl bg-[#FBFBF6]/60 border border-brand-border text-brand-ink placeholder:text-brand-muted/80 focus:bg-white focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 outline-none transition duration-150" id="email" name="email" placeholder="you@example.com" required="" type="email">
+<p class="text-[11px] text-brand-muted mt-1.5 pl-1 leading-tight">
+            Used to notify you of scheme approvals and claim deadlines
+          </p>
+</div>
+<!-- Field 3: Password & Password Strength Indicator -->
+<div data-purpose="form-field-password">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-sm font-semibold text-brand-ink" for="password">
+              Password
+            </label>
+<span class="text-[11px] text-brand-muted">8+ chars with letters &amp; numbers</span>
+</div>
+<!-- Password input wrapper with trailing eye toggle icon -->
+<div class="relative">
+<input class="w-full pl-4 pr-11 py-3 text-sm rounded-2xl bg-[#FBFBF6]/60 border border-brand-border text-brand-ink placeholder:text-brand-muted/80 focus:bg-white focus:border-brand-green focus:ring-2 focus:ring-brand-green/20 outline-none transition duration-150" id="password" name="password" placeholder="Create a secure password" required="" type="password" value="Kavita@Shakti2025">
+<button aria-label="Toggle password visibility" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-ink focus:outline-none transition-colors" id="password-toggle" type="button">
+<!-- Eye open / outline icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- 4-Segment Strength Indicator Bar -->
+<div class="mt-2.5 pt-0.5 space-y-1.5" data-purpose="password-meter">
+<div class="grid grid-cols-4 gap-1.5 h-1.5 w-full">
+<!-- Bar 1: Filled (Active Gold) -->
+<div class="rounded-full bg-brand-gold"></div>
+<!-- Bar 2: Filled (Active Gold) -->
+<div class="rounded-full bg-brand-gold"></div>
+<!-- Bar 3: Filled (Active Green) -->
+<div class="rounded-full bg-brand-green"></div>
+<!-- Bar 4: Empty -->
+<div class="rounded-full bg-brand-border"></div>
+</div>
+<div class="flex items-center justify-between text-[11px] pt-0.5">
+<span class="font-medium text-brand-green flex items-center gap-1">
+<svg class="w-3 h-3 text-brand-green" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+                Strength: Strong (Ready to protect citizen data)
+              </span>
+</div>
+</div>
+</div>
+<!-- Primary CTA Submit Button -->
+<div class="pt-2">
+<button class="w-full h-[52px] rounded-full bg-brand-green hover:bg-brand-hover active:scale-[0.99] text-white font-semibold text-base shadow-brand-green flex items-center justify-center gap-2 transition-all duration-150 focus:outline-none focus:ring-4 focus:ring-brand-green/20" type="submit">
+<span class="">Create account</span>
+<span class="text-lg leading-none transition-transform group-hover:translate-x-1">→</span>
+</button>
+</div>
+<!-- Terms & Privacy Agreement Notice -->
+<p class="text-[12px] text-brand-muted text-center leading-normal px-2 pt-1">
+          By creating an account, you agree to our 
+          <a class="text-brand-green font-medium underline underline-offset-2 hover:text-brand-hover" href="#">Terms of Service</a> 
+          and 
+          <a class="text-brand-green font-medium underline underline-offset-2 hover:text-brand-hover" href="#">Privacy Policy</a>.
+        </p>
+<!-- Social / DigiLocker Divider -->
+<div class="relative flex py-2 items-center">
+<div class="flex-grow border-t border-brand-border"></div>
+<span class="flex-shrink mx-4 text-xs uppercase tracking-wider text-brand-muted font-medium">or continue with</span>
+<div class="flex-grow border-t border-brand-border"></div>
+</div>
+<!-- DigiLocker / MeriPehchaan Auth Button -->
+<div>
+<button class="w-full h-12 px-4 rounded-full border border-brand-border bg-white hover:bg-neutral-50 active:bg-neutral-100 text-brand-ink text-sm font-medium flex items-center justify-center gap-2.5 transition duration-150 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-green/20" type="button">
+<!-- Checkmark / DigiLocker Shield Emblem -->
+<span class="w-5 h-5 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center text-xs">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<span class="">Sign up with DigiLocker / Citizen Aadhaar ID</span>
+<!-- 1-TAP Badge -->
+<span class="ml-1 text-[10px] uppercase font-bold tracking-wider bg-emerald-50 text-brand-green px-2 py-0.5 rounded-md border border-brand-green/20">
+              1-Tap
+            </span>
+</button>
+</div>
+</form>
+<!-- Bottom Login Switcher Footer -->
+<footer class="mt-6 pt-4 border-t border-brand-border text-center text-sm text-brand-body">
+        Already have an account? 
+        <a class="text-brand-green font-semibold underline underline-offset-2 hover:text-brand-hover transition-colors ml-1" href="/login">
+          Log in
+        </a>
+</footer>
+</section>
+<!-- END: RightFormPanel -->
+</main>
+<!-- END: ApplicationCanvas -->
+<!-- Password toggle interactivity -->
+<script data-purpose="password-visibility-handler">
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggleBtn = document.getElementById('password-toggle');
+      const passwordInput = document.getElementById('password');
+
+      if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', function () {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          
+          // Toggle icon representation
+          if (isPassword) {
+            toggleBtn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-brand-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+              </svg>
+            `;
+          } else {
+            toggleBtn.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-brand-muted hover:text-brand-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            `;
+          }
+        });
+      }
+    });
+  </script>
+
+
+
+
+</body></html>

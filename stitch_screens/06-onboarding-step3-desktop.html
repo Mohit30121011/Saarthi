@@ -1,0 +1,421 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - Onboarding Step 3 (Desktop)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1F6E43',
+            'primary-hover': '#195A37',
+            accent: '#F2A93B',
+            ink: '#10241A',
+            body: '#3C4A42',
+            muted: '#8A9A90',
+            base: '#FBFBF6',
+            border: '#E7ECE3',
+            'tint-green': '#E8F2EC'
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FBFBF6;
+      background-image: radial-gradient(#1F6E43 0.65px, transparent 0.65px);
+      background-size: 24px 24px;
+      background-position: -19px -19px;
+    }
+    .custom-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 9999px;
+      background: #E7ECE3;
+      outline: none;
+    }
+    .custom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #1F6E43;
+      cursor: pointer;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 4px 10px rgba(31, 110, 67, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .custom-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 6px 14px rgba(31, 110, 67, 0.45);
+    }
+    .custom-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #1F6E43;
+      cursor: pointer;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 4px 10px rgba(31, 110, 67, 0.35);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-body font-sans flex flex-col justify-between p-6 antialiased selection:bg-accent/25 selection:text-ink">
+
+  <!-- Persistent Top Utility Bar -->
+  <header class="w-full max-w-[1240px] mx-auto flex items-center justify-between text-[13px] font-medium text-body/80 mb-3 px-2">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/80 border border-border rounded-full text-[11px] font-bold tracking-wider text-primary shadow-xs">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> GOV.IN
+      </span>
+      <span class="font-medium">सारथी • राष्ट्रीय नागरिक सेवा पोर्टल</span>
+      <span class="text-border">|</span>
+      <span class="text-muted">Digital Public Infrastructure for Social Entitlements</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-1.5 text-muted hover:text-ink transition-colors cursor-pointer">
+        <svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+        <span class="">Toll-Free: <strong class="text-ink font-semibold">1800-SAARTHI</strong> (1800-722784)</span>
+      </div>
+      <div class="flex items-center gap-1 text-[12px] bg-white border border-border rounded-md px-2 py-1 cursor-pointer">
+        <span class="font-bold text-primary">EN</span>
+        <span class="text-muted">/</span>
+        <span class="text-body hover:text-ink">हिन्दी</span>
+        <svg class="w-3.5 h-3.5 text-muted ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Master Enclosure Frame (12px Dark Ink Bezel) -->
+  <main class="w-full max-w-[1240px] mx-auto my-auto transition-all">
+    <div class="w-full bg-white overflow-hidden flex flex-row min-h-[670px] border border-border rounded-3xl">
+
+      <!-- Left Panel: Content & Controls (60%) -->
+      <section class="w-[58%] p-10 flex flex-col justify-between bg-white">
+        <div>
+          <!-- Header Bar: Logo + Save & Exit -->
+          <div class="flex items-center justify-between pb-4">
+            <div class="flex items-center gap-3">
+              <img src="https://lh3.googleusercontent.com/aida/AEtjO1VCfJ8SMaNwmtt9kwvIR1hDJBtDr8fmAaVrKsXfCd35UwEp522kSPbbArwQyTjiObm6LH9QfsYRs3AAUSzxUO3MTceqTitZoErHRMaKQqmSWhAGTpXk3I-baPBIBiYgfEnNHJsH0khOjq5Gw2yw5Uq5rbgicmfSdQCrwfXoM8u9FcWy_R_ijoSSo8PJ8VQ70usKCj-oSkq9UyVK7sNMOW9WnDljtwsCElS1lgV2z6GQKw" alt="Saarthi Emblem" class="w-8 h-8 object-contain">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-serif font-bold text-xl tracking-tight text-ink leading-none">Saarthi</span>
+                  <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 bg-[#E8F2EC] text-primary rounded-sm">CIVIC</span>
+                </div>
+                <p class="text-[10px] tracking-wider uppercase font-semibold text-muted">Entitlements Portal</p>
+              </div>
+            </div>
+
+            <button class="inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-ink transition-colors px-3 py-1.5 rounded-full hover:bg-neutral-50">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              <span class="">Save &amp; exit</span>
+            </button>
+          </div>
+
+          <!-- Progress Indicator: 6 segments (1-2 Completed Green, 3 Current Gold, 4-6 Upcoming Grey) -->
+          <div class="pt-2 pb-5">
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider mb-2">
+              <span class="text-ink">Step 3 of 6 • Income &amp; Occupation</span>
+              <span class="text-accent font-semibold tracking-normal text-[11px] bg-amber-50 px-2 py-0.5 rounded-full border border-accent/20">50% Completed</span>
+            </div>
+            <div class="grid grid-cols-6 gap-2 w-full">
+              <!-- Segment 1: Completed -->
+              <div class="h-1.5 rounded-full bg-primary" title="Step 1: Basic Info (Completed)"></div>
+              <!-- Segment 2: Completed -->
+              <div class="h-1.5 rounded-full bg-primary" title="Step 2: Location (Completed)"></div>
+              <!-- Segment 3: CURRENT (Gold Accent) -->
+              <div class="h-1.5 rounded-full bg-accent" title="Step 3: Income &amp; Occupation (Active)"></div>
+              <!-- Segment 4: Upcoming -->
+              <div class="h-1.5 rounded-full bg-border" title="Step 4: Category &amp; Education"></div>
+              <!-- Segment 5: Upcoming -->
+              <div class="h-1.5 rounded-full bg-border" title="Step 5: Additional Details"></div>
+              <!-- Segment 6: Upcoming -->
+              <div class="h-1.5 rounded-full bg-border" title="Step 6: Review &amp; Confirm"></div>
+            </div>
+          </div>
+
+          <!-- Headline & Contextual Privacy Subtext -->
+          <div class="mb-6">
+            <h1 class="font-serif text-[29px] leading-[1.25] font-bold text-ink mb-2">
+              What's your household's annual income?
+            </h1>
+            <p class="text-[14.5px] leading-relaxed text-body flex items-start gap-1.5">
+              <span class="">Income determines eligibility for most financial-aid and subsidy schemes.</span>
+              <span class="inline-flex items-center gap-1 font-medium text-emerald-800 bg-tint-green px-2 py-0.5 rounded-md text-[12px] shrink-0">
+                <svg class="w-3.5 h-3.5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Private &amp; never shared
+              </span>
+            </p>
+          </div>
+
+          <!-- Two-Way Interactive Income Slider Widget -->
+          <div class="bg-[#FBFBF6] border border-border rounded-2xl p-5 mb-7">
+            <div class="flex items-center justify-between mb-3">
+              <label for="income-input" class="text-xs font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
+                <span class="">Annual Family Income (Gross)</span>
+                <span class="text-muted font-normal capitalize tracking-normal text-[11px]">(Tap to edit)</span>
+              </label>
+              <div class="text-xs font-semibold text-primary bg-tint-green px-2.5 py-0.5 rounded-full">
+                Eligible for Tier 2 Subsidies
+              </div>
+            </div>
+
+            <!-- Large Editable Readout -->
+            <div class="flex items-baseline gap-2 mb-4 bg-white border border-border rounded-xl px-4 py-2.5 shadow-2xs focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+              <span class="font-serif text-2xl font-bold text-primary">₹</span>
+              <input id="income-readout" type="text" value="3,50,000" class="font-serif text-[28px] font-bold text-ink bg-transparent focus:outline-none w-full tracking-tight" aria-label="Annual income value">
+              <span class="text-xs font-medium text-muted shrink-0">INR / year</span>
+            </div>
+
+            <!-- Custom Range Slider Track -->
+            <div class="relative px-1 pt-1 pb-2">
+              <input id="income-slider" type="range" min="0" max="2500000" step="25000" value="350000" class="custom-slider" aria-label="Income range slider" style="background: linear-gradient(to right, #1F6E43 0%, #1F6E43 14%, #E7ECE3 14%, #E7ECE3 100%);">
+              <!-- Key Band Ticks -->
+              <div class="flex justify-between text-[11px] font-semibold text-muted mt-2 px-0.5 select-none">
+                <span class="text-ink">₹0</span>
+                <span class="">₹2.5L</span>
+                <span class="text-primary font-bold">₹5L</span>
+                <span class="">₹10L</span>
+                <span class="">₹15L</span>
+                <span class="">₹25L+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Occupation Field: 3 Columns x 2 Rows Grid -->
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <label class="text-xs font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
+                <span class="">Occupation</span>
+                <span class="text-accent">*</span>
+              </label>
+              <span class="text-[12px] text-muted">Select one primary status</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3" role="radiogroup" aria-label="Occupation selection">
+
+              <!-- Card 1: Student -->
+              <button type="button" role="radio" aria-checked="false" class="group flex flex-col items-center justify-center p-3.5 bg-white border border-border rounded-2xl hover:border-body/40 hover:-translate-y-0.5 transition-all text-center relative focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <div class="w-10 h-10 rounded-full bg-amber-50 text-accent flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                  <svg class="w-5 h-5 text-[#D97706]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                  </svg>
+                </div>
+                <span class="text-[13.5px] font-semibold text-ink">Student</span>
+                <span class="text-[10px] text-muted mt-0.5">Scholarships</span>
+              </button>
+
+              <!-- Card 2: Farmer -->
+              <button type="button" role="radio" aria-checked="false" class="group flex flex-col items-center justify-center p-3.5 bg-white border border-border rounded-2xl hover:border-body/40 hover:-translate-y-0.5 transition-all text-center relative focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <div class="w-10 h-10 rounded-full bg-emerald-50 text-primary flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                  <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12"></path>
+                    <path d="M12 6v12"></path>
+                    <path d="M8 9l4-3 4 3"></path>
+                    <path d="M7 14l5-2 5 2"></path>
+                  </svg>
+                </div>
+                <span class="text-[13.5px] font-semibold text-ink">Farmer</span>
+                <span class="text-[10px] text-muted mt-0.5">Agri &amp; PM-KISAN</span>
+              </button>
+
+              <!-- Card 3: Self-Employed (SELECTED) -->
+              <button type="button" role="radio" aria-checked="true" class="group flex flex-col items-center justify-center p-3.5 bg-tint-green border-2 border-primary rounded-2xl shadow-xs transition-all text-center relative focus:outline-none">
+                <!-- Checkmark Badge in corner -->
+                <span class="absolute top-2 right-2 w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center shadow-xs">
+                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+                <div class="w-10 h-10 rounded-full bg-white text-primary flex items-center justify-center mb-2 shadow-2xs">
+                  <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                  </svg>
+                </div>
+                <span class="text-[13.5px] font-bold text-ink">Self-Employed</span>
+                <span class="text-[10px] text-primary font-medium mt-0.5">MSME &amp; Mudra</span>
+              </button>
+
+              <!-- Card 4: Salaried -->
+              <button type="button" role="radio" aria-checked="false" class="group flex flex-col items-center justify-center p-3.5 bg-white border border-border rounded-2xl hover:border-body/40 hover:-translate-y-0.5 transition-all text-center relative focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <div class="w-10 h-10 rounded-full bg-stone-100 text-body flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                  <svg class="w-5 h-5 text-body" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+                    <circle cx="9" cy="10" r="2"></circle>
+                    <path d="M15 8h2"></path>
+                    <path d="M15 12h2"></path>
+                    <path d="M7 16h10"></path>
+                  </svg>
+                </div>
+                <span class="text-[13.5px] font-semibold text-ink">Salaried</span>
+                <span class="text-[10px] text-muted mt-0.5">Formal Sector</span>
+              </button>
+
+              <!-- Card 5: Homemaker -->
+              <button type="button" role="radio" aria-checked="false" class="group flex flex-col items-center justify-center p-3.5 bg-white border border-border rounded-2xl hover:border-body/40 hover:-translate-y-0.5 transition-all text-center relative focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <div class="w-10 h-10 rounded-full bg-amber-50 text-accent flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                  <svg class="w-5 h-5 text-[#D97706]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                </div>
+                <span class="text-[13.5px] font-semibold text-ink">Homemaker</span>
+                <span class="text-[10px] text-muted mt-0.5">Women Welfare</span>
+              </button>
+
+              <!-- Card 6: Unemployed -->
+              <button type="button" role="radio" aria-checked="false" class="group flex flex-col items-center justify-center p-3.5 bg-white border border-border rounded-2xl hover:border-body/40 hover:-translate-y-0.5 transition-all text-center relative focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <div class="w-10 h-10 rounded-full bg-stone-100 text-body flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+                  <svg class="w-5 h-5 text-body" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+                <span class="text-[13.5px] font-semibold text-ink">Unemployed</span>
+                <span class="text-[10px] text-muted mt-0.5">Skill &amp; DBT Aid</span>
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Persistent Bottom Navigation Bar -->
+        <footer class="pt-6 border-t border-border mt-6 flex items-center justify-between">
+          <a href="#" class="inline-flex items-center gap-2 text-sm font-semibold text-body hover:text-ink transition-colors px-4 py-2.5 rounded-full hover:bg-neutral-100">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span class="">Back to Location</span>
+          </a>
+
+          <div class="flex items-center gap-4">
+            <span class="text-xs text-muted">Next: Social Category &amp; Education</span>
+            <button type="button" class="inline-flex items-center gap-2 px-8 py-3.5 bg-primary hover:bg-primary-hover active:scale-[0.98] text-white font-medium text-base rounded-full shadow-[0_8px_20px_rgba(31,110,67,0.22)] transition-all">
+              <span class="">Continue</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </section>
+
+      <!-- Right Panel: Step-Specific 3D Clay Scene (42%) -->
+      <section class="w-[42%] bg-[#1F6E43] relative p-8 flex flex-col justify-between overflow-hidden rounded-r-[22px]" style="background: radial-gradient(circle at 45% 45%, #24814f 0%, #175433 75%, #0e341f 100%);">
+        
+        <!-- Subtle Background Clay Waves & Rings -->
+        <div class="absolute inset-0 opacity-15 pointer-events-none">
+          <svg class="w-full h-full" viewBox="0 0 400 600" fill="none">
+            <circle cx="200" cy="220" r="180" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="6 8"></circle>
+            <circle cx="200" cy="220" r="260" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="4 6"></circle>
+          </svg>
+        </div>
+
+        <!-- Top Badge in Illustration Panel -->
+        <div class="relative z-10 flex items-center justify-between text-white/90 text-xs">
+          <div class="inline-flex items-center gap-2 bg-black/25 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 font-medium">
+            <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+            <span class="">Financial Eligibility Engine</span>
+          </div>
+          <span class="text-[11px] tracking-wider uppercase font-semibold text-white/60">DBT • DBT-BHARAT</span>
+        </div>
+
+        <!-- Central Claymorphic 3D Asset -->
+        <div class="relative z-10 my-auto flex flex-col items-center justify-center py-2">
+          <div class="relative w-full max-w-[340px] aspect-square rounded-3xl overflow-hidden shadow-[0_25px_40px_rgba(0,0,0,0.35)] border border-white/15 bg-[#175433]">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuABVGE2kkdQmSSK1G83atdj6w_Edl_z4UgLQiWA64Q8YG5Cp4GOO_90sCr0VHELdR9pdWomhC-iLl1R35UZN01Km-XPCpdTgDDIpl7KWXc0DtAN5BULHAmZC6iJzu2FeAYxUQiCiA_Ol94XEohVvisf6XI6OTnSzACaMUIti7CbNeVQxEtXnD7cRuGJTfjZjNHB6PdHum3r0ij7OCC0dfvDkWKGqIb6I_ZyWZxyQamigg__WbYu7k6OOA" alt="Citizen beside 3D clay financial chart blocks" class="w-full h-full object-cover">
+          </div>
+        </div>
+
+        <!-- Overlapping Entitlement Insight Card -->
+        <div class="relative z-10 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-[0_12px_30px_rgba(0,0,0,0.25)] flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-amber-50 text-accent border border-accent/20 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-[#D97706]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M14.8 9A2 2 0 0 0 13 8h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1"></path>
+              <path d="M12 6v2m0 8v2"></path>
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-primary">MSME &amp; Subsidy Matches</span>
+              <span class="text-[10px] font-semibold bg-tint-green text-primary px-1.5 py-0.2 rounded">14 Verified</span>
+            </div>
+            <p class="text-ink font-serif font-bold text-base leading-snug">₹1,25,000+ Potential Capital Aid</p>
+            <p class="text-[11px] text-body">PMEGP &amp; Credit Linked Subsidy Scheme</p>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Bottom Legal & Accessibility Links -->
+  <footer class="w-full max-w-[1240px] mx-auto flex items-center justify-between text-[12px] text-muted mt-3 px-2">
+    <div class="">© 2025 Saarthi Civic Platform • Ministry of Electronics &amp; IT • Government of India</div>
+    <div class="flex items-center gap-5">
+      <a href="#" class="hover:text-ink transition-colors">Income Data Privacy</a>
+      <span class="">•</span>
+      <a href="#" class="hover:text-ink transition-colors">Citizen Charter</a>
+      <span class="">•</span>
+      <a href="#" class="hover:text-ink transition-colors">Accessibility Statement</a>
+    </div>
+  </footer>
+
+  <script>
+    const slider = document.getElementById('income-slider');
+    const readout = document.getElementById('income-readout');
+
+    function formatNumber(num) {
+      return Number(num).toLocaleString('en-IN');
+    }
+
+    function updateSliderBackground(val) {
+      const percentage = (val / 2500000) * 100;
+      slider.style.background = `linear-gradient(to right, #1F6E43 0%, #1F6E43 ${percentage}%, #E7ECE3 ${percentage}%, #E7ECE3 100%)`;
+    }
+
+    slider.addEventListener('input', (e) => {
+      const val = e.target.value;
+      readout.value = formatNumber(val);
+      updateSliderBackground(val);
+    });
+
+    readout.addEventListener('change', (e) => {
+      let rawVal = e.target.value.replace(/,/g, '').trim();
+      let numVal = parseInt(rawVal, 10);
+      if (isNaN(numVal)) numVal = 0;
+      if (numVal < 0) numVal = 0;
+      if (numVal > 2500000) numVal = 2500000;
+      slider.value = numVal;
+      readout.value = formatNumber(numVal);
+      updateSliderBackground(numVal);
+    });
+  </script>
+
+
+
+
+</body></html>
