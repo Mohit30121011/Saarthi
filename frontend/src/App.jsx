@@ -13,6 +13,10 @@ import Checklist from './pages/Checklist'
 import Bookmarks from './pages/Bookmarks'
 import Notifications from './pages/Notifications'
 import Profile from './pages/Profile'
+import AdminRoute from './components/AdminRoute'
+import AdminLayout from './components/admin/AdminLayout'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminSchemes from './pages/admin/AdminSchemes'
 
 export default function App() {
   return (
@@ -34,6 +38,13 @@ export default function App() {
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/profile" element={<Profile />} />
+            </Route>
+          </Route>
+
+          <Route element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/schemes" element={<AdminSchemes />} />
             </Route>
           </Route>
 

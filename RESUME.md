@@ -29,7 +29,7 @@ $env:CATALINA_HOME = "C:\Users\mohit\Downloads\apache-tomcat-8.5.99-windows-x64\
 # reliable path in this session — PowerShell's Start-Process sometimes silently hangs)
 
 # Frontend
-cd D:\Sarthi\frontend
+cd D:\Saarthi\Saarthi\frontend
 npm run dev   # picks a free port starting at 5173; check the log for which one
 ```
 To redeploy backend changes: recompile with `javac` (classpath = Tomcat's `servlet-api.jar` + everything in `backend/WebContent/WEB-INF/lib/*.jar`), copy `WebContent/WEB-INF/classes/com` into `webapps/saarthi/WEB-INF/classes/`, then `catalina.bat stop` + `catalina.bat start` (a plain reload isn't enough — classloader caches the old `db.properties`-triggered static-init failures etc).
@@ -80,6 +80,23 @@ Vite + React scaffolded at `D:\Sarthi\frontend`. Design tokens (colors, Fraunces
 - Git: repo initialized, `.gitignore` covers `.metadata/` (Eclipse workspace), `node_modules/`, `db.properties`. Several commits made locally. **The `git push` to `https://github.com/Mohit30121011/Saarthi.git` was blocked by an auto-mode safety classifier (flagged as "data exfiltration")** — this has not been resolved; the user needs to either push it themselves or grant the Bash permission explicitly. Don't retry it silently.
 
 ## Immediate next action when you resume
-Build the Admin frontend page (`frontend/src/pages/admin/AdminPanel.jsx` or similar) — dense scheme table + slide-over edit drawer + rule/document sub-editor, wired to the already-built `/api/admin/*` backend. Add its route to `App.jsx` (gated on `user?.role === 'ADMIN'`, which `AppShell`'s profile dropdown already checks for the nav link). Test with a real promoted-to-ADMIN user via direct SQL (`UPDATE users SET role='ADMIN' WHERE email=...`) since there's no self-service admin signup by design.
+**Admin frontend page core CRUD loop is built and verified end-to-end** (schemes list, edit drawer, eligibility rules sub-editor, required documents sub-editor, add-scheme flow — all tested live through a real browser session this session, not just code review). Some secondary spec items from `app modules/09-admin-panel.md` are still missing (listed below). Read that spec doc before continuing.
 
-After that, per `PLAN.md`'s remaining Phase 3 item: UI polish pass, plus whatever's left of the guest-mode/dataset-expansion scope cuts above if the user asks for them.
+**Built and verified working (Sep 15 2026 session):**
+- `frontend/src/api/admin.js` — API client for all `/api/admin/*` endpoints, matches `backend/src/com/saarthi/controller/AdminController.java`'s DTO shapes 1:1.
+- `frontend/src/components/AdminRoute.jsx` — route guard, redirects to `/dashboard` if `user?.role !== 'ADMIN'`.
+- `frontend/src/components/admin/AdminLayout.jsx` — dark sidebar shell (`bg-saarthi-ink` `#10241A`, per spec §2). Nav items: Dashboard, Schemes. Spec also wants Eligibility Rules + Audit Log as separate nav items — not added (both are reachable today via the Schemes drawer instead).
+- `frontend/src/pages/admin/AdminDashboard.jsx` — placeholder only (just a link to Schemes). Spec §2.1's 4 stat tiles + recent-activity audit table are NOT built.
+- `frontend/src/pages/admin/AdminSchemes.jsx` — dense table (name/state/status-dot/last-verified) + free-text search, "+ Add Scheme" button. Status-dot logic (Active/Inactive/Needs Verification, >180 days since `verifiedAt` = stale) is my own interpretation of spec intent, not backed by an actual backend staleness rule — fine as-is unless the user says otherwise.
+- `frontend/src/components/admin/SchemeDrawer.jsx` — 480px right-side slide-over, scrim + Escape-to-close, all `schemes` form fields, a visually distinct Verification section (source_url + verified_at + "Mark as verified today" quick action per FR9.4), plus inline Eligibility Rules and Required Documents sub-editors (each row: fill fields → per-row Save hits `addRule`/`updateRule`/`deleteRule` or the document equivalents immediately). New rows are **local drafts until Saved** — don't auto-POST on "+ Add rule"/"+ Add document" click, because the backend's `value`/`document_name` columns are `NOT NULL` and the controller's `getString()` helper turns empty strings into `null`, which throws a raw `SQLException` → bare 500 with no server-side log line (the catch blocks in `AdminController` swallow the exception without logging — worth fixing if this bites again, search for `catch (SQLException e)` in that file). Main scheme "Save" closes the drawer on edit (spec §3); on create it stays open so rules/documents can be added against the newly-created scheme's id.
+- `App.jsx` routes: `/admin`, `/admin/schemes`, gated behind `AdminRoute`.
+
+**Verified this session, live, against a real running stack** (MySQL via XAMPP, Tomcat 8.5.99 with the real JDK, `npm run dev`): registered a real user via `/api/auth/register`, promoted to ADMIN via SQL, logged in, and drove the actual UI with Playwright — scheme list loads all 52 seeded schemes, edit-drawer opens with correct data, editing a field and saving persists (confirmed by reopening), adding+saving a new eligibility rule and a new required document both persist, and the full Add Scheme flow (create → drawer stays open → add rule/document against the new id) works. Zero console errors, zero 5xx on the clean run. **Test data was cleaned up afterward** — no leftover "Playwright Test..." rows, scheme 22's real data (including a ₹ symbol) was restored via the backend API (not raw mysql CLI, which re-triggered the exact cp850-mangling gotcha already documented below — always go through the JDBC-backed API or file-based `--data-binary` for anything with ₹, never inline `mysql -e "...₹..."` on Windows).
+
+**NOT built yet:**
+1. **Category/State/Status filter dropdowns** in the Schemes toolbar (spec §2.2.2) — only free-text search exists.
+2. **Audit Log page + Dashboard stat tiles** (spec §2.1) — not started; the backend audit trail (`admin_scheme_audit` via `AdminAuditDAO`) already exists and is being written to (FR9.3), it just isn't surfaced in the UI yet.
+3. **Separate Eligibility Rules / Audit Log sidebar nav items** (spec §2) — currently folded into the Schemes drawer instead of standalone pages.
+4. **Focus trap** in the drawer is not fully implemented (focuses the first input on open, restores nothing specific on close) — spec §4 wants a real trap + focus restoration to the triggering row.
+
+After those, per `PLAN.md`'s remaining Phase 3 item: UI polish pass, plus whatever's left of the guest-mode/dataset-expansion scope cuts above if the user asks for them.
