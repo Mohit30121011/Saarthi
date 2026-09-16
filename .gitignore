@@ -8,6 +8,8 @@
 backend/WebContent/WEB-INF/classes/com/
 backend/WebContent/WEB-INF/classes/db.properties
 backend/WebContent/WEB-INF/classes/chatbot.properties
+backend/src/*.properties
+*.properties
 
 # Frontend (once scaffolded)
 node_modules/

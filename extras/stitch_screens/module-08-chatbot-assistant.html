@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-secondary-container":"#531800","partial-amber-soft":"#FEF3C7","surface-variant":"#d8e3fb","surface-container-high":"#dee8ff","on-primary":"#ffffff","partial-amber":"#D97706","surface-container-low":"#f0f3ff","outline-variant":"#c4c6ce","primary-fixed-dim":"#b4c7ed","tertiary":"#000f00","on-tertiary-fixed":"#012200","harita-green-vibrant":"#16A34A","surface-container-highest":"#d8e3fb","inverse-on-surface":"#ecf1ff","surface-container-lowest":"#ffffff","on-secondary":"#ffffff","on-background":"#111c2d","kesari-saffron-vibrant":"#FF7722","on-secondary-fixed-variant":"#802a00","chakra-blue-subtle":"#1A365D","harita-green":"#138808","error-container":"#ffdad6","slate-border":"#E2E8F0","surface":"#f9f9ff","error":"#ba1a1a","slate-surface-elevated":"#FFFFFF","secondary-fixed":"#ffdbcf","secondary-fixed-dim":"#ffb59a","chakra-blue":"#0D2240","kesari-saffron-soft":"#FFF3EB","surface-tint":"#4c5f80","on-error-container":"#93000a","on-error":"#ffffff","inverse-primary":"#b4c7ed","on-primary-fixed-variant":"#344767","surface-container":"#e7eeff","on-secondary-fixed":"#380d00","secondary-container":"#fc6018","outline":"#75777e","primary-fixed":"#d6e3ff","on-primary-fixed":"#051b39","primary-container":"#0d2240","on-surface-variant":"#44474e","primary":"#000b21","slate-surface":"#F8FAFC","inverse-surface":"#263143","tertiary-fixed-dim":"#72de5c","surface-bright":"#f9f9ff","background":"#f9f9ff","on-primary-container":"#778aad","on-surface":"#111c2d","surface-dim":"#cfdaf2","harita-green-soft":"#EAFBF0","tertiary-container":"#012900","secondary":"#a83900","chakra-blue-light":"#EBF3FC","on-tertiary-container":"#319e23","kesari-saffron":"#E65100","on-tertiary-fixed-variant":"#035300","on-tertiary":"#ffffff","tertiary-fixed":"#8dfc75"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin":"2rem","space-lg":"1.5rem","space-sm":"0.5rem","margin-mobile":"1rem","gutter-mobile":"1rem","space-md":"1rem","space-xl":"2rem","space-xs":"0.25rem","gutter":"1.5rem"},"fontFamily":{"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"display-lg-mobile":["Plus Jakarta Sans"],"body-md":["Inter"],"display-lg":["Plus Jakarta Sans"],"label-sm":["Inter"],"headline-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"label-lg":["Inter"],"label-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"body-sm":["Inter"]},"fontSize":{"headline-xl-mobile":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.015em","fontWeight":"700"}],"body-lg":["1.125rem",{"lineHeight":"1.75rem","fontWeight":"400"}],"display-lg-mobile":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.02em","fontWeight":"800"}],"body-md":["1rem",{"lineHeight":"1.5rem","fontWeight":"400"}],"display-lg":["3rem",{"lineHeight":"3.5rem","letterSpacing":"-0.025em","fontWeight":"800"}],"label-sm":["0.6875rem",{"lineHeight":"0.875rem","letterSpacing":"0.05em","fontWeight":"700"}],"headline-lg":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.015em","fontWeight":"700"}],"headline-xl":["2rem",{"lineHeight":"2.5rem","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["1.125rem",{"lineHeight":"1.5rem","fontWeight":"600"}],"label-lg":["0.875rem",{"lineHeight":"1.25rem","letterSpacing":"0.01em","fontWeight":"600"}],"label-md":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.03em","fontWeight":"600"}],"headline-md":["1.25rem",{"lineHeight":"1.75rem","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["0.875rem",{"lineHeight":"1.375rem","fontWeight":"400"}]}}}};</script></head><body class="bg-slate-surface text-on-surface font-body-md text-body-md antialiased min-h-screen relative"><header class="fixed top-0 left-0 right-0 z-50 bg-slate-surface-elevated/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-1.5 w-full grid grid-cols-3"><div class="bg-kesari-saffron h-full"></div><div class="bg-surface-container-lowest h-full"></div><div class="bg-harita-green h-full"></div></div><div class="max-w-7xl mx-auto px-space-md lg:px-space-lg"><div class="h-11 flex items-center justify-between border-b border-slate-border text-on-surface-variant font-label-md text-label-md"><div class="flex items-center gap-space-sm"><span class="flex h-2 w-2 rounded-full bg-harita-green"></span><span>Government of India &amp; Government of Maharashtra Digital Initiative</span><span class="hidden md:inline text-outline-variant">|</span><span class="hidden md:inline text-on-surface font-label-md text-label-md">Official Citizen Service Gateway</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">translate</span><span class="cursor-pointer hover:text-chakra-blue transition-colors font-label-md text-label-md font-semibold text-chakra-blue">English</span><span class="text-outline-variant">|</span><span class="cursor-pointer hover:text-chakra-blue transition-colors font-label-md text-label-md">हिन्दी</span><span class="text-outline-variant">|</span><span class="cursor-pointer hover:text-chakra-blue transition-colors font-label-md text-label-md">मराठी</span></div><div class="hidden sm:flex items-center gap-space-xs bg-chakra-blue-light text-chakra-blue px-space-xs py-0.5 rounded"><span class="material-symbols-outlined text-[14px]">verified_user</span><span class="font-label-sm text-label-sm uppercase tracking-wider">Gazette Provenance Guaranteed</span></div></div></div><div class="h-20 flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="SAARTHI Official Portal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VXPIddJTwVWTPrAC-vHlHgqdEb2DEc6hdSg2MiiOImBESNTHO8mvGI75egFYzLfBYdnVWIvd3s4eMLMHrfaq5XyLfFOV_wVaERCSQ9ZbfFO6a4-7sVfaO4z28dzjwJdAODg806KEyrlxYYPviCMqXWzD9R5rD-OW3kIwEElB70_9tO6DiA2uwlxry9-WUcv27G96izYZgP5r8sfutNno_v6ibrFiQUA1jXgN0xWBn5-OFseBGXOwPYhC0"/><div class="flex flex-col"><div class="flex items-center gap-space-xs"><span class="font-headline-md text-headline-md font-bold tracking-tight text-chakra-blue">SAARTHI</span><span class="px-1.5 py-0.5 rounded bg-kesari-saffron-soft text-kesari-saffron font-label-sm text-label-sm border border-kesari-saffron/20">सारथी</span></div><span class="font-label-sm text-label-sm text-on-surface-variant">Citizen Welfare &amp; Entitlement Registry</span></div></div><div class="hidden xl:flex items-center bg-slate-surface border border-slate-border rounded-lg px-space-sm py-1.5 w-64 text-on-surface-variant"><span class="material-symbols-outlined text-[18px] mr-2">search</span><span class="font-body-sm text-body-sm flex-1 truncate">Search schemes or ID...</span><span class="text-label-sm font-label-sm bg-surface-container-high px-1.5 py-0.5 rounded text-on-surface-variant">⌘K</span></div></div><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-chakra-blue-light text-chakra-blue font-bold rounded-lg"><a class="px-3 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dashboard-matches" href="#">Dashboard</a><a aria-current="page" class="px-3 py-2 transition-colors bg-chakra-blue-light text-chakra-blue font-bold rounded-lg" data-path="explore-schemes" href="#">Explore Schemes</a><a class="px-3 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="document-checklist" href="#">Checklist</a><a class="px-3 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="saved-schemes" href="#">Saved</a><a class="px-3 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center gap-1" data-path="notifications" href="#">Notifications<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-kesari-saffron text-on-primary">3</span></a><a class="px-3 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="admin-portal" href="#">Admin</a></nav><div class="flex items-center gap-space-sm pl-space-sm border-l border-slate-border"><div class="text-right hidden sm:block"><div class="font-label-lg text-label-lg font-semibold text-chakra-blue leading-tight">Khushi &amp; Mohit</div><div class="flex items-center justify-end gap-1 font-label-sm text-label-sm text-harita-green font-medium"><span class="w-1.5 h-1.5 rounded-full bg-harita-green"></span><span>85% Verified • MH</span></div></div><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-chakra-blue/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMDYJyEtEZYmaHV0c7JDds_or_H99GaGg_w9rMDlK9RzJ_OlDbCfVIIFQ-ELUr1hXynk2srzrR1nnUKCJ4cdHzmwTDuZMOA5lyGADinYYV30i8aZXvKdnXbxHSqFGCnaRJYmGVCQQOyfE2cS1p_UpvcHwZq20Bs6DDXrSXIuOb1Nhph20w0S3jGJuzSVWsVlc_U-FXehQWnHip6PBPhixBstnODQVeaJkvmSoK-3vt715M18aS4ifPjw"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-harita-green ring-2 ring-slate-surface-elevated"></span></div></div></div></div></header><main class="w-full pt-[134px] min-h-[calc(100vh-280px)] bg-slate-surface"><div class="flex flex-col w-full relative">
+<!-- Subtle Ambient Glows -->
+<div class="absolute top-10 left-12 w-96 h-96 bg-chakra-blue-light/50 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-80 right-96 w-80 h-80 bg-kesari-saffron-soft/60 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- Main Grid Layout: Background Context (Cols 1-7) & Chatbot Drawer Panel (Cols 8-12) -->
+<div class="w-full max-w-7xl mx-auto px-space-md lg:px-space-lg py-6 grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
+<!-- LEFT CONTEXT (Cols 1 to 7): Dimmed / Accessible SAARTHI Scheme Portal Canvas -->
+<div class="xl:col-span-6 flex flex-col gap-6 opacity-85 transition-opacity duration-300 pointer-events-none select-none xl:pointer-events-auto xl:select-auto">
+<!-- Top Citizen Context & Entitlement Summary -->
+<div class="bg-slate-surface-elevated rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-13 h-13 rounded-full object-cover shadow-sm" data-alt="Official portrait photograph of citizen Mohit Gupta, an engineering student in Pune Maharashtra, captured under crisp studio lighting with dignified neutral backdrop and high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPz6geeigWCG59hjSwwTjirMDJtY1qYnQj9nlzyWu1kmWIEORqHhgj8eMpC-1jan5EoxWfCK49u-3d7wKT2rx12B3R6swo_o10fQ0WguAg3YDV_j-EAb4-Lfk-DoK4uqo33vd3zbRanfOwC3JEosrly1Y0Arl2R23JkMldVxPbsRkOLC_ou8zqHzbj0vyHa9BMokoRrepHHVzNq_OAfSP0aCeQprN6ImIXu2yGnbDGqHmb9mtNArXJBQ"/>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-harita-green rounded-full shadow-sm"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md text-chakra-blue">Mohit Gupta</span>
+<span class="bg-chakra-blue-light text-chakra-blue px-2 py-0.5 rounded text-label-sm font-label-sm uppercase tracking-wider">CAP ID: MH23-9081</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">B.Tech Mechanical • Government College of Engg, Karad • Pune Resident</span>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-harita-green-soft px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+<span class="font-label-md text-label-md text-harita-green font-bold">Aadhaar &amp; MahaDBT e-KYC Linked</span>
+</div>
+</div>
+<!-- Metric Cards Grid -->
+<div class="grid grid-cols-3 gap-3 pt-2">
+<div class="bg-slate-surface p-3.5 rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Household Income</span>
+<span class="font-headline-sm text-headline-sm text-chakra-blue mt-0.5">₹4,20,000</span>
+<span class="font-label-sm text-label-sm text-harita-green mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">check_circle</span> Tahsildar Validated
+            </span>
+</div>
+<div class="bg-slate-surface p-3.5 rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Eligible Schemes</span>
+<span class="font-headline-sm text-headline-sm text-kesari-saffron mt-0.5">7 Identified</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">4 Strong • 3 Partial</span>
+</div>
+<div class="bg-slate-surface p-3.5 rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Vaulted Credentials</span>
+<span class="font-headline-sm text-headline-sm text-chakra-blue-subtle mt-0.5">14 / 16 Docs</span>
+<span class="font-label-sm text-label-sm text-harita-green mt-1">DigiLocker Synced</span>
+</div>
+</div>
+</div>
+<!-- Active Matched Scheme Background Card -->
+<div class="bg-slate-surface-elevated rounded-xl p-6 shadow-sm flex flex-col gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-harita-green"></div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="bg-chakra-blue-light text-chakra-blue font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">Higher &amp; Technical Education Dept • GoM</span>
+<span class="bg-harita-green-soft text-harita-green font-label-sm text-label-sm px-2 py-0.5 rounded font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">stars</span> 100% Strong Match
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-chakra-blue mt-1">Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Code: SCH-MH-HED-2024-012 • Statutory GR Ref: TEM-2018/CR.295/TE-4</span>
+</div>
+</div>
+<div class="bg-slate-surface p-4 rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Annual Tuition Waiver Benefit</span>
+<span class="font-headline-lg text-headline-lg text-chakra-blue font-bold">50% Tuition + Exam Fee Reimbursed</span>
+</div>
+<span class="font-label-sm text-label-sm bg-kesari-saffron-soft text-kesari-saffron px-3 py-1.5 rounded-lg font-bold">Direct Benefit Transfer</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant line-clamp-2">
+          Financial assistance for higher and technical professional degree courses across recognized institutions in Maharashtra for eligible candidates admitted via CAP rounds with parental income under statutory limit.
+        </div>
+<div class="flex items-center justify-between pt-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-harita-green">schedule</span> Verified for FY 2024-25
+          </span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-slate-surface text-chakra-blue font-label-md text-label-md hover:bg-surface-container-high transition-colors" type="button">Details</button>
+<button class="px-3 py-1.5 rounded-lg bg-chakra-blue text-on-primary font-label-md text-label-md hover:bg-chakra-blue-subtle transition-colors" type="button">Open Checklist</button>
+</div>
+</div>
+</div>
+<!-- Secondary Matched Scheme Background Card (Hostel Allowance) -->
+<div class="bg-slate-surface-elevated rounded-xl p-6 shadow-sm flex flex-col gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-kesari-saffron"></div>
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="bg-chakra-blue-light text-chakra-blue font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">Higher Education Dept • GoM</span>
+<span class="bg-partial-amber-soft text-partial-amber font-label-sm text-label-sm px-2 py-0.5 rounded font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> Partial Match • 1 Doc Pending
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-chakra-blue mt-1">Dr. Panjabrao Deshmukh Vasatigruh Nirvah Bhatta Yojna</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Code: SCH-MH-HED-2024-008 • Monthly Hosteller Subsidy</span>
+</div>
+</div>
+<div class="bg-slate-surface p-4 rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Hostel Maintenance Allowance</span>
+<span class="font-headline-lg text-headline-lg text-kesari-saffron font-bold">₹30,000 / Academic Year</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container-high text-chakra-blue px-2.5 py-1 rounded font-semibold">Non-Metro Tier II/III</span>
+</div>
+</div>
+</div>
+<!-- RIGHT DRAWER (Cols 7 to 12): Floating Interactive AI Civic Assistant (FR8.1 to FR8.12) -->
+<div class="xl:col-span-6 flex flex-col bg-slate-surface-elevated rounded-2xl shadow-xl overflow-hidden relative">
+<!-- Drawer Header: Brand, Trust Badges, Provenance Rules, Quota FR8.1, FR8.4, FR8.7, FR8.11 -->
+<div class="bg-chakra-blue text-on-primary p-5 flex flex-col gap-3">
+<!-- Top bar with Controls -->
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-lowest/10 flex items-center justify-center relative">
+<span class="material-symbols-outlined text-kesari-saffron-vibrant text-[24px]">cognition</span>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-harita-green"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-primary font-bold">SAARTHI AI Civic Assistant</span>
+<span class="font-label-sm text-label-sm bg-kesari-saffron-soft text-kesari-saffron px-2 py-0.5 rounded-full font-bold">सारथी एआई मित्र</span>
+</div>
+</div>
+</div>
+<!-- Controls: Clear, Minimize -->
+<div class="flex items-center gap-1.5">
+<button class="p-1.5 rounded-lg bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-surface-variant hover:text-on-primary transition-colors" onclick="document.getElementById('dialog-stream').scrollTop = 0" title="Clear Conversation" type="button">
+<span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-surface-variant hover:text-on-primary transition-colors" title="Minimize Drawer" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Chat Stream Body -->
+<div class="p-5 flex flex-col gap-5 overflow-y-auto max-h-[620px] bg-slate-surface flex-1" id="dialog-stream">
+<!-- Welcome intro tag -->
+<div class="text-center my-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">
+            Session Encrypted • Profile Context Bound to Mohit Gupta (UID: ****4091)
+          </span>
+</div>
+<!-- User Bubble -->
+<div class="flex items-end justify-end gap-2.5 pl-8">
+<div class="bg-chakra-blue text-on-primary px-4 py-3 rounded-2xl rounded-tr-none shadow-sm max-w-lg flex flex-col gap-1">
+<span class="font-body-md text-body-md text-on-primary">Am I eligible for the Rajarshi Shahu Maharaj Scholarship and what documents do I need to submit?</span>
+<div class="flex items-center justify-end gap-1 font-label-sm text-label-sm text-surface-variant">
+<span>11:42 AM</span>
+<span class="material-symbols-outlined text-[13px] text-harita-green">done_all</span>
+</div>
+</div>
+<img class="w-7 h-7 rounded-full object-cover" data-alt="Small thumbnail avatar of Indian engineering student Mohit Gupta smiling in smart casual wear against warm background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABc-lzRSCFgoxelr8R2gsI0lHhApZduUd-xOXagZslopnTnnQUcpcdDNyWlueK6PhF2J_u2LqJowOMyodJEqfy8z-bx_ocVgYSCb_mGHTxDF7A20bcmbtTwL8x5XOccLDyUmBzaMo_YEL-wTo3BWHGzKM9YhekIgclP42WetBvP_WUl8gbv7gNgSTAOs8A23QIlYch07UPA2g9YktEc6xmYtdERox7_V_6gH4P2UfMdYWsTWaXkxl4eQ"/>
+</div>
+<!-- Deterministic Algorithm Processing Indicator (FR8.5, Algorithm 5.6) -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-chakra-blue-light text-chakra-blue font-label-sm text-label-sm self-start">
+<span class="material-symbols-outlined text-chakra-blue text-[16px] animate-spin">sync</span>
+<span>Consulting EligibilityService v4.2 deterministic rulebook &amp; verified snapshot...</span>
+</div>
+<!-- Bot Response Message (FR8.5, FR8.7, FR8.8, FR8.9) -->
+<div class="flex items-start gap-2.5 pr-2">
+<div class="w-8 h-8 rounded-xl bg-chakra-blue text-kesari-saffron flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">robot_2</span>
+</div>
+<div class="flex flex-col gap-3 max-w-xl w-full">
+<!-- Speech bubble text -->
+<div class="bg-slate-surface-elevated text-on-surface p-4 rounded-2xl rounded-tl-none shadow-sm flex flex-col gap-3">
+<div class="font-body-md text-body-md leading-relaxed text-on-surface">
+                Namaste <strong class="text-chakra-blue">Mohit</strong>! Yes, you are <span class="text-harita-green font-bold">100% Eligible (Strong Match)</span> for the <strong class="text-chakra-blue">Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulkh Shishyavrutti Yojna (SCH-MH-HED-2024-012)</strong>.
+              </div>
+<!-- Rule Explainer Card (FR8.5) -->
+<div class="bg-slate-surface rounded-xl p-3.5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold text-chakra-blue uppercase tracking-wider">Algorithmic Criterion Evaluation (Profile Matches)</span>
+<span class="bg-harita-green-soft text-harita-green font-label-sm text-label-sm px-2 py-0.5 rounded font-bold">3 / 3 Criteria Passed</span>
+</div>
+<div class="flex flex-col gap-2 pt-1 font-body-sm text-body-sm">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-harita-green text-[18px] mt-0.5">check_circle</span>
+<div>
+<span class="font-bold text-chakra-blue">Domicile:</span> Maharashtra verified via DigiLocker Native Certificate (#MH-DOM-2021-9921).
+                    </div>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-harita-green text-[18px] mt-0.5">check_circle</span>
+<div>
+<span class="font-bold text-chakra-blue">Family Annual Income:</span> ₹4,20,000/yr (well under statutory ceiling of ₹8,00,000).
+                    </div>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-harita-green text-[18px] mt-0.5">check_circle</span>
+<div>
+<span class="font-bold text-chakra-blue">Course Admission:</span> Regular B.Tech centralized CAP seat allotment confirmed (EN23908).
+                    </div>
+</div>
+</div>
+</div>
+<!-- Required Document Checklist (Cross-referenced with FR6.4) -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold text-chakra-blue flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[17px] text-kesari-saffron">fact_check</span>
+                    Required Application Documents (FR6.4 Matrix)
+                  </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">3 of 4 Ready in Vault</span>
+</div>
+<div class="flex flex-col gap-2 pt-1">
+<!-- Item 1: Done -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-harita-green-soft/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+<span class="font-label-md text-label-md text-harita-green font-semibold">1. Maharashtra Domicile / Birth Certificate</span>
+</div>
+<span class="font-label-sm text-label-sm text-harita-green font-bold bg-slate-surface-elevated px-2 py-0.5 rounded">Ready in Vault</span>
+</div>
+<!-- Item 2: Done -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-harita-green-soft/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+<span class="font-label-md text-label-md text-harita-green font-semibold">2. Tahsildar Income Certificate FY 24-25</span>
+</div>
+<span class="font-label-sm text-label-sm text-harita-green font-bold bg-slate-surface-elevated px-2 py-0.5 rounded">Ready in Vault</span>
+</div>
+<!-- Item 3: Done -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-harita-green-soft/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+<span class="font-label-md text-label-md text-harita-green font-semibold">3. SSC (10th) &amp; HSC (12th) Marksheets</span>
+</div>
+<span class="font-label-sm text-label-sm text-harita-green font-bold bg-slate-surface-elevated px-2 py-0.5 rounded">Ready in Vault</span>
+</div>
+<!-- Item 4: Action Required -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-kesari-saffron-soft">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-kesari-saffron text-[18px]">pending_actions</span>
+<span class="font-label-md text-label-md text-kesari-saffron font-semibold">4. Current Year College Fee Receipt (2024-25)</span>
+</div>
+<span class="font-label-sm text-label-sm text-kesari-saffron font-bold bg-slate-surface-elevated px-2 py-0.5 rounded">Action Required</span>
+</div>
+</div>
+</div>
+<!-- Interactive Quick Actions for User -->
+<div class="pt-2 flex flex-wrap gap-2">
+<button class="px-3.5 py-2 rounded-lg bg-chakra-blue text-on-primary font-label-md text-label-md hover:bg-chakra-blue-subtle transition-colors flex items-center gap-1.5 shadow-sm" type="button">
+<span>View Scheme Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+<button class="px-3.5 py-2 rounded-lg bg-kesari-saffron text-on-primary font-label-md text-label-md hover:bg-kesari-saffron-vibrant transition-colors flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">upload_file</span>
+<span>Add Missing Fee Receipt</span>
+</button>
+<a class="px-3 py-2 rounded-lg bg-slate-surface hover:bg-surface-container-high text-chakra-blue font-label-md text-label-md transition-colors flex items-center gap-1.5" href="https://mahadbt.maharashtra.gov.in" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+<span>MahaDBT Portal</span>
+</a>
+</div>
+<!-- Gazette Grounding Provenance Footer (FR8.8) -->
+<div class="mt-2 pt-3 border-t border-slate-border flex flex-col gap-1 text-on-surface-variant">
+<div class="flex items-start gap-1.5 text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-harita-green text-[15px] mt-0.5">verified_user</span>
+<span><strong>Statutory Provenance:</strong> Verified against Maharashtra GR TEM-2018/CR.295/TE-4 (Dated 12 March 2025). Traceable to official gazette entry on mahadbt.maharashtra.gov.in. (FR8.8)</span>
+</div>
+<!-- Standing Statutory Disclaimer (FR8.9) -->
+<div class="font-label-sm text-label-sm text-outline italic mt-0.5">
+                  Standing Disclaimer (FR8.9): Eligibility shown is algorithmic and provisional. Please confirm final sanction on the official administrative portal before deadlines.
+                </div>
+</div>
+</div>
+<!-- Assistant Feedback Bar -->
+<div class="flex items-center justify-between px-2 text-label-sm font-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1 text-harita-green font-semibold">
+<span class="material-symbols-outlined text-[15px]">security</span> RAG-Grounded Snapshot
+              </span>
+<div class="flex items-center gap-3">
+<span class="text-on-surface-variant">Was this accurate?</span>
+<button class="hover:text-chakra-blue flex items-center gap-0.5" type="button">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span> Yes
+                </button>
+<button class="hover:text-kesari-saffron flex items-center gap-0.5" type="button">
+<span class="material-symbols-outlined text-[16px]">thumb_down</span> No
+                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Follow-up Suggestions / Action Chips -->
+<div id="suggestions-box" class="px-5 py-3 bg-slate-surface-elevated border-t border-slate-border flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-kesari-saffron">lightbulb</span> Suggested Questions
+</span>
+<button onclick="toggleSuggestions()" class="text-xs text-on-surface-variant hover:text-chakra-blue flex items-center gap-1 font-semibold px-1.5 py-0.5 rounded hover:bg-surface-container-high transition-colors cursor-pointer" title="Hide Suggestions" type="button">
+<span>Hide</span>
+<span class="material-symbols-outlined text-[13px]">close</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1.5 rounded-full bg-slate-surface hover:bg-chakra-blue-light hover:text-chakra-blue text-on-surface text-label-sm font-label-sm transition-colors text-left flex items-center gap-1.5 shadow-sm" onclick="insertPrompt(this.innerText)" type="button">
+<span class="material-symbols-outlined text-[15px] text-kesari-saffron">event</span>
+<span>What is the application deadline for this scholarship?</span>
+</button>
+<button class="px-3 py-1.5 rounded-full bg-slate-surface hover:bg-chakra-blue-light hover:text-chakra-blue text-on-surface text-label-sm font-label-sm transition-colors text-left flex items-center gap-1.5 shadow-sm" onclick="insertPrompt(this.innerText)" type="button">
+<span class="material-symbols-outlined text-[15px] text-harita-green">domain_add</span>
+<span>Can I also claim Panjabrao Deshmukh hostel allowance?</span>
+</button>
+<button class="px-3 py-1.5 rounded-full bg-slate-surface hover:bg-chakra-blue-light hover:text-chakra-blue text-on-surface text-label-sm font-label-sm transition-colors text-left flex items-center gap-1.5 shadow-sm" onclick="insertPrompt(this.innerText)" type="button">
+<span class="material-symbols-outlined text-[15px] text-chakra-blue">autorenew</span>
+<span>How to renew Tahsildar Income Certificate online?</span>
+</button>
+</div>
+</div>
+<!-- Re-open suggestions bar (hidden by default) -->
+<div id="show-suggestions-bar" class="hidden px-5 py-1.5 bg-slate-surface-elevated/80 border-t border-slate-border/80 flex items-center justify-between">
+<button onclick="toggleSuggestions()" class="text-xs font-semibold text-chakra-blue hover:text-kesari-saffron flex items-center gap-1 py-0.5 transition-colors cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[14px] text-kesari-saffron">lightbulb</span>
+<span>Show Suggested Questions</span>
+</button>
+</div>
+<!-- Interactive Input Area -->
+<div class="p-4 bg-slate-surface-elevated border-t border-slate-border flex flex-col gap-2">
+<div class="flex items-center gap-2 bg-slate-surface rounded-xl px-3 py-2 shadow-inner focus-within:ring-2 focus-within:ring-chakra-blue transition-all">
+<button class="w-9 h-9 rounded-lg hover:bg-kesari-saffron-soft text-on-surface-variant hover:text-kesari-saffron flex items-center justify-center transition-colors" title="Voice Input in Marathi/Hindi/English" type="button">
+<span class="material-symbols-outlined text-[22px]">mic</span>
+</button>
+<input class="w-full bg-transparent border-none text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none py-1" id="chat-input" placeholder="Ask about any scheme, eligibility rule, or document requirement..." type="text"/>
+<button class="w-9 h-9 rounded-lg hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-colors" title="Attach Document for OCR Verification" type="button">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<button class="h-9 px-4 rounded-lg bg-kesari-saffron hover:bg-kesari-saffron-vibrant text-on-primary font-label-md text-label-md flex items-center gap-1.5 transition-all shadow-sm" onclick="sendMockQuery()" type="button">
+<span>Send</span>
+<span class="material-symbols-outlined text-[16px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro-interaction Script for Interactive Demonstration -->
+<script>
+    function toggleSuggestions() {
+      var sBox = document.getElementById('suggestions-box');
+      var sBar = document.getElementById('show-suggestions-bar');
+      if (sBox && sBar) {
+        if (sBox.classList.contains('hidden')) {
+          sBox.classList.remove('hidden');
+          sBar.classList.add('hidden');
+        } else {
+          sBox.classList.add('hidden');
+          sBar.classList.remove('hidden');
+        }
+      }
+    }
+
+    function insertPrompt(text) {
+      var input = document.getElementById('chat-input');
+      if (input) {
+        input.value = text;
+        input.focus();
+      }
+    }
+
+    function sendMockQuery() {
+      var input = document.getElementById('chat-input');
+      if (!input || !input.value.trim()) return;
+
+      var stream = document.getElementById('dialog-stream');
+      var userText = input.value;
+      input.value = '';
+
+      var userBubble = document.createElement('div');
+      userBubble.className = 'flex items-end justify-end gap-2.5 pl-8 animate-fade-in';
+      userBubble.innerHTML = `
+        <div class="bg-chakra-blue text-on-primary px-4 py-3 rounded-2xl rounded-tr-none shadow-sm max-w-lg flex flex-col gap-1">
+          <span class="font-body-md text-body-md text-on-primary">` + userText + `</span>
+          <div class="flex items-center justify-end gap-1 font-label-sm text-label-sm text-surface-variant">
+            <span>Just now</span>
+            <span class="material-symbols-outlined text-[13px] text-harita-green">done</span>
+          </div>
+        </div>
+        <div class="w-7 h-7 rounded-full bg-chakra-blue-light text-chakra-blue flex items-center justify-center font-label-sm text-label-sm font-bold">MG</div>
+      `;
+      stream.appendChild(userBubble);
+      stream.scrollTop = stream.scrollHeight;
+
+      // Simulate Grounded System Response
+      setTimeout(function() {
+        var replyBubble = document.createElement('div');
+        replyBubble.className = 'flex items-start gap-2.5 pr-2 animate-fade-in';
+        replyBubble.innerHTML = `
+          <div class="w-8 h-8 rounded-xl bg-chakra-blue text-kesari-saffron flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">robot_2</span>
+          </div>
+          <div class="flex flex-col gap-2 max-w-xl w-full">
+            <div class="bg-slate-surface-elevated text-on-surface p-4 rounded-2xl rounded-tl-none shadow-sm flex flex-col gap-2">
+              <span class="font-body-md text-body-md text-on-surface">According to official MahaDBT Gazetted Notification (GR TEM-2018/CR.295/TE-4), the institutional deadline for Rajarshi Shahu Maharaj Scholarship application scrutiny is <strong>30 April 2025</strong>.</span>
+              <div class="p-2.5 bg-slate-surface rounded-lg font-label-sm text-label-sm text-chakra-blue flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-harita-green text-[16px]">verified</span>
+                <span>Ground truth verified from Official Gazetted Circulars.</span>
+              </div>
+            </div>
+          </div>
+        `;
+        stream.appendChild(replyBubble);
+        stream.scrollTop = stream.scrollHeight;
+      }, 700);
+    }
+  </script>
+</div></main><aside class="fixed bottom-space-lg right-space-lg z-40"><div class="group relative flex items-center"><div class="hidden md:flex items-center mr-3 px-3 py-2 rounded-xl bg-slate-surface-elevated border border-slate-border shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all transform translate-y-1 group-hover:translate-y-0"><div class="flex flex-col"><span class="font-label-md text-label-md font-bold text-chakra-blue flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-harita-green">verified</span>Ask Saarthi AI Assistant</span><span class="font-label-sm text-label-sm text-on-surface-variant">Bilingual • Ground-truth gazette verified</span></div></div><button class="w-14 h-14 rounded-full bg-chakra-blue text-on-primary flex items-center justify-center shadow-xl hover:bg-chakra-blue-subtle transition-transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-kesari-saffron/40 relative" type="button"><span class="material-symbols-outlined text-[26px]">forum</span><span class="absolute -top-1 -right-1 flex h-4 w-4"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-kesari-saffron opacity-75"></span><span class="relative inline-flex rounded-full h-4 w-4 bg-kesari-saffron border-2 border-slate-surface-elevated"></span></span></button></div></aside><footer class="w-full bg-chakra-blue text-on-primary mt-space-xl border-t-4 border-kesari-saffron"><div class="max-w-7xl mx-auto px-space-md lg:px-space-lg py-12"><div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 pb-8 border-b border-chakra-blue-subtle"><div class="md:col-span-2 flex flex-col gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-surface-container-lowest/10 flex items-center justify-center"><span class="material-symbols-outlined text-kesari-saffron-vibrant">account_balance</span></div><div><div class="font-headline-sm text-headline-sm font-bold tracking-tight text-surface-container-lowest">National Welfare Discovery Infrastructure</div><div class="font-label-md text-label-md text-surface-variant">Government of India &amp; State Governments Partner Network</div></div></div><p class="font-body-sm text-body-sm text-surface-variant max-w-xl">SAARTHI delivers direct, transparent citizen matching to central and state benefits under statutory acts. Every entitlement criteria rule is parsed directly from gazetted orders and state policy circulars.</p><div class="flex flex-wrap items-center gap-4 text-surface-variant font-label-md text-label-md pt-2"><span class="flex items-center gap-1.5 text-harita-green-vibrant"><span class="material-symbols-outlined text-[16px]">verified</span>Gazette Provenance Guaranteed</span><span class="flex items-center gap-1.5 text-surface-variant"><span class="material-symbols-outlined text-[16px]">lock</span>DigiLocker &amp; Aadhaar e-KYC Compliant</span></div></div><div class="flex flex-col gap-2.5"><div class="font-label-lg text-label-lg font-bold text-surface-container-lowest uppercase tracking-wider">Citizen Framework</div><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" data-path="dashboard-matches" href="#">Personalized Scheme Matcher</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" data-path="document-checklist" href="#">Verification Document Matrix</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" data-path="saved-schemes" href="#">Family Dossier &amp; Bookmarks</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" href="#">Track Direct Benefit Transfer (DBT)</a></div><div class="flex flex-col gap-2.5"><div class="font-label-lg text-label-lg font-bold text-surface-container-lowest uppercase tracking-wider">Support &amp; Grievance</div><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" href="#">National Consumer &amp; Citizen Helpline (14566)</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" href="#">CPGRAMS Grievance Portal</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" href="#">WCAG 2.1 AAA Accessibility Report</a><a class="font-body-sm text-body-sm text-surface-variant hover:text-surface-container-lowest transition-colors" href="#">Terms of Service &amp; Data Privacy</a></div></div><div class="flex flex-col sm:flex-row items-center justify-between gap-4 font-label-md text-label-md text-surface-variant"><div>© 2025 SAARTHI • National Informatics Centre (NIC) • Ministry of Electronics and IT</div><div class="flex items-center gap-6"><span>Designed for all 22 Official Indian Languages</span><span>Open Government Data (OGD) Platform</span></div></div></div></footer></body></html>

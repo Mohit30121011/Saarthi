@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+// In dev: Vite proxy maps /api → localhost:8080/Saarthi/api
+// In production on Tomcat ROOT: override via VITE_API_BASE env var
 const client = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_BASE || '/api',
 })
 
 client.interceptors.request.use((config) => {

@@ -34,7 +34,7 @@ public final class ChatbotConfig {
     }
 
     public static String geminiApiKey() { return PROPS.getProperty("gemini.api.key", ""); }
-    public static String geminiModel() { return PROPS.getProperty("gemini.model", "gemini-3.8-flash"); }
+    public static String geminiModel() { return PROPS.getProperty("gemini.model", "gemini-3.6-flash"); }
     public static String groqApiKey() { return PROPS.getProperty("groq.api.key", ""); }
     public static String groqModel() { return PROPS.getProperty("groq.model", "llama-3.3-70b-versatile"); }
 

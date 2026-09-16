@@ -14,4 +14,11 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
+    <!-- SPA fallback: all 404s that are not API/asset requests serve index.html
+         so React Router can handle client-side routes like /login, /dashboard etc. -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/index.html</location>
+    </error-page>
+
 </web-app>

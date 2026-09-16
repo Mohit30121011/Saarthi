@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef, useId } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { getChecklist, toggleChecklistItem } from '../api/checklist'
-import checklistHeroImg from '../assets/checklist-hero.jpg'
+import { ChecklistSkeleton } from '../components/Skeletons'
 
 const SORT_OPTIONS = [
   { id: 'category', label: 'Category' },
@@ -9,123 +9,83 @@ const SORT_OPTIONS = [
   { id: 'status', label: 'Status (Pending first)' },
 ]
 
-// Curated helpful subtitles for categories
 const CATEGORY_META = {
   'ID Proof': {
-    subtitle: 'Essential identity documents required for most schemes.',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-      </svg>
-    ),
+    marathi: 'पहचान पुरावा',
+    icon: 'badge',
+    badgeColor: 'bg-chakra-blue-light text-chakra-blue',
   },
   'Income Proof': {
-    subtitle: 'Used to verify your annual or family income.',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    marathi: 'आय दाखला व पुरावा',
+    icon: 'payments',
+    badgeColor: 'bg-kesari-saffron-soft text-kesari-saffron',
   },
   'Address Proof': {
-    subtitle: 'Valid proof of permanent address or Maharashtra domicile.',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ),
+    marathi: 'अधिवास व रहिवासी पुरावा',
+    icon: 'home_pin',
+    badgeColor: 'bg-chakra-blue-light text-chakra-blue',
   },
   'Bank Details': {
-    subtitle: 'Aadhaar-seeded bank account for direct benefit transfer (DBT).',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-      </svg>
-    ),
+    marathi: 'बैंक खाते व NPCI आधार लिंकिंग',
+    icon: 'account_balance',
+    badgeColor: 'bg-harita-green-soft text-harita-green',
   },
   'Educational Certificate': {
-    subtitle: 'Academic transcripts, marksheets, or college enrollment bonafide.',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-      </svg>
-    ),
+    marathi: 'शैक्षणिक प्रमाणपत्रे व गुणपत्रिका',
+    icon: 'school',
+    badgeColor: 'bg-chakra-blue-light text-chakra-blue',
   },
   'Photograph': {
-    subtitle: 'Recent passport-size colored photographs with clear background.',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    ),
+    marathi: 'पासपोर्ट छायाचित्र',
+    icon: 'photo_camera',
+    badgeColor: 'bg-surface-container-high text-chakra-blue',
   },
   'Other': {
-    subtitle: 'Caste, category, disability, or scheme-specific undertakings.',
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-    ),
+    marathi: 'इतर जात व विशेष प्रमाणपत्रे',
+    icon: 'verified',
+    badgeColor: 'bg-kesari-saffron-soft text-kesari-saffron',
   },
 }
 
-// Curated document descriptions
 const DOC_DESCRIPTIONS = {
-  'Aadhaar Card': 'Accepted for most government schemes',
-  'PAN Card': 'Required for financial schemes and investments',
-  'Voter ID Card': 'Any one of these photo identity documents is accepted',
-  'Voter ID / Passport / Driving License': 'Any one of these photo identity documents is accepted',
-  'Income Certificate': 'Issued by State Government / Tehsildar / Competent Authority',
-  'Caste Certificate': 'Issued by Competent Authority / Sub-Divisional Officer (SDO)',
-  'Caste/Category Certificate': 'Issued by Competent Authority / SDO / Tehsildar',
-  'Non-Creamy Layer (NCL) Certificate': 'Valid for current financial year',
-  'Domicile Certificate': 'Proof of residence in Maharashtra state',
-  'Bank Account Passbook': 'Passbook showing IFSC, Account Number & NPCI Aadhaar seeding',
-  'Bank Account Passbook (Aadhaar-linked)': 'Passbook showing IFSC, Account Number & NPCI Aadhaar seeding',
-  'Bank Passbook (Aadhaar-seeded)': 'Passbook showing IFSC, Account Number & NPCI Aadhaar seeding',
-  'Bank Statement': 'Recent 6 months account transaction statement',
-  'Passport-size Photograph': 'Recent passport photo with light/white background',
-  'Passport Size Photograph': 'Recent passport photo with light/white background',
-  'Ration Card': 'Yellow / Orange / White ration card or NFSA food security card',
-  'BPL Certificate / Ration Card': 'BPL survey card or priority household ration card',
-  'Land Ownership Records (Khatauni/7-12 extract)': '7/12 extract or 8A khatauni land record',
-  'Bonafide/Enrolment Certificate from Institution': 'Issued by current recognized college/school',
-  'Previous Year Marksheet': 'Marksheet showing grades and passing status',
-  'Educational Qualification Certificate': 'Highest degree or 10th/12th passing certificate',
-  'Detailed Project Report': 'Project business summary for MSME / subsidy approval',
-  'Business Proof/Project Report': 'Business plan or Udyam MSME registration',
-  'Minority Community Certificate': 'Self-declaration or certificate issued by competent authority',
-  'Birth Certificate of Girl Child': 'Issued by Municipal Corporation or Gram Panchayat',
-  'Disability Certificate': 'Unique Disability ID (UDID) or civil surgeon certificate',
+  'Aadhaar Card': 'UIDAI biometric validation linked to registered mobile for instant OTP e-KYC.',
+  'Maharashtra Domicile Certificate': 'MahaOnline issued permanent domicile clearance with digital QR validation.',
+  'PAN Card': 'Income tax identifier required for financial subsidies and DBT processing.',
+  'Income Certificate': 'Tahsildar issued certificate valid for current financial year (gross income ceiling verification).',
+  'Caste Certificate': 'Issued by Sub-Divisional Officer (SDO) under Maharashtra Scheduled Castes & Backward Classes Act.',
+  'Non-Creamy Layer (NCL) Certificate': 'Valid for current FY 2024-25 / 2024-27 issued by competent revenue authority.',
+  'Bank Account Passbook (Aadhaar-linked)': 'Nationalized bank passbook showing active Aadhaar NPCI DBT mapper.',
+  'Bank Passbook (Aadhaar-seeded)': 'Passbook showing IFSC, Account Number & NPCI Aadhaar seeding.',
+  'Land Ownership Records (Khatauni/7-12 extract)': 'Mahabhulekh digitally signed 7/12 & 8A land revenue extract.',
+  'Bonafide/Enrolment Certificate from Institution': 'Issued by current recognized college/school registrar.',
+  'Previous Year Marksheet': 'Marksheet certifying eligibility percentages and regular academic progression.',
+  'Passport-size Photograph': 'Recent passport-size colored photographs with white background.',
 }
 
 export default function Checklist() {
-  const navigate = useNavigate()
   const [checklist, setChecklist] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [activeFilter, setActiveFilter] = useState('all') // 'all', 'not_collected', 'collected', 'mandatory', 'optional'
-  const [sortBy, setSortBy] = useState('category') // 'category', 'name', 'status'
+  const [sortBy, setSortBy] = useState('category')
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
   const sortDropdownRef = useRef(null)
   const [collapsedCategories, setCollapsedCategories] = useState({})
-  const [openMenuDoc, setOpenMenuDoc] = useState(null)
   const [uploadedFiles, setUploadedFiles] = useState({})
   const [selectedDocForSchemes, setSelectedDocForSchemes] = useState(null)
-  const [showGuidanceModal, setShowGuidanceModal] = useState(false)
   const [showDigiLockerModal, setShowDigiLockerModal] = useState(false)
+  const [digiLockerConnected, setDigiLockerConnected] = useState(false)
   const [toast, setToast] = useState(null)
   const toastTimeoutRef = useRef(null)
 
-  function triggerToast(message, type = 'success', documentName = null, currentChecked = false) {
+  function triggerToast(message, type = 'success') {
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current)
     }
-    setToast({ message, type, documentName, currentChecked })
+    setToast({ message, type })
     toastTimeoutRef.current = setTimeout(() => {
       setToast(null)
-    }, 4000)
+    }, 3800)
   }
 
   function load() {
@@ -139,24 +99,22 @@ export default function Checklist() {
 
   useEffect(load, [])
 
-  // Close menus on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
         setSortDropdownOpen(false)
       }
-      setOpenMenuDoc(null)
     }
-    if (openMenuDoc || sortDropdownOpen) {
+    if (sortDropdownOpen) {
       window.addEventListener('click', handleClickOutside)
       return () => window.removeEventListener('click', handleClickOutside)
     }
-  }, [openMenuDoc, sortDropdownOpen])
+  }, [sortDropdownOpen])
 
   async function handleToggle(documentName, currentlyChecked) {
     const nextChecked = !currentlyChecked
 
-    // optimistic update
+    // Optimistic UI update
     setChecklist((prev) => {
       if (!prev) return prev
       const next = { ...prev }
@@ -168,22 +126,19 @@ export default function Checklist() {
       return next
     })
 
-    // Show toast message
     triggerToast(
       nextChecked
-        ? `✓ "${documentName}" marked as collected`
-        : `"${documentName}" marked as not collected`,
-      nextChecked ? 'success' : 'info',
-      documentName,
-      nextChecked
+        ? `✓ "${documentName}" marked as verified & ready in dossier`
+        : `"${documentName}" marked as pending action`,
+      nextChecked ? 'success' : 'info'
     )
 
     try {
       const updated = await toggleChecklistItem(documentName, nextChecked)
       setChecklist(updated)
     } catch {
-      load() // revert to server truth on failure
-      triggerToast(`Could not update "${documentName}". Retrying…`, 'error')
+      load() // revert on server error
+      triggerToast(`Could not update "${documentName}". Syncing…`, 'error')
     }
   }
 
@@ -191,7 +146,6 @@ export default function Checklist() {
     const file = event.target.files?.[0]
     if (file) {
       setUploadedFiles((prev) => ({ ...prev, [documentName]: file.name }))
-      // Mark as checked if not already checked
       handleToggle(documentName, false)
       triggerToast(`✓ "${file.name}" uploaded for ${documentName}`, 'success')
     }
@@ -204,165 +158,6 @@ export default function Checklist() {
     }))
   }
 
-  if (loading) {
-    return (
-      <div className="w-full max-w-[1400px] mx-auto pb-16 animate-pulse">
-        {/* Top Status Indicator */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#156f45] animate-ping" />
-          <span className="text-xs font-semibold text-[#52796F]">
-            Consolidating required documents across your eligible schemes…
-          </span>
-        </div>
-
-        {/* 1. TOP HERO BANNER SKELETON */}
-        <div className="relative overflow-hidden rounded-2xl bg-[#EBF5EE] border border-[#D4E8DC] p-6 sm:p-8 min-h-[190px] flex items-center justify-between mb-6">
-          <div className="space-y-3 max-w-lg w-full">
-            <div className="h-3.5 w-24 bg-emerald-200/70 rounded-full" />
-            <div className="h-8 w-72 bg-emerald-300/50 rounded-xl" />
-            <div className="h-4 w-96 bg-emerald-200/60 rounded-full" />
-            <div className="h-3.5 w-4/5 bg-emerald-200/40 rounded-full" />
-          </div>
-          <div className="hidden md:flex w-64 h-36 bg-emerald-200/30 rounded-2xl shrink-0" />
-        </div>
-
-        {/* 2. FILTER STRIP SKELETON */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            <div className="h-9 w-36 bg-slate-200 rounded-full" />
-            <div className="h-9 w-32 bg-slate-100 rounded-full" />
-            <div className="h-9 w-28 bg-slate-100 rounded-full" />
-            <div className="h-9 w-28 bg-slate-100 rounded-full" />
-            <div className="h-9 w-24 bg-slate-100 rounded-full" />
-          </div>
-          <div className="h-9 w-36 bg-slate-100 rounded-xl shrink-0 self-end sm:self-auto" />
-        </div>
-
-        {/* 3. TWO-COLUMN GRID SKELETON */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left Column: Category Cards */}
-          <div className="lg:col-span-8 space-y-4">
-            {/* Category Card 1 */}
-            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs">
-              <div className="flex items-center justify-between pb-4 border-b border-[#F0F4F1]">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 shrink-0" />
-                  <div className="space-y-1.5">
-                    <div className="h-5 w-36 bg-slate-200 rounded" />
-                    <div className="h-3 w-56 bg-slate-100 rounded" />
-                  </div>
-                </div>
-                <div className="h-6 w-28 bg-slate-100 rounded-full" />
-              </div>
-
-              {/* Rows inside Card 1 */}
-              <div className="divide-y divide-[#F0F4F1] pt-1">
-                {[1, 2, 3].map((n) => (
-                  <div key={n} className="py-4 flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-3.5 flex-1">
-                      <div className="w-5 h-5 rounded-md bg-slate-100 shrink-0 mt-1" />
-                      <div className="space-y-2 flex-1">
-                        <div className="h-4 w-44 bg-slate-200 rounded" />
-                        <div className="h-3 w-64 bg-slate-100 rounded" />
-                        <div className="flex gap-2 pt-1">
-                          <div className="h-5 w-24 bg-slate-100 rounded-md" />
-                          <div className="h-5 w-20 bg-slate-100 rounded-md" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="h-7 w-20 bg-slate-100 rounded-xl shrink-0" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Category Card 2 */}
-            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs">
-              <div className="flex items-center justify-between pb-4 border-b border-[#F0F4F1]">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 shrink-0" />
-                  <div className="space-y-1.5">
-                    <div className="h-5 w-40 bg-slate-200 rounded" />
-                    <div className="h-3 w-48 bg-slate-100 rounded" />
-                  </div>
-                </div>
-                <div className="h-6 w-28 bg-slate-100 rounded-full" />
-              </div>
-
-              <div className="divide-y divide-[#F0F4F1] pt-1">
-                {[1, 2].map((n) => (
-                  <div key={n} className="py-4 flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-3.5 flex-1">
-                      <div className="w-5 h-5 rounded-md bg-slate-100 shrink-0 mt-1" />
-                      <div className="space-y-2 flex-1">
-                        <div className="h-4 w-40 bg-slate-200 rounded" />
-                        <div className="h-3 w-56 bg-slate-100 rounded" />
-                        <div className="flex gap-2 pt-1">
-                          <div className="h-5 w-24 bg-slate-100 rounded-md" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="h-7 w-20 bg-slate-100 rounded-xl shrink-0" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: 3 Cards */}
-          <div className="lg:col-span-4 space-y-5">
-            {/* Progress Card Skeleton */}
-            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs space-y-4">
-              <div className="h-5 w-28 bg-slate-200 rounded" />
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-slate-100 shrink-0" />
-                <div className="space-y-2 flex-1">
-                  <div className="h-5 w-24 bg-slate-200 rounded" />
-                  <div className="h-3 w-32 bg-slate-100 rounded" />
-                </div>
-              </div>
-              <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
-            </div>
-
-            {/* Quick Actions Card Skeleton */}
-            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs space-y-3">
-              <div className="h-5 w-28 bg-slate-200 rounded mb-2" />
-              <div className="h-12 w-full bg-slate-50 rounded-xl" />
-              <div className="h-12 w-full bg-slate-50 rounded-xl" />
-              <div className="h-12 w-full bg-slate-50 rounded-xl" />
-            </div>
-
-            {/* Tip Card Skeleton */}
-            <div className="bg-[#FFFBEB] border border-[#FDE68A]/70 rounded-2xl p-5 shadow-xs space-y-2.5">
-              <div className="h-4 w-16 bg-amber-200/80 rounded" />
-              <div className="h-3.5 w-full bg-amber-200/50 rounded" />
-              <div className="h-3.5 w-3/4 bg-amber-200/50 rounded" />
-              <div className="h-3 w-28 bg-amber-300/70 rounded mt-3" />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="max-w-xl mx-auto text-center py-20 px-4">
-        <div className="w-14 h-14 rounded-2xl bg-[#FDF2F1] text-[#C0473B] flex items-center justify-center mx-auto mb-4 font-bold text-2xl">
-          !
-        </div>
-        <h2 className="font-fraunces text-2xl font-bold text-[#10241A] mb-2">Checklist Unavailable</h2>
-        <p className="text-sm text-[#8A9A90] mb-6">{error}</p>
-        <button
-          onClick={load}
-          className="px-5 py-2.5 rounded-xl bg-[#156f45] text-white font-medium hover:bg-[#115e3b] transition-colors shadow-sm"
-        >
-          Try Again
-        </button>
-      </div>
-    )
-  }
-
   const rawCategories = Object.keys(checklist || {})
   const allItems = rawCategories.flatMap((c) => checklist[c] || [])
 
@@ -373,24 +168,18 @@ export default function Checklist() {
   const optionalItems = totalItems - mandatoryItems
 
   const percent = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0
+  const circumference = 314.159
+  const strokeOffset = circumference - (percent / 100) * circumference
 
-  // Filter and sort items per category
+  // Filter and sort
   const filteredChecklist = {}
   rawCategories.forEach((cat) => {
     let items = checklist[cat] || []
+    if (activeFilter === 'not_collected') items = items.filter((i) => !i.checked)
+    else if (activeFilter === 'collected') items = items.filter((i) => i.checked)
+    else if (activeFilter === 'mandatory') items = items.filter((i) => i.mandatory)
+    else if (activeFilter === 'optional') items = items.filter((i) => !i.mandatory)
 
-    // Apply filter
-    if (activeFilter === 'not_collected') {
-      items = items.filter((i) => !i.checked)
-    } else if (activeFilter === 'collected') {
-      items = items.filter((i) => i.checked)
-    } else if (activeFilter === 'mandatory') {
-      items = items.filter((i) => i.mandatory)
-    } else if (activeFilter === 'optional') {
-      items = items.filter((i) => !i.mandatory)
-    }
-
-    // Apply sort
     if (sortBy === 'name') {
       items = [...items].sort((a, b) => a.documentName.localeCompare(b.documentName))
     } else if (sortBy === 'status') {
@@ -404,179 +193,206 @@ export default function Checklist() {
 
   const visibleCategories = Object.keys(filteredChecklist)
 
-  return (
-    <div className="w-full max-w-[1400px] mx-auto pb-16">
-      {/* 1. TOP HERO BANNER */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-[20px] bg-gradient-to-r from-[#EBF5EE] via-[#E2F2E7] to-[#D5EDE0] border border-[#D4E8DC] p-6 sm:p-8 mb-6 shadow-xs">
-        {/* Left Side Copy */}
-        <div className="relative z-10 max-w-xl">
-          <Link
-            to="/checklist"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-[#156f45] hover:text-[#115e3b] transition-colors mb-2.5"
-          >
-            ← My Checklist
-          </Link>
+  if (loading) {
+    return <ChecklistSkeleton />
+  }
 
-          <h1 className="font-fraunces text-3xl sm:text-[36px] font-bold text-[#10241A] tracking-tight leading-tight mb-2">
-            Document Checklist
-          </h1>
-
-          <p className="text-sm sm:text-[15px] text-[#2D3E33] font-medium mb-1.5">
-            Consolidated across your Strong-confidence matches —{' '}
-            <span className="font-bold text-[#156f45]">
-              {checkedItems} of {totalItems} collected
-            </span>
-          </p>
-
-          <p className="text-xs sm:text-[13.5px] text-[#52796F] max-w-lg leading-relaxed">
-            These are the documents you may need for the schemes you're eligible for. Upload or mark them as available to keep track of your progress.
-          </p>
+  if (error) {
+    return (
+      <div className="max-w-xl mx-auto text-center py-20 px-4">
+        <div className="w-14 h-14 rounded-2xl bg-error-container text-error flex items-center justify-center mx-auto mb-4 font-bold text-2xl">
+          <span className="material-symbols-outlined text-[28px]">warning</span>
         </div>
+        <h2 className="font-headline-lg font-bold text-chakra-blue mb-2">Checklist Service Unavailable</h2>
+        <p className="text-body-sm text-on-surface-variant mb-6">{error}</p>
+        <button
+          onClick={load}
+          className="px-5 py-2.5 rounded-xl bg-chakra-blue text-on-primary font-label-lg font-bold hover:bg-chakra-blue-subtle transition-colors shadow-sm"
+        >
+          Try Again
+        </button>
+      </div>
+    )
+  }
 
-        {/* Right Side 3D Character Artwork */}
-        <div className="hidden md:block absolute top-0 right-0 h-full w-[440px] lg:w-[500px] pointer-events-none">
-          <img
-            src={checklistHeroImg}
-            alt="Prepared Today, Brighter Tomorrow"
-            className="w-full h-full object-cover object-center"
-            style={{
-              maskImage: 'linear-gradient(to right, transparent, black 25%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent, black 25%)',
-            }}
-          />
+  return (
+    <div className="flex flex-col w-full -mt-6">
+      {/* 1. TOP PROGRESS & GAZETTE CONTEXT SCRIM (Module 6 Header) */}
+      <div className="w-full bg-chakra-blue text-on-primary shadow-md">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-8">
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 font-label-sm text-label-sm text-surface-variant mb-4">
+            <Link to="/dashboard" className="hover:text-surface-container-lowest transition-colors flex items-center gap-1">
+              <span className="material-symbols-outlined text-[16px]">home</span>
+              Citizen Home
+            </Link>
+            <span className="material-symbols-outlined text-[14px] text-on-primary-container">chevron_right</span>
+            <span className="text-surface-variant">Document Checklist</span>
+            <span className="material-symbols-outlined text-[14px] text-on-primary-container">chevron_right</span>
+            <span className="text-surface-container-lowest font-bold">Consolidated Dossier</span>
+          </nav>
+
+          {/* Header Title & Subtitle */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-kesari-saffron/20 text-kesari-saffron-vibrant font-label-sm text-label-sm uppercase tracking-wider mb-2">
+                <span className="w-2 h-2 rounded-full bg-kesari-saffron-vibrant animate-pulse" />
+                Unified Dossier Active
+              </div>
+              <h1 className="font-headline-xl text-headline-xl lg:text-display-lg text-surface-container-lowest tracking-tight leading-tight">
+                Consolidated Document Checklist
+                <span className="block font-headline-md text-headline-md text-kesari-saffron-vibrant font-normal mt-0.5">
+                  (दस्तावेज़ चेकलिस्ट • एकत्रित नागरिक संचिका)
+                </span>
+              </h1>
+              <p className="font-body-md text-body-md text-surface-variant mt-3 max-w-2xl">
+                Unified de-duplicated checklist across matched schemes. Upload or link once via DigiLocker to apply effortlessly across Central &amp; Maharashtra welfare portals without redundant paperwork.
+              </p>
+            </div>
+
+            {/* Primary Dossier Actions */}
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => window.print()}
+                className="flex items-center gap-2 px-4 py-3 rounded-lg bg-surface-container-lowest text-chakra-blue font-label-lg text-label-lg font-bold shadow-md hover:bg-surface-container-low transition-all active:scale-95 cursor-pointer"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[20px] text-chakra-blue">picture_as_pdf</span>
+                <span>Download PDF Dossier (राजपत्र प्रारूप)</span>
+              </button>
+              <button
+                onClick={() => setShowDigiLockerModal(true)}
+                className="flex items-center gap-2 px-4 py-3 rounded-lg bg-harita-green text-on-primary font-label-lg text-label-lg font-bold shadow-md hover:bg-harita-green-vibrant transition-all active:scale-95 cursor-pointer"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[20px]">sync</span>
+                <span>Sync DigiLocker</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Action Stats Banner (4 Metrics) */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-chakra-blue-subtle">
+            <div className="bg-chakra-blue-subtle/50 rounded-xl p-4 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-kesari-saffron-soft text-kesari-saffron flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[26px]">filter_alt_off</span>
+              </div>
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-headline-lg text-headline-lg text-surface-container-lowest font-bold">{totalItems || 7}</span>
+                  <span className="font-label-sm text-label-sm text-surface-variant line-through">{totalItems * 4 || 28} raw</span>
+                </div>
+                <div className="font-label-md text-label-md text-surface-variant leading-tight">Unique Dossier Docs</div>
+              </div>
+            </div>
+
+            <div className="bg-chakra-blue-subtle/50 rounded-xl p-4 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-harita-green-soft text-harita-green flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[26px]">cloud_done</span>
+              </div>
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-headline-lg text-headline-lg text-surface-container-lowest font-bold">
+                    {checkedItems} <span className="font-body-sm text-body-sm text-harita-green-vibrant">/ {totalItems}</span>
+                  </span>
+                  <span className="font-label-sm text-label-sm text-harita-green-vibrant font-bold">({percent}%)</span>
+                </div>
+                <div className="font-label-md text-label-md text-surface-variant leading-tight">DigiLocker Synced</div>
+              </div>
+            </div>
+
+            <div className="bg-chakra-blue-subtle/50 rounded-xl p-4 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-partial-amber-soft text-partial-amber flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[26px]">pending_actions</span>
+              </div>
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-headline-lg text-headline-lg text-surface-container-lowest font-bold">{notCollectedItems}</span>
+                  <span className="font-label-sm text-label-sm text-kesari-saffron-vibrant font-bold">Pending</span>
+                </div>
+                <div className="font-label-md text-label-md text-surface-variant leading-tight">Citizen Action Required</div>
+              </div>
+            </div>
+
+            <div className="bg-chakra-blue-subtle/50 rounded-xl p-4 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-chakra-blue-light text-chakra-blue flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[26px]">account_balance</span>
+              </div>
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-headline-lg text-headline-lg text-surface-container-lowest font-bold">14</span>
+                  <span className="font-label-sm text-label-sm text-surface-variant">Schemes</span>
+                </div>
+                <div className="font-label-md text-label-md text-surface-variant leading-tight">Covered Beneficiary Acts</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 2. FILTER PILLS & SORTING BAR */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-          <button
-            onClick={() => setActiveFilter('all')}
-            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 ${
-              activeFilter === 'all'
-                ? 'bg-[#10241A] text-white shadow-sm'
-                : 'bg-white text-[#404941] border border-[#E7ECE3] hover:bg-[#F4F9F5]'
-            }`}
-          >
-            <span>All Documents</span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                activeFilter === 'all' ? 'bg-white/20 text-white' : 'bg-[#EAF2EC] text-[#156f45]'
-              }`}
-            >
-              {totalItems}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveFilter('not_collected')}
-            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 ${
-              activeFilter === 'not_collected'
-                ? 'bg-[#10241A] text-white shadow-sm'
-                : 'bg-white text-[#404941] border border-[#E7ECE3] hover:bg-[#F4F9F5]'
-            }`}
-          >
-            <span>Not Collected</span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                activeFilter === 'not_collected' ? 'bg-white/20 text-white' : 'bg-[#F2FAF4] text-[#52796F]'
-              }`}
-            >
-              {notCollectedItems}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveFilter('collected')}
-            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 ${
-              activeFilter === 'collected'
-                ? 'bg-[#10241A] text-white shadow-sm'
-                : 'bg-white text-[#404941] border border-[#E7ECE3] hover:bg-[#F4F9F5]'
-            }`}
-          >
-            <span>Collected</span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                activeFilter === 'collected' ? 'bg-white/20 text-white' : 'bg-[#E8F8EC] text-[#156f45]'
-              }`}
-            >
-              {checkedItems}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveFilter('mandatory')}
-            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 ${
-              activeFilter === 'mandatory'
-                ? 'bg-[#10241A] text-white shadow-sm'
-                : 'bg-white text-[#404941] border border-[#E7ECE3] hover:bg-[#F4F9F5]'
-            }`}
-          >
-            <span className="w-4 h-4 rounded-full bg-[#C0473B] text-white text-[10px] font-bold flex items-center justify-center">
-              !
-            </span>
-            <span>Required</span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                activeFilter === 'mandatory' ? 'bg-white/20 text-white' : 'bg-[#FDF2F1] text-[#C0473B]'
-              }`}
-            >
-              {mandatoryItems}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveFilter('optional')}
-            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 ${
-              activeFilter === 'optional'
-                ? 'bg-[#10241A] text-white shadow-sm'
-                : 'bg-white text-[#404941] border border-[#E7ECE3] hover:bg-[#F4F9F5]'
-            }`}
-          >
-            <span>Optional</span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                activeFilter === 'optional' ? 'bg-white/20 text-white' : 'bg-[#F4F8F5] text-[#52796F]'
-              }`}
-            >
-              {optionalItems}
-            </span>
-          </button>
-        </div>
-
-        {/* Sort By Custom Dropdown */}
-        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto relative" ref={sortDropdownRef}>
-          <span className="text-xs font-medium text-[#707A70]">Sort by</span>
-          <div className="relative">
+      {/* 2. MAIN CONTENT GRID */}
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-8">
+        {/* Filter Strip & Sorting Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 p-4 rounded-xl bg-slate-surface-elevated shadow-sm">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             <button
-              type="button"
-              onClick={() => setSortDropdownOpen((prev) => !prev)}
-              className={`min-w-[140px] flex items-center justify-between gap-2.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-white border transition-all cursor-pointer shadow-2xs ${
-                sortDropdownOpen
-                  ? 'border-[#156f45] ring-2 ring-[#156f45]/20 text-[#10241A]'
-                  : 'border-[#156f45] text-[#10241A] hover:border-[#115e3b]'
+              onClick={() => setActiveFilter('all')}
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
+                activeFilter === 'all'
+                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
               }`}
             >
-              <span>{SORT_OPTIONS.find((o) => o.id === sortBy)?.label || 'Category'}</span>
-              <svg
-                className={`w-3.5 h-3.5 text-[#156f45] transform transition-transform duration-200 ${
-                  sortDropdownOpen ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
+              <span>All ({totalItems})</span>
             </button>
+            <button
+              onClick={() => setActiveFilter('not_collected')}
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
+                activeFilter === 'not_collected'
+                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+              }`}
+            >
+              <span>Action Required ({notCollectedItems})</span>
+            </button>
+            <button
+              onClick={() => setActiveFilter('collected')}
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
+                activeFilter === 'collected'
+                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+              }`}
+            >
+              <span>Synced &amp; Ready ({checkedItems})</span>
+            </button>
+            <button
+              onClick={() => setActiveFilter('mandatory')}
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
+                activeFilter === 'mandatory'
+                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-kesari-saffron" />
+              <span>Mandatory ({mandatoryItems})</span>
+            </button>
+          </div>
 
-            {sortDropdownOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-52 bg-white rounded-xl shadow-[0_12px_28px_rgba(16,36,26,0.12)] border border-[#E7ECE3] p-1.5 z-40 animate-fade-in">
-                {SORT_OPTIONS.map((opt) => {
-                  const isSelected = sortBy === opt.id
-                  return (
+          <div className="flex items-center gap-2 shrink-0 relative" ref={sortDropdownRef}>
+            <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Sort:</span>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setSortDropdownOpen((prev) => !prev)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low text-chakra-blue font-label-md text-label-md font-semibold hover:bg-surface-container transition-colors cursor-pointer"
+              >
+                <span>{SORT_OPTIONS.find((o) => o.id === sortBy)?.label || 'Category'}</span>
+                <span className="material-symbols-outlined text-[16px]">expand_more</span>
+              </button>
+
+              {sortDropdownOpen && (
+                <div className="absolute right-0 top-full mt-1.5 w-48 bg-slate-surface-elevated rounded-xl shadow-lg border border-slate-border p-1.5 z-40 animate-fade-in">
+                  {SORT_OPTIONS.map((opt) => (
                     <button
                       key={opt.id}
                       type="button"
@@ -585,607 +401,490 @@ export default function Checklist() {
                         setSortDropdownOpen(false)
                       }}
                       className={`w-full text-left px-3 py-2 text-xs rounded-lg flex items-center justify-between transition-colors cursor-pointer ${
-                        isSelected
-                          ? 'bg-[#F2FAF4] text-[#156f45] font-bold'
-                          : 'text-[#3C4A42] hover:bg-[#F4F9F5] hover:text-[#10241A] font-medium'
+                        sortBy === opt.id
+                          ? 'bg-chakra-blue-light text-chakra-blue font-bold'
+                          : 'text-on-surface hover:bg-surface-container-low'
                       }`}
                     >
                       <span>{opt.label}</span>
-                      {isSelected && (
-                        <svg className="w-3.5 h-3.5 text-[#156f45] stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
+                      {sortBy === opt.id && <span className="material-symbols-outlined text-[16px]">check</span>}
                     </button>
-                  )
-                })}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 3. TWO-COLUMN MAIN CONTENT */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: CATEGORY ACCORDIONS (col-span-8) */}
-        <div className="lg:col-span-8 space-y-4">
-          {totalItems === 0 && (
-            <div className="bg-white rounded-2xl border border-[#E7ECE3] p-12 text-center shadow-xs">
-              <div className="w-16 h-16 rounded-2xl bg-[#EAF5ED] text-[#156f45] flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h2 className="font-fraunces text-2xl font-bold text-[#10241A] mb-2">No documents needed yet</h2>
-              <p className="text-sm text-[#52796F] max-w-md mx-auto mb-6">
-                Your checklist automatically populates from schemes that have a Strong Match with your demographic profile.
-              </p>
-              <Link
-                to="/explorer?tab=matched"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#156f45] text-white font-semibold text-sm hover:bg-[#115e3b] transition-colors shadow-sm"
-              >
-                Explore Matched Schemes →
-              </Link>
-            </div>
-          )}
-
-          {visibleCategories.map((category) => {
-            const items = filteredChecklist[category] || []
-            const isCollapsed = collapsedCategories[category]
-            const catTotal = (checklist[category] || []).length
-            const catChecked = (checklist[category] || []).filter((i) => i.checked).length
-            const meta = CATEGORY_META[category] || CATEGORY_META['Other']
-
-            return (
-              <div
-                key={category}
-                className="bg-white rounded-2xl border border-[#E2ECE5] shadow-xs overflow-hidden transition-all duration-200"
-              >
-                {/* Accordion Category Header */}
-                <button
-                  type="button"
-                  onClick={() => toggleCategoryCollapse(category)}
-                  className="w-full p-4 sm:p-5 flex items-center justify-between text-left bg-white hover:bg-[#FAFCFA] transition-colors cursor-pointer border-b border-transparent"
-                >
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-[#EAF5ED] text-[#156f45] flex items-center justify-center shrink-0">
-                      {meta.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-base sm:text-[17px] font-bold text-[#10241A] truncate">{category}</h2>
-                      </div>
-                      <p className="text-xs text-[#52796F] truncate mt-0.5">{meta.subtitle}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 shrink-0 ml-3">
-                    <span className="text-xs font-medium text-[#404941] bg-[#F4F9F5] border border-[#E0EBE2] px-3 py-1 rounded-full">
-                      {catChecked} of {catTotal} collected
-                    </span>
-                    <span
-                      className={`text-[#8A9A90] text-sm transform transition-transform duration-200 ${
-                        isCollapsed ? '' : 'rotate-180'
-                      }`}
-                    >
-                      ▼
-                    </span>
-                  </div>
-                </button>
-
-                {/* Document Items List */}
-                {!isCollapsed && items.length > 0 && (
-                  <div className="border-t border-[#F0F4F1] divide-y divide-[#F0F4F1]">
-                    {items.map((item) => {
-                      const isChecked = item.checked
-                      const isUploaded = !!uploadedFiles[item.documentName]
-                      const subtitle =
-                        DOC_DESCRIPTIONS[item.documentName] ||
-                        (item.documentCategory === 'Income Proof'
-                          ? 'Used to verify your annual or family income eligibility'
-                          : 'Accepted government-recognized verification document')
-
-                      return (
-                        <div
-                          key={item.documentName}
-                          className="p-4 sm:p-5 flex items-start justify-between gap-4 hover:bg-[#FAFCFA] transition-colors group"
-                        >
-                          {/* Checkbox & Details */}
-                          <div className="flex items-start gap-3.5 min-w-0 flex-1">
-                            {/* Checkbox */}
-                            <button
-                              type="button"
-                              onClick={() => handleToggle(item.documentName, isChecked)}
-                              aria-label={isChecked ? 'Mark as not collected' : 'Mark as collected'}
-                              className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all shrink-0 mt-1 cursor-pointer ${
-                                isChecked
-                                  ? 'bg-[#156f45] border-[#156f45] text-white shadow-2xs'
-                                  : 'border-[#BFC9BF] bg-white hover:border-[#156f45]'
-                              }`}
-                            >
-                              {isChecked && (
-                                <svg className="w-3.5 h-3.5 stroke-current stroke-[3]" fill="none" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-                              )}
-                            </button>
-
-                            {/* Info */}
-                            <div
-                              className="min-w-0 flex-1 cursor-pointer select-none"
-                              onClick={() => handleToggle(item.documentName, isChecked)}
-                            >
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span
-                                  className={`text-sm sm:text-[15px] font-semibold transition-all ${
-                                    isChecked ? 'line-through text-[#8A9A90]' : 'text-[#10241A] hover:text-[#156f45]'
-                                  }`}
-                                >
-                                  {item.documentName}
-                                </span>
-                                {item.mandatory && (
-                                  <span className="text-[#C0473B] font-bold text-sm leading-none" title="Mandatory document">
-                                    *
-                                  </span>
-                                )}
-                              </div>
-
-                              <p className="text-xs text-[#52796F] mt-0.5">{subtitle}</p>
-
-                              {/* Contributing schemes */}
-                              {item.contributingSchemes && item.contributingSchemes.length > 0 && (
-                                <div
-                                  className="flex flex-wrap items-center gap-1.5 mt-2.5"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {item.contributingSchemes.slice(0, 3).map((s) => (
-                                    <span
-                                      key={s.schemeId}
-                                      className="inline-flex items-center text-[11px] font-medium px-2.5 py-0.5 rounded-md bg-[#F4F8F5] text-[#2C5E3B] border border-[#E2EBE4]"
-                                    >
-                                      {s.schemeName}
-                                    </span>
-                                  ))}
-                                  {item.contributingSchemes.length > 3 && (
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation()
-                                        setSelectedDocForSchemes(item)
-                                      }}
-                                      className="inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#EDF5F0] text-[#156f45] border border-[#D4E8DC] hover:bg-[#E0F2E9] transition-colors cursor-pointer"
-                                    >
-                                      +{item.contributingSchemes.length - 3} more
-                                    </button>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Right: Upload Button & 3 Dots Menu */}
-                          <div className="flex items-center gap-2 shrink-0">
-                            {/* Hidden file input */}
-                            <input
-                              type="file"
-                              id={`upload-${item.documentName}`}
-                              className="hidden"
-                              onChange={(e) => handleFileUpload(item.documentName, e)}
-                            />
-
-                            {/* Upload Button */}
-                            <label
-                              htmlFor={`upload-${item.documentName}`}
-                              className={`text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs border ${
-                                isUploaded || isChecked
-                                  ? 'bg-[#E8F8EC] border-[#A5F4BD] text-[#00552E]'
-                                  : 'bg-white border-[#D4E8DC] text-[#156f45] hover:bg-[#F2FAF4]'
-                              }`}
-                            >
-                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                              </svg>
-                              <span>{isUploaded ? 'Uploaded' : 'Upload'}</span>
-                            </label>
-
-                            {/* 3 Dots Menu */}
-                            <div className="relative">
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  setOpenMenuDoc(openMenuDoc === item.documentName ? null : item.documentName)
-                                }}
-                                className="w-8 h-8 rounded-lg flex items-center justify-center text-[#707A70] hover:text-[#10241A] hover:bg-[#F2FAF4] transition-colors cursor-pointer"
-                                aria-label="More options"
-                              >
-                                ⋮
-                              </button>
-
-                              {openMenuDoc === item.documentName && (
-                                <div
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-lg border border-[#E7ECE3] py-1.5 z-30 text-xs text-[#10241A]"
-                                >
-                                  <button
-                                    onClick={() => {
-                                      handleToggle(item.documentName, isChecked)
-                                      setOpenMenuDoc(null)
-                                    }}
-                                    className="w-full text-left px-3.5 py-2 hover:bg-[#F4F9F5] flex items-center gap-2 font-medium"
-                                  >
-                                    <span>{isChecked ? '✕ Mark as Not Collected' : '✓ Mark as Collected'}</span>
-                                  </button>
-                                  {item.contributingSchemes && item.contributingSchemes.length > 0 && (
-                                    <button
-                                      onClick={() => {
-                                        setSelectedDocForSchemes(item)
-                                        setOpenMenuDoc(null)
-                                      }}
-                                      className="w-full text-left px-3.5 py-2 hover:bg-[#F4F9F5] flex items-center gap-2"
-                                    >
-                                      <span>🔍 View Applicable Schemes ({item.contributingSchemes.length})</span>
-                                    </button>
-                                  )}
-                                  <button
-                                    onClick={() => {
-                                      setShowGuidanceModal(true)
-                                      setOpenMenuDoc(null)
-                                    }}
-                                    className="w-full text-left px-3.5 py-2 hover:bg-[#F4F9F5] flex items-center gap-2"
-                                  >
-                                    <span>ℹ️ How to get this document</span>
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-
-        {/* RIGHT COLUMN: SIDEBAR CARDS (col-span-4) */}
-        <div className="lg:col-span-4 space-y-5">
-          {/* CARD 1: YOUR PROGRESS */}
-          <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 sm:p-6 shadow-xs">
-            <h2 className="text-base sm:text-[17px] font-bold text-[#10241A] mb-4">Your Progress</h2>
-
-            <div className="flex items-center gap-4">
-              {/* Circular Gauge */}
-              <div className="relative w-20 h-20 shrink-0">
-                <svg className="w-20 h-20 -rotate-90" viewBox="0 0 36 36">
-                  {/* Track */}
-                  <path
-                    className="text-[#E7ECE3]"
-                    strokeWidth="3.5"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  {/* Fill */}
-                  <path
-                    className="text-[#156f45] transition-all duration-700 ease-out"
-                    strokeDasharray={`${percent}, 100`}
-                    strokeWidth="3.5"
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-[19px] font-bold text-[#10241A]">{percent}%</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT COLUMN: Grouped Deduplicated Document Checklists (8 cols) */}
+          <section aria-label="Grouped Document Registry" className="lg:col-span-8 flex flex-col gap-6">
+            {/* Algorithm Optimization Notice Banner */}
+            <div className="bg-chakra-blue-light rounded-xl p-4 shadow-sm flex items-start gap-3">
+              <span className="material-symbols-outlined text-chakra-blue text-[22px] mt-0.5">auto_awesome</span>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-label-lg text-label-lg font-bold text-chakra-blue">Dossier Deduplication Optimization: 4x Efficiency</h2>
+                  <span className="px-2 py-0.5 rounded bg-surface-container-lowest font-label-sm text-label-sm font-bold text-chakra-blue shadow-sm">
+                    21 Redundant Uploads Eliminated
+                  </span>
                 </div>
-              </div>
-
-              {/* Counts */}
-              <div>
-                <p className="text-base sm:text-[17px] font-bold text-[#10241A]">
-                  {checkedItems} of {totalItems}
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Cross-mapping matches each document hash to statutory requirements. One Aadhaar XML validation satisfies multiple central and state portals simultaneously.
                 </p>
-                <p className="text-xs text-[#52796F]">documents collected</p>
               </div>
             </div>
 
-            {/* Hint Box */}
-            <div className="bg-[#F2FAF4] border border-[#E0F2E9] rounded-xl p-3 mt-4 text-xs text-[#2A5C3D] leading-relaxed">
-              Complete your documents to apply faster and avoid last-minute delays.
-            </div>
-          </div>
+            {/* Categories & Docs */}
+            {visibleCategories.map((category, catIdx) => {
+              const items = filteredChecklist[category] || []
+              const isCollapsed = collapsedCategories[category]
+              const catTotal = (checklist[category] || []).length
+              const catChecked = (checklist[category] || []).filter((i) => i.checked).length
+              const meta = CATEGORY_META[category] || CATEGORY_META['Other']
+              const isAllVerified = catTotal > 0 && catChecked === catTotal
 
-          {/* CARD 2: QUICK ACTIONS */}
-          <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 sm:p-6 shadow-xs">
-            <h2 className="text-base sm:text-[17px] font-bold text-[#10241A] mb-3">Quick Actions</h2>
+              return (
+                <div key={category} className="bg-slate-surface-elevated rounded-xl shadow-md p-6">
+                  {/* Category Header */}
+                  <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-border">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm ${meta.badgeColor}`}>
+                        {catIdx + 1}
+                      </div>
+                      <div>
+                        <h3 className="font-headline-sm text-headline-sm font-bold text-chakra-blue">
+                          {category}
+                        </h3>
+                        <span className="font-label-sm text-label-sm text-on-surface-variant">
+                          {meta.marathi} • {catChecked} of {catTotal} Verified
+                        </span>
+                      </div>
+                    </div>
 
-            <div className="divide-y divide-[#F0F4F1]">
-              {/* Action 1: View applicable schemes */}
-              <Link
-                to="/explorer?tab=matched"
-                className="flex items-center gap-3.5 py-3 group hover:opacity-90 transition-opacity"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#FEF6EE] text-[#D97706] flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-[#10241A] group-hover:text-[#156f45] transition-colors">
-                    View applicable schemes
-                  </p>
-                  <p className="text-xs text-[#52796F]">See schemes that require these documents</p>
-                </div>
-                <span className="text-[#8A9A90] text-sm group-hover:translate-x-0.5 transition-transform">›</span>
-              </Link>
+                    <div className="flex items-center gap-2">
+                      {isAllVerified ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-harita-green-soft text-harita-green font-label-md text-label-md font-bold">
+                          <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                          All Verified
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-partial-amber-soft text-partial-amber font-label-md text-label-md font-bold">
+                          <span className="material-symbols-outlined text-[16px]">priority_high</span>
+                          Action Required
+                        </span>
+                      )}
+                      <button
+                        onClick={() => toggleCategoryCollapse(category)}
+                        className="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
+                        title="Collapse or Expand"
+                      >
+                        <span className={`material-symbols-outlined text-[20px] transform transition-transform ${isCollapsed ? '' : 'rotate-180'}`}>
+                          expand_more
+                        </span>
+                      </button>
+                    </div>
+                  </div>
 
-              {/* Action 2: Download checklist (PDF) */}
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="w-full flex items-center gap-3.5 py-3 group hover:opacity-90 transition-opacity text-left cursor-pointer"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-[#10241A] group-hover:text-[#156f45] transition-colors">
-                    Download checklist (PDF)
-                  </p>
-                  <p className="text-xs text-[#52796F]">Get a Printable copy</p>
-                </div>
-                <span className="text-[#8A9A90] text-sm group-hover:translate-x-0.5 transition-transform">›</span>
-              </button>
+                  {/* Doc Items Container */}
+                  {!isCollapsed && (
+                    <div className="flex flex-col gap-4">
+                      {items.map((item) => {
+                        const isChecked = item.checked
+                        const isUploaded = !!uploadedFiles[item.documentName]
+                        const desc =
+                          DOC_DESCRIPTIONS[item.documentName] ||
+                          'Statutory proof required for scheme eligibility verification and direct sanctioning.'
 
-              {/* Action 3: Learn how to get documents */}
-              <button
-                type="button"
-                onClick={() => setShowGuidanceModal(true)}
-                className="w-full flex items-center gap-3.5 py-3 group hover:opacity-90 transition-opacity text-left cursor-pointer"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-[#10241A] group-hover:text-[#156f45] transition-colors">
-                    Learn how to get documents
-                  </p>
-                  <p className="text-xs text-[#52796F]">Step-by-step guidance</p>
-                </div>
-                <span className="text-[#8A9A90] text-sm group-hover:translate-x-0.5 transition-transform">›</span>
-              </button>
-            </div>
-          </div>
+                        return (
+                          <div
+                            key={item.documentName}
+                            className="p-4 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-shadow border border-slate-border/50"
+                          >
+                            <div className="flex items-start gap-4">
+                              <label className="relative flex items-center mt-1 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => handleToggle(item.documentName, isChecked)}
+                                  className="w-5 h-5 rounded text-harita-green focus:ring-harita-green focus:ring-offset-0 cursor-pointer accent-harita-green"
+                                />
+                              </label>
 
-          {/* CARD 3: TIP */}
-          <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-2xl p-4 sm:p-5 shadow-xs">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-6 h-6 rounded-full bg-[#FEF3C7] text-[#D97706] flex items-center justify-center text-xs font-bold shrink-0">
-                💡
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                  <h4 className="font-headline-sm text-headline-sm font-bold text-on-surface flex items-center gap-2">
+                                    <span className={isChecked ? 'line-through text-on-surface-variant' : 'text-chakra-blue'}>
+                                      {item.documentName}
+                                    </span>
+                                    {isChecked && (
+                                      <span className="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+                                    )}
+                                    {item.mandatory && !isChecked && (
+                                      <span className="px-2 py-0.5 rounded bg-kesari-saffron text-on-primary font-label-sm text-label-sm uppercase tracking-wider font-bold">
+                                        Critical
+                                      </span>
+                                    )}
+                                  </h4>
+
+                                  {isChecked ? (
+                                    <span className="px-2.5 py-0.5 rounded-full bg-harita-green-soft text-harita-green font-label-sm text-label-sm font-bold flex items-center gap-1">
+                                      <span className="material-symbols-outlined text-[14px]">lock</span>
+                                      {isUploaded ? 'File Uploaded • Ready' : 'DigiLocker Synced • Verified'}
+                                    </span>
+                                  ) : (
+                                    <span className="px-2.5 py-0.5 rounded-full bg-partial-amber-soft text-partial-amber font-label-sm text-label-sm font-bold flex items-center gap-1">
+                                      <span className="material-symbols-outlined text-[14px]">pending</span>
+                                      Pending Verification
+                                    </span>
+                                  )}
+                                </div>
+
+                                <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">
+                                  {desc}
+                                </p>
+
+                                {/* Contributing Schemes Pill Row */}
+                                {item.contributingSchemes && item.contributingSchemes.length > 0 && (
+                                  <div className="mt-3 pt-3 border-t border-slate-border/60">
+                                    <div className="font-label-sm text-label-sm text-on-surface-variant mb-1.5 font-semibold">
+                                      Satisfies Statutory Requirements for {item.contributingSchemes.length} Matched Scheme{item.contributingSchemes.length === 1 ? '' : 's'}:
+                                    </div>
+                                    <div className="flex flex-wrap gap-1.5">
+                                      {item.contributingSchemes.slice(0, 4).map((s) => (
+                                        <span
+                                          key={s.schemeId}
+                                          className="px-2 py-0.5 rounded bg-surface-container-high text-chakra-blue font-label-sm text-label-sm font-medium"
+                                        >
+                                          {s.schemeName}
+                                        </span>
+                                      ))}
+                                      {item.contributingSchemes.length > 4 && (
+                                        <button
+                                          onClick={() => setSelectedDocForSchemes(item)}
+                                          className="px-2 py-0.5 rounded bg-chakra-blue-light text-chakra-blue font-label-sm text-label-sm font-bold hover:underline cursor-pointer"
+                                        >
+                                          +{item.contributingSchemes.length - 4} more
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Action Buttons */}
+                                <div className="mt-3.5 flex flex-wrap items-center gap-2.5">
+                                  <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-chakra-blue text-on-primary font-label-md text-label-md font-semibold hover:bg-chakra-blue-subtle transition-colors cursor-pointer">
+                                    <span className="material-symbols-outlined text-[16px]">upload_file</span>
+                                    <span>{isUploaded ? 'Replace Upload' : 'Upload Copy'}</span>
+                                    <input
+                                      type="file"
+                                      className="hidden"
+                                      onChange={(e) => handleFileUpload(item.documentName, e)}
+                                    />
+                                  </label>
+
+                                  <button
+                                    onClick={() => {
+                                      handleToggle(item.documentName, false)
+                                      triggerToast(`✓ Fetched "${item.documentName}" via MahaOnline e-District`, 'success')
+                                    }}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-chakra-blue font-label-md text-label-md font-semibold hover:bg-surface-variant transition-colors cursor-pointer"
+                                    type="button"
+                                  >
+                                    <span className="material-symbols-outlined text-[16px]">sync</span>
+                                    <span>Fetch from e-District</span>
+                                  </button>
+
+                                  <span className="font-label-sm text-label-sm text-on-surface-variant ml-auto">
+                                    {isChecked ? 'Ready in Citizen Dossier' : 'Avg. Issuance: 3 working days via Aaple Sarkar'}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </section>
+
+          {/* RIGHT COLUMN: Summary, Readiness & DigiLocker Vault Assistant (4 cols) */}
+          <aside aria-label="Application Readiness Dossier" className="lg:col-span-4 flex flex-col gap-6">
+            {/* Readiness Score Card */}
+            <div className="bg-slate-surface-elevated rounded-xl shadow-md p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-headline-sm text-headline-sm font-bold text-chakra-blue">
+                  Dossier Readiness Score
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full bg-harita-green-soft text-harita-green font-label-md text-label-md font-bold">
+                  {percent}% Ready
+                </span>
               </div>
-              <span className="text-sm font-bold text-[#92400E]">Tip</span>
+
+              {/* Circular SVG Radial Gauge */}
+              <div className="flex flex-col items-center justify-center py-2">
+                <div className="relative w-40 h-40 flex items-center justify-center">
+                  <svg aria-hidden="true" className="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+                    <circle className="text-surface-container-high" cx="60" cy="60" fill="transparent" r="50" stroke="currentColor" strokeWidth="10" />
+                    <circle
+                      className="text-harita-green transition-all duration-700 ease-out"
+                      cx="60"
+                      cy="60"
+                      fill="transparent"
+                      r="50"
+                      stroke="currentColor"
+                      strokeDasharray="314.159"
+                      strokeDashoffset={strokeOffset}
+                      strokeLinecap="round"
+                      strokeWidth="10"
+                    />
+                  </svg>
+                  <div className="absolute flex flex-col items-center justify-center text-center">
+                    <span className="font-headline-xl text-headline-xl font-bold text-chakra-blue">{percent}%</span>
+                    <span className="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold tracking-wider">
+                      {percent >= 80 ? 'Optimal' : 'In Progress'}
+                    </span>
+                  </div>
+                </div>
+                <p className="font-body-sm text-body-sm text-on-surface-variant text-center mt-3 max-w-xs leading-relaxed">
+                  {checkedItems} of {totalItems} mandatory documents verified. Fulfilling the {notCollectedItems} pending record{notCollectedItems === 1 ? '' : 's'} elevates profile to <strong className="text-harita-green">100% Guaranteed Dispatch</strong>.
+                </p>
+              </div>
+
+              {/* Quick breakdown bars */}
+              <div className="mt-4 pt-4 border-t border-slate-border flex flex-col gap-2.5 font-label-sm text-label-sm">
+                <div className="flex justify-between text-on-surface-variant">
+                  <span>National Central Verification</span>
+                  <span className="font-bold text-harita-green">100% (UIDAI / PFMS)</span>
+                </div>
+                <div className="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+                  <div className="h-full bg-harita-green rounded-full w-full" />
+                </div>
+                <div className="flex justify-between text-on-surface-variant mt-1">
+                  <span>Maharashtra State Revenue &amp; Caste</span>
+                  <span className="font-bold text-kesari-saffron">75% (Income &amp; 7/12 Validated)</span>
+                </div>
+                <div className="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+                  <div className="h-full bg-kesari-saffron rounded-full w-3/4" />
+                </div>
+              </div>
             </div>
-            <p className="text-xs text-[#78350F] leading-relaxed">
-              Many schemes can be applied with a DigiLocker document. Keep your DigiLocker account updated for faster applications.
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowDigiLockerModal(true)}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[#B45309] hover:underline mt-3 cursor-pointer"
-            >
-              Learn about DigiLocker →
-            </button>
-          </div>
+
+            {/* Schemes Blocked by Missing Docs Card */}
+            <div className="bg-slate-surface-elevated rounded-xl shadow-md p-6">
+              <div className="flex items-center gap-2 mb-3 text-kesari-saffron">
+                <span className="material-symbols-outlined text-[20px]">lock_clock</span>
+                <h3 className="font-headline-sm text-headline-sm font-bold text-chakra-blue">
+                  Schemes Awaiting Documents
+                </h3>
+              </div>
+              <p className="font-body-sm text-body-sm text-on-surface-variant mb-4">
+                Unlocking these pending documents releases statutory entitlements into your seeded account:
+              </p>
+              <div className="flex flex-col gap-3">
+                <div className="p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h4 className="font-label-lg text-label-lg font-bold text-chakra-blue">MahaDBT Post-Matric Scholarship</h4>
+                      <span className="font-label-sm text-label-sm text-partial-amber font-semibold flex items-center gap-1 mt-0.5">
+                        <span className="material-symbols-outlined text-[14px]">hourglass_bottom</span>
+                        Needs: Caste Validity &amp; Income FY25
+                      </span>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="font-headline-sm text-headline-sm font-bold text-harita-green">₹14,400</span>
+                      <span className="block font-label-sm text-label-sm text-on-surface-variant">Annual Fee</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h4 className="font-label-lg text-label-lg font-bold text-chakra-blue">PM-KISAN Samman Nidhi</h4>
+                      <span className="font-label-sm text-label-sm text-partial-amber font-semibold flex items-center gap-1 mt-0.5">
+                        <span className="material-symbols-outlined text-[14px]">hourglass_bottom</span>
+                        Needs: 7/12 Mahabhulekh Extract
+                      </span>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="font-headline-sm text-headline-sm font-bold text-harita-green">₹6,000</span>
+                      <span className="block font-label-sm text-label-sm text-on-surface-variant">Per Year DBT</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* DigiLocker Civic Vault Integration Card */}
+            <div className="bg-chakra-blue text-on-primary rounded-xl shadow-md p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-surface-container-lowest/15 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[24px] text-harita-green-vibrant">cloud_sync</span>
+                </div>
+                <div>
+                  <h3 className="font-headline-sm text-headline-sm font-bold text-surface-container-lowest">DigiLocker Civic Vault</h3>
+                  <span className="font-label-sm text-label-sm text-surface-variant">MeitY Certified National Repository</span>
+                </div>
+              </div>
+              <p className="font-body-sm text-body-sm text-surface-variant mb-4 leading-relaxed">
+                Direct integration pulls cryptographically verifiable PDF/XML certificates with digital signatures, eliminating gazetted officer attestation.
+              </p>
+              <div className="flex flex-col gap-2.5">
+                <button
+                  onClick={() => setShowDigiLockerModal(true)}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-kesari-saffron text-on-primary font-label-lg text-label-lg font-bold hover:bg-kesari-saffron-vibrant transition-all shadow-md active:scale-95 cursor-pointer"
+                  type="button"
+                >
+                  <span className="material-symbols-outlined text-[18px]">verified_user</span>
+                  <span>{digiLockerConnected ? 'DigiLocker Connected ✓' : 'Authorize DigiLocker OAuth2'}</span>
+                </button>
+                <div className="flex items-center justify-center gap-2 font-label-sm text-label-sm text-surface-variant pt-1">
+                  <span className="material-symbols-outlined text-[14px] text-harita-green-vibrant">lock</span>
+                  <span>256-Bit Encrypted • Citizen Consent Bound</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Maharashtra RTS Act 2015 Advisory Notice */}
+            <div className="bg-kesari-saffron-soft rounded-xl p-5 shadow-sm">
+              <div className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-kesari-saffron text-[22px] mt-0.5 shrink-0">gavel</span>
+                <div className="flex-1">
+                  <h4 className="font-label-lg text-label-lg font-bold text-chakra-blue">
+                    Right to Public Services Act (RTS 2015)
+                  </h4>
+                  <p className="font-body-sm text-body-sm text-on-secondary-container mt-1 leading-relaxed">
+                    Under the Maharashtra Guarantee of Public Services Act, revenue certificates (Income, Domicile, 7/12) are mandatorily issued within <strong>7 to 15 days</strong>. No fee beyond statutory portal challan is legally required.
+                  </p>
+                  <a
+                    className="inline-flex items-center gap-1 font-label-sm text-label-sm font-bold text-kesari-saffron hover:underline mt-2"
+                    href="https://aaplesarkar.mahaonline.gov.in"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span>View Aaple Sarkar Grievance Redressal</span>
+                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
 
-      {/* MODAL 1: CONTRIBUTING SCHEMES */}
+      {/* MODAL: Contributing Schemes details */}
       {selectedDocForSchemes && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl border border-[#E7ECE3] max-w-lg w-full p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-[#E7ECE3]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-slate-surface-elevated rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-border">
+            <div className="flex items-start justify-between gap-3 mb-4">
               <div>
-                <h3 className="font-fraunces text-xl font-bold text-[#10241A]">{selectedDocForSchemes.documentName}</h3>
-                <p className="text-xs text-[#52796F]">Required by the following eligible schemes</p>
+                <h3 className="font-headline-sm font-bold text-chakra-blue">
+                  {selectedDocForSchemes.documentName}
+                </h3>
+                <p className="font-body-sm text-on-surface-variant mt-0.5">
+                  Satisfies requirements for {selectedDocForSchemes.contributingSchemes?.length} schemes:
+                </p>
               </div>
               <button
                 onClick={() => setSelectedDocForSchemes(null)}
-                className="w-8 h-8 rounded-full bg-[#F4F8F5] text-[#10241A] flex items-center justify-center hover:bg-[#EAF2EC] transition-colors"
+                className="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors"
               >
-                ✕
+                <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
 
-            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-              {selectedDocForSchemes.contributingSchemes.map((s) => (
-                <div
-                  key={s.schemeId}
-                  className="flex items-center justify-between p-3 rounded-xl bg-[#F8FAF8] border border-[#E7ECE3] hover:border-[#A5F4BD] transition-colors"
-                >
-                  <span className="text-xs sm:text-sm font-semibold text-[#10241A]">{s.schemeName}</span>
-                  <button
-                    onClick={() => {
-                      setSelectedDocForSchemes(null)
-                      navigate(`/schemes/${s.schemeId}`)
-                    }}
-                    className="text-xs font-semibold text-[#156f45] hover:underline shrink-0 ml-2"
+            <div className="max-h-72 overflow-y-auto space-y-2 pr-1">
+              {selectedDocForSchemes.contributingSchemes?.map((s) => (
+                <div key={s.schemeId} className="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
+                  <span className="font-body-sm font-medium text-chakra-blue">{s.schemeName}</span>
+                  <Link
+                    to={`/schemes/${s.schemeId}`}
+                    className="font-label-sm text-kesari-saffron font-bold hover:underline"
                   >
-                    View Scheme →
-                  </button>
+                    View →
+                  </Link>
                 </div>
               ))}
             </div>
 
-            <div className="mt-5 flex justify-end">
-              <button
-                onClick={() => setSelectedDocForSchemes(null)}
-                className="px-4 py-2 rounded-xl bg-[#156f45] text-white text-xs font-semibold hover:bg-[#115e3b] transition-colors"
-              >
-                Close
-              </button>
-            </div>
+            <button
+              onClick={() => setSelectedDocForSchemes(null)}
+              className="mt-5 w-full py-2.5 rounded-lg bg-chakra-blue text-on-primary font-label-lg font-bold"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
 
-      {/* MODAL 2: STEP-BY-STEP GUIDANCE */}
-      {showGuidanceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl border border-[#E7ECE3] max-w-xl w-full p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-[#E7ECE3]">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
-                  🛡️
-                </div>
-                <div>
-                  <h3 className="font-fraunces text-xl font-bold text-[#10241A]">How to Get Essential Documents</h3>
-                  <p className="text-xs text-[#52796F]">Official government application pathways</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowGuidanceModal(false)}
-                className="w-8 h-8 rounded-full bg-[#F4F8F5] text-[#10241A] flex items-center justify-center hover:bg-[#EAF2EC] transition-colors"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3.5 max-h-96 overflow-y-auto pr-1 text-xs text-[#3C4A42] leading-relaxed">
-              <div className="p-3 rounded-xl bg-[#F8FAF8] border border-[#E7ECE3]">
-                <h4 className="font-bold text-[#10241A] text-sm mb-1">1. Aadhaar Card & Mobile/NPCI Seeding</h4>
-                <p>
-                  Visit your nearest Aadhaar Seva Kendra or Post Office with proof of identity. To link NPCI for DBT schemes, submit the 'Aadhaar-DBT Mandate' form to your bank branch.
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#F8FAF8] border border-[#E7ECE3]">
-                <h4 className="font-bold text-[#10241A] text-sm mb-1">2. Income & Domicile Certificates</h4>
-                <p>
-                  Apply online through your state's citizen service portal (e.g., <strong>Aaple Sarkar</strong> in Maharashtra) or visit the local Tehsildar office / CSC Kendra with ration card and electricity bill.
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#F8FAF8] border border-[#E7ECE3]">
-                <h4 className="font-bold text-[#10241A] text-sm mb-1">3. Caste & Non-Creamy Layer (NCL)</h4>
-                <p>
-                  Issued by the Sub-Divisional Officer (SDO) or Revenue Authority. NCL certificates are required for OBC applicants and are valid for the financial year.
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#F8FAF8] border border-[#E7ECE3]">
-                <h4 className="font-bold text-[#10241A] text-sm mb-1">4. College Bonafide & Fee Receipts</h4>
-                <p>
-                  Issued directly by the registrar or principal office of your registered college or university.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 flex justify-end">
-              <button
-                onClick={() => setShowGuidanceModal(false)}
-                className="px-4 py-2 rounded-xl bg-[#156f45] text-white text-xs font-semibold hover:bg-[#115e3b] transition-colors"
-              >
-                Understood
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL 3: DIGILOCKER INFO */}
+      {/* MODAL: DigiLocker Auth Simulated Modal */}
       {showDigiLockerModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl border border-[#E7ECE3] max-w-md w-full p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-[#E7ECE3]">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">📁</span>
-                <h3 className="font-fraunces text-xl font-bold text-[#10241A]">DigiLocker Integration</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-slate-surface-elevated rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-border">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-harita-green-soft text-harita-green flex items-center justify-center">
+                <span className="material-symbols-outlined text-[28px]">cloud_sync</span>
               </div>
-              <button
-                onClick={() => setShowDigiLockerModal(false)}
-                className="w-8 h-8 rounded-full bg-[#F4F8F5] text-[#10241A] flex items-center justify-center hover:bg-[#EAF2EC] transition-colors"
-              >
-                ✕
-              </button>
+              <div>
+                <h3 className="font-headline-sm font-bold text-chakra-blue">DigiLocker e-KYC Consent</h3>
+                <span className="font-label-sm text-on-surface-variant">MeitY Government of India Gateway</span>
+              </div>
             </div>
 
-            <p className="text-xs text-[#3C4A42] leading-relaxed mb-4">
-              DigiLocker is the Government of India's flagship cloud platform under Digital India. Documents issued via DigiLocker are treated at par with original physical documents as per Rule 9A of the Information Technology Rules.
+            <p className="font-body-sm text-on-surface-variant mb-4 leading-relaxed">
+              By syncing with DigiLocker, SAARTHI will securely fetch your verified Aadhaar XML, Maharashtra Domicile, and 7/12 land records to auto-satisfy statutory scheme requirements.
             </p>
 
-            <ul className="text-xs text-[#52796F] space-y-2 mb-6 list-disc pl-4">
-              <li>Instantly fetch Aadhaar, Driving License, and PAN Card</li>
-              <li>Pull 10th & 12th CBSE/State Board marksheets directly</li>
-              <li>1-click digital verification on national and state scholarship portals</li>
-            </ul>
+            <div className="space-y-2 mb-6">
+              <div className="flex items-center gap-2 font-label-sm text-on-surface">
+                <span className="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+                <span>Aadhaar Card (UIDAI Linked)</span>
+              </div>
+              <div className="flex items-center gap-2 font-label-sm text-on-surface">
+                <span className="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+                <span>State Domicile Certificate (MahaOnline)</span>
+              </div>
+              <div className="flex items-center gap-2 font-label-sm text-on-surface">
+                <span className="material-symbols-outlined text-harita-green text-[18px]">verified</span>
+                <span>Bank Passbook NPCI Direct Benefit Transfer</span>
+              </div>
+            </div>
 
-            <div className="flex items-center justify-end gap-2">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  setDigiLockerConnected(true)
+                  setShowDigiLockerModal(false)
+                  triggerToast('✓ DigiLocker Vault synced! All verified records updated.', 'success')
+                }}
+                className="flex-1 py-3 rounded-lg bg-harita-green hover:bg-harita-green-vibrant text-on-primary font-label-lg font-bold transition-colors cursor-pointer"
+              >
+                Allow &amp; Link DigiLocker
+              </button>
               <button
                 onClick={() => setShowDigiLockerModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-[#707A70] hover:bg-[#F4F9F5] transition-colors"
+                className="px-4 py-3 rounded-lg bg-surface-container-high text-chakra-blue font-label-lg font-bold hover:bg-surface-container-highest transition-colors cursor-pointer"
               >
-                Close
+                Cancel
               </button>
-              <a
-                href="https://www.digilocker.gov.in"
-                target="_blank"
-                rel="noreferrer"
-                className="px-4 py-2 rounded-xl bg-[#156f45] text-white text-xs font-semibold hover:bg-[#115e3b] transition-colors"
-              >
-                Visit DigiLocker.gov.in ↗
-              </a>
             </div>
           </div>
         </div>
       )}
 
-      {/* 4. FLOATING TOAST NOTIFICATION */}
+      {/* Micro-interaction Notification Toast */}
       {toast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[#10241A] text-white px-4 py-3 rounded-2xl shadow-[0_14px_36px_rgba(0,0,0,0.28)] border border-[#2D3E33] animate-in slide-in-from-bottom-5 duration-200"
-        >
-          <div
-            className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs ${
-              toast.type === 'error' ? 'bg-[#C0473B] text-white' : 'bg-[#156f45] text-white'
-            }`}
-          >
-            {toast.type === 'error' ? '!' : '✓'}
-          </div>
-          <div className="flex-1 min-w-0 pr-2">
-            <p className="text-xs sm:text-sm font-semibold text-white truncate">{toast.message}</p>
-          </div>
-          {toast.documentName && (
-            <button
-              type="button"
-              onClick={() => {
-                handleToggle(toast.documentName, toast.currentChecked)
-                setToast(null)
-              }}
-              className="text-xs font-bold text-[#A5F4BD] hover:underline px-1.5 py-0.5 cursor-pointer"
-            >
-              Undo
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={() => setToast(null)}
-            className="text-slate-400 hover:text-white text-xs p-1 ml-1 cursor-pointer"
-          >
-            ✕
-          </button>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-chakra-blue text-on-primary px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5 duration-200">
+          <span className="material-symbols-outlined text-harita-green-vibrant text-[22px]">
+            {toast.type === 'error' ? 'error' : 'check_circle'}
+          </span>
+          <span className="font-label-lg text-label-lg font-medium">{toast.message}</span>
         </div>
       )}
     </div>
   )
 }
-

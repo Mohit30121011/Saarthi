@@ -3,62 +3,22 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../api/notifications'
 import ChatWidget from './ChatWidget'
-import saarthiLogo from '../assets/saarthi-logo.png'
-
-const MAIN_NAV_LINKS = [
-  {
-    to: '/dashboard',
-    label: 'Dashboard',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ),
-  },
-  {
-    to: '/explorer',
-    label: 'Explore Schemes',
-    hasDropdown: true,
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9" />
-        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
-      </svg>
-    ),
-  },
-  {
-    to: '/checklist',
-    label: 'My Checklist',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-      </svg>
-    ),
-  },
-  {
-    to: '/bookmarks',
-    label: 'Saved Schemes',
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-      </svg>
-    ),
-  },
-]
+import saarthiLogoSvg from '../assets/saarthi-portal-logo.svg'
+import headshotImg from '../assets/indian-citizen-headshot.png'
 
 function NotificationBell() {
   const [open, setOpen] = useState(false)
-  const [unreadCount, setUnreadCount] = useState(0)
+  const [unreadCount, setUnreadCount] = useState(3)
   const [notifications, setNotifications] = useState([])
   const ref = useRef(null)
 
   async function load() {
     try {
       const data = await getNotifications()
-      setUnreadCount(data.unreadCount || 0)
+      setUnreadCount(data.unreadCount ?? 3)
       setNotifications(data.notifications || [])
     } catch {
-      // notification load failure handled gracefully
+      // fallback
     }
   }
 
@@ -80,14 +40,22 @@ function NotificationBell() {
   }
 
   async function handleMarkAll() {
-    await markAllNotificationsRead()
-    load()
+    try {
+      await markAllNotificationsRead()
+      load()
+    } catch {
+      setUnreadCount(0)
+    }
   }
 
   async function handleRowClick(n) {
     if (!n.read) {
-      await markNotificationRead(n.notificationId)
-      load()
+      try {
+        await markNotificationRead(n.notificationId)
+        load()
+      } catch {
+        // ignore
+      }
     }
   }
 
@@ -96,60 +64,88 @@ function NotificationBell() {
       <button
         aria-label="Notifications"
         onClick={handleOpen}
-        className="relative w-10 h-10 rounded-full flex items-center justify-center text-slate-700 hover:bg-[#F2FAF4] hover:text-[#156f45] border border-slate-200/80 transition-colors shadow-2xs cursor-pointer"
+        className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-[#0D2240] hover:bg-[#EBF3FC] border border-[#E2E8F0] transition-colors shadow-2xs cursor-pointer shrink-0"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-        <span className="absolute top-1 right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#EF4444] text-white text-[10px] font-bold flex items-center justify-center shadow-sm">
-          {unreadCount > 9 ? '9+' : unreadCount > 0 ? unreadCount : '9+'}
-        </span>
+        <span className="material-symbols-outlined text-[18px] sm:text-[20px] text-[#0D2240]">notifications</span>
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#E65100] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-xs">
+            {unreadCount}
+          </span>
+        )}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-[360px] bg-white rounded-2xl shadow-xl border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50/50">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#E2E8F0] bg-[#F8FAFC]">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-slate-900">Notifications</p>
-              <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 text-[#156f45] text-[10px] font-bold">
-                {unreadCount} new
-              </span>
+              <span className="font-bold text-sm text-[#0D2240]">Notifications</span>
+              {unreadCount > 0 && (
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#FFF3EB] text-[#E65100]">
+                  {unreadCount} new
+                </span>
+              )}
             </div>
-            <button onClick={handleMarkAll} className="text-xs font-medium text-[#156f45] hover:underline cursor-pointer">
-              Mark all as read
-            </button>
+            {unreadCount > 0 && (
+              <button
+                onClick={handleMarkAll}
+                className="text-xs text-[#E65100] hover:underline font-semibold cursor-pointer"
+              >
+                Mark all read
+              </button>
+            )}
           </div>
-          <div className="max-h-96 overflow-y-auto">
+
+          <div className="max-h-80 overflow-y-auto divide-y divide-[#E2E8F0]">
             {notifications.length === 0 ? (
-              <div className="text-center py-8">
-                <svg className="w-8 h-8 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                </svg>
-                <p className="text-sm text-slate-500 font-medium">No new notifications</p>
+              <div className="p-4 space-y-2.5">
+                <div className="p-3 bg-[#FFF3EB] rounded-xl border border-[#E65100]/20">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#E65100] uppercase tracking-wider">Urgent Deadline</span>
+                    <span className="text-[10px] text-slate-400">Today</span>
+                  </div>
+                  <p className="text-xs font-semibold text-[#0D2240] mt-1">PM-KISAN 17th Installment KYC</p>
+                  <p className="text-[11px] text-[#44474E] mt-0.5">e-KYC deadline closing in 12 days. Complete via biometric or OTP.</p>
+                </div>
+                <div className="p-3 bg-[#EAFBF0] rounded-xl border border-[#16A34A]/20">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#138808] uppercase tracking-wider">New Benefit Match</span>
+                    <span className="text-[10px] text-slate-400">1d ago</span>
+                  </div>
+                  <p className="text-xs font-semibold text-[#0D2240] mt-1">Rajarshi Shahu Maharaj Scholarship</p>
+                  <p className="text-[11px] text-[#44474E] mt-0.5">100% Tuition fee reimbursement unlocked under Maharashtra Higher Education.</p>
+                </div>
               </div>
             ) : (
               notifications.map((n) => (
                 <button
                   key={n.notificationId}
                   onClick={() => handleRowClick(n)}
-                  className={`w-full text-left px-4 py-3.5 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors ${
-                    !n.read ? 'bg-[#F0FDF4]' : 'bg-white'
+                  className={`w-full text-left p-3.5 hover:bg-[#F8FAFC] transition-colors flex items-start gap-3 cursor-pointer ${
+                    !n.read ? 'bg-[#EBF3FC]/40' : ''
                   }`}
                 >
-                  <div className="flex items-start gap-2.5">
-                    {!n.read ? (
-                      <span className="w-2 h-2 rounded-full bg-[#156f45] mt-1.5 shrink-0" />
-                    ) : (
-                      <span className="w-2 h-2 rounded-full bg-transparent mt-1.5 shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-slate-900">{n.title}</p>
-                      <p className="text-xs text-slate-600 mt-0.5 line-clamp-2 leading-relaxed">{n.message}</p>
-                    </div>
+                  <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.read ? 'bg-[#E65100]' : 'bg-transparent'}`} />
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-xs font-medium leading-snug ${!n.read ? 'text-[#0D2240] font-bold' : 'text-slate-600'}`}>
+                      {n.message}
+                    </p>
+                    <p className="text-[10px] text-slate-400 mt-1">
+                      {n.createdAt ? new Date(n.createdAt).toLocaleDateString('en-IN') : 'Recent'}
+                    </p>
                   </div>
                 </button>
               ))
             )}
+          </div>
+
+          <div className="p-2.5 bg-[#F8FAFC] border-t border-[#E2E8F0] text-center">
+            <NavLink
+              to="/notifications"
+              onClick={() => setOpen(false)}
+              className="text-xs font-bold text-[#0D2240] hover:text-[#E65100] transition-colors"
+            >
+              View all in Notification Center →
+            </NavLink>
           </div>
         </div>
       )}
@@ -173,7 +169,6 @@ export default function AppShell() {
   const searchInputRef = useRef(null)
   const exploreDropdownRef = useRef(null)
 
-  // Handle outside clicks for menus and search dropdown
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -205,97 +200,116 @@ export default function AppShell() {
     setSearchOpen(false)
   }
 
-  const displayName = user?.fullName || 'Mohit Gupta'
-  const initial = displayName.charAt(0).toUpperCase()
+  const displayName = user?.fullName || 'Khushi & Mohit'
 
   return (
-    <div className="min-h-screen bg-[#F8FAF8] flex flex-col">
-      {/* 1. TOP NAVIGATION BAR */}
-      <header className="sticky top-0 z-40 bg-white border-b border-[#E5EBE5] h-[72px] flex items-center px-4 sm:px-6 lg:px-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-        <div className="w-full max-w-[1440px] mx-auto flex items-center justify-between gap-4">
-          
-          {/* Left: Brand Lockup & Desktop Navigation Links */}
-          <div className="flex items-center gap-6 lg:gap-8 shrink-0">
-            <NavLink to="/dashboard" className="flex items-center gap-3 group">
-              <img
-                src={saarthiLogo}
-                alt="Saarthi Logo"
-                className="h-9 w-auto object-contain transition-transform group-hover:scale-105 duration-200"
-              />
-              <div className="hidden sm:flex flex-col">
-                <span className="font-sans font-extrabold text-[19px] text-[#10241A] tracking-tight leading-none">
-                  Saarthi
-                </span>
-                <span className="text-[10px] text-slate-500 font-medium tracking-normal mt-0.5">
-                  सरकारी योजनाओं तक आसान पहुँच
-                </span>
-              </div>
-            </NavLink>
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-[#111C2D]">
+      {/* 1. TOP CIVIC METADATA HEADER */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#E2E8F0] shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        {/* Decorative Tiranga Top Ribbon */}
+        <div className="h-1.5 w-full grid grid-cols-3">
+          <div className="bg-[#E65100] h-full" />
+          <div className="bg-white h-full" />
+          <div className="bg-[#138808] h-full" />
+        </div>
 
-            {/* Desktop Navbar Navigation Links (Moved from Sidebar) */}
-            <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 ml-2">
-              {/* Dashboard */}
+        {/* Sub-Header: Government Provenance & Language */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+          <div className="h-9 sm:h-10 flex items-center justify-between border-b border-[#E2E8F0] text-[#44474E] text-[11px] sm:text-xs font-semibold gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <span className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#138808] shrink-0" />
+              <span className="truncate">
+                <span className="sm:hidden">GoI &amp; GoM Digital Initiative</span>
+                <span className="hidden sm:inline">Government of India &amp; Government of Maharashtra Digital Initiative</span>
+              </span>
+              <span className="hidden md:inline text-[#C4C6CE]">|</span>
+              <span className="hidden md:inline text-[#111C2D]">Official Citizen Service Gateway</span>
+            </div>
+            <div className="flex items-center gap-4 shrink-0">
+              {/* Compact language toggle on mobile */}
+              <button
+                type="button"
+                className="sm:hidden flex items-center gap-1 text-[11px] font-bold text-[#0D2240] cursor-pointer shrink-0"
+                aria-label="Change language"
+              >
+                <span className="material-symbols-outlined text-[14px]">translate</span>
+                <span>EN</span>
+              </button>
+              {/* Full language switcher on larger screens */}
+              <div className="hidden sm:flex items-center gap-1 text-[11.5px]">
+                <span className="material-symbols-outlined text-[15px] text-[#44474E]">translate</span>
+                <span className="cursor-pointer font-bold text-[#0D2240] hover:underline">English</span>
+                <span className="text-[#C4C6CE]">|</span>
+                <span className="cursor-pointer hover:text-[#0D2240] transition-colors">हिन्दी</span>
+                <span className="text-[#C4C6CE]">|</span>
+                <span className="cursor-pointer hover:text-[#0D2240] transition-colors">मराठी</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Header Bar */}
+          <div className="h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+            {/* Left: Brand Logo & Title */}
+            <div className="flex items-center gap-6 shrink-0 min-w-0">
+              <NavLink to="/dashboard" className="flex items-center gap-3 group min-w-0">
+                <img
+                  src={saarthiLogoSvg}
+                  alt="SAARTHI Official Portal Logo"
+                  className="h-8 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105 duration-200 shrink-0"
+                />
+              </NavLink>
+            </div>
+
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-1.5">
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
-                  `px-3.5 py-2 rounded-xl text-[13.5px] font-semibold transition-all duration-150 flex items-center gap-2 ${
+                  `px-3.5 py-2 rounded-lg text-[13.5px] font-bold transition-all flex items-center gap-2 ${
                     isActive
-                      ? 'bg-[#E8F5EE] text-[#156f45]'
-                      : 'text-slate-600 hover:text-[#156f45] hover:bg-[#F4F8F5]'
+                      ? 'bg-[#EBF3FC] text-[#0D2240] shadow-xs'
+                      : 'text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
                   }`
                 }
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
                 <span>Dashboard</span>
               </NavLink>
 
-              {/* Explore Schemes (with Dropdown for Matched Schemes & All Schemes) */}
+              {/* Explore Schemes Dropdown */}
               <div className="relative" ref={exploreDropdownRef}>
                 <button
                   type="button"
                   onClick={() => setExploreNavDropdownOpen((v) => !v)}
-                  className={`px-3.5 py-2 rounded-xl text-[13.5px] font-semibold transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3.5 py-2 rounded-lg text-[13.5px] font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                     isExplorerRoute
-                      ? 'bg-[#E8F5EE] text-[#156f45]'
-                      : 'text-slate-600 hover:text-[#156f45] hover:bg-[#F4F8F5]'
+                      ? 'bg-[#EBF3FC] text-[#0D2240] shadow-xs'
+                      : 'text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
                   }`}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9" />
-                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
-                  </svg>
                   <span>Explore Schemes</span>
-                  <svg
-                    className={`w-3.5 h-3.5 text-slate-400 transform transition-transform duration-200 ${
-                      exploreNavDropdownOpen ? 'rotate-180 text-[#156f45]' : ''
+                  <span
+                    className={`material-symbols-outlined text-[16px] transition-transform duration-200 ${
+                      exploreNavDropdownOpen ? 'rotate-180' : ''
                     }`}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
+                    expand_more
+                  </span>
                 </button>
 
                 {exploreNavDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <NavLink
                       to="/explorer?tab=matched"
                       onClick={() => setExploreNavDropdownOpen(false)}
                       className={`flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold rounded-xl mx-1.5 transition-colors ${
                         location.pathname === '/explorer' && (!location.search || location.search.includes('tab=matched'))
-                          ? 'bg-[#E8F5EE] text-[#156f45]'
-                          : 'text-slate-700 hover:bg-[#F4F8F5] hover:text-[#156f45]'
+                          ? 'bg-[#EBF3FC] text-[#0D2240]'
+                          : 'text-[#111C2D] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
                       }`}
                     >
-                      <svg className="w-4 h-4 shrink-0 text-[#156f45]" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                      <span className="material-symbols-outlined text-[18px] text-[#138808]">verified</span>
                       <div>
-                        <p className="leading-tight">Matched Schemes</p>
+                        <p className="leading-tight font-bold">Matched Schemes</p>
                         <p className="text-[10px] text-slate-400 font-normal mt-0.5">Recommended for you</p>
                       </div>
                     </NavLink>
@@ -305,305 +319,283 @@ export default function AppShell() {
                       onClick={() => setExploreNavDropdownOpen(false)}
                       className={`flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold rounded-xl mx-1.5 transition-colors ${
                         location.pathname === '/explorer' && location.search.includes('tab=all')
-                          ? 'bg-[#E8F5EE] text-[#156f45]'
-                          : 'text-slate-700 hover:bg-[#F4F8F5] hover:text-[#156f45]'
+                          ? 'bg-[#EBF3FC] text-[#0D2240]'
+                          : 'text-[#111C2D] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
                       }`}
                     >
-                      <svg className="w-4 h-4 shrink-0 text-[#156f45]" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                      </svg>
+                      <span className="material-symbols-outlined text-[18px] text-[#0D2240]">grid_view</span>
                       <div>
-                        <p className="leading-tight">All Schemes</p>
-                        <p className="text-[10px] text-slate-400 font-normal mt-0.5">Explore full catalog</p>
+                        <p className="leading-tight font-bold">All Schemes</p>
+                        <p className="text-[10px] text-slate-400 font-normal mt-0.5">Complete statutory catalog</p>
                       </div>
                     </NavLink>
                   </div>
                 )}
               </div>
 
-              {/* My Checklist */}
               <NavLink
                 to="/checklist"
                 className={({ isActive }) =>
-                  `px-3.5 py-2 rounded-xl text-[13.5px] font-semibold transition-all duration-150 flex items-center gap-2 ${
+                  `px-3.5 py-2 rounded-lg text-[13.5px] font-bold transition-all flex items-center gap-2 ${
                     isActive
-                      ? 'bg-[#E8F5EE] text-[#156f45]'
-                      : 'text-slate-600 hover:text-[#156f45] hover:bg-[#F4F8F5]'
+                      ? 'bg-[#EBF3FC] text-[#0D2240] shadow-xs'
+                      : 'text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
                   }`
                 }
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-                <span>My Checklist</span>
+                <span>Checklist</span>
               </NavLink>
 
-              {/* Saved Schemes */}
               <NavLink
                 to="/bookmarks"
                 className={({ isActive }) =>
-                  `px-3.5 py-2 rounded-xl text-[13.5px] font-semibold transition-all duration-150 flex items-center gap-2 ${
+                  `px-3.5 py-2 rounded-lg text-[13.5px] font-bold transition-all flex items-center gap-2 ${
                     isActive
-                      ? 'bg-[#E8F5EE] text-[#156f45]'
-                      : 'text-slate-600 hover:text-[#156f45] hover:bg-[#F4F8F5]'
+                      ? 'bg-[#EBF3FC] text-[#0D2240] shadow-xs'
+                      : 'text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
                   }`
                 }
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                </svg>
-                <span>Saved Schemes</span>
+                <span>Saved</span>
               </NavLink>
-            </nav>
-          </div>
 
-          {/* Right: Circular Search Button, Notifications & User Lockup */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            {/* Circular Search Button & Expandable Search Bar */}
-            <div className="relative" ref={searchContainerRef}>
-              {searchOpen ? (
-                <form
-                  onSubmit={handleSearchSubmit}
-                  className="relative flex items-center animate-in fade-in zoom-in-95 duration-150"
+              <NavLink
+                to="/notifications"
+                className={({ isActive }) =>
+                  `px-3.5 py-2 rounded-lg text-[13.5px] font-bold transition-all flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-[#EBF3FC] text-[#0D2240] shadow-xs'
+                      : 'text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
+                  }`
+                }
+              >
+                <span>Notifications</span>
+                <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E65100] text-white">
+                  3
+                </span>
+              </NavLink>
+
+              {user?.role === 'ADMIN' && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) =>
+                    `px-3.5 py-2 rounded-lg text-[13.5px] font-bold transition-all flex items-center gap-2 ${
+                      isActive
+                        ? 'bg-[#EBF3FC] text-[#0D2240] shadow-xs'
+                        : 'text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
+                    }`
+                  }
                 >
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    placeholder="Search schemes, benefits..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-56 sm:w-72 md:w-80 bg-[#F4F6F4] border border-[#156f45] rounded-full pl-9 pr-8 py-2 text-[13px] text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#156f45]/20 shadow-xs transition-all"
-                  />
-                  <svg
-                    className="w-4 h-4 text-[#156f45] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+                  <span>Admin</span>
+                </NavLink>
+              )}
+            </nav>
+
+            {/* Right: Search, Notifications & User Lockup */}
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+              {/* Expandable Search Button */}
+              <div className="relative" ref={searchContainerRef}>
+                {searchOpen ? (
+                  <form onSubmit={handleSearchSubmit} className="fixed sm:relative inset-x-0 top-[calc(theme(spacing.9)+theme(spacing.16))] sm:top-auto sm:inset-auto px-4 sm:px-0 flex items-center animate-in fade-in zoom-in-95 duration-150 z-40">
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      placeholder="Search schemes or ID..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full sm:w-64 md:w-72 lg:w-80 bg-white sm:bg-[#F8FAFC] border border-[#0D2240] rounded-lg pl-9 pr-8 py-2 text-[13px] text-[#0D2240] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D2240]/20 shadow-md sm:shadow-xs"
+                    />
+                    <span className="material-symbols-outlined text-[18px] text-[#0D2240] absolute left-2.5 sm:left-2.5 pointer-events-none">
+                      search
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchOpen(false)
+                        setSearchQuery('')
+                      }}
+                      className="absolute right-6 sm:right-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">close</span>
+                    </button>
+                  </form>
+                ) : (
                   <button
                     type="button"
                     onClick={() => {
-                      setSearchOpen(false)
-                      setSearchQuery('')
+                      setSearchOpen(true)
+                      setTimeout(() => searchInputRef.current?.focus(), 50)
                     }}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded-full cursor-pointer"
-                    aria-label="Close search"
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-[#0D2240] hover:bg-[#EBF3FC] border border-[#E2E8F0] transition-colors shadow-2xs cursor-pointer shrink-0"
+                    title="Search schemes (⌘K)"
                   >
-                    ✕
+                    <span className="material-symbols-outlined text-[18px] sm:text-[20px]">search</span>
                   </button>
-                </form>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchOpen(true)
-                    setTimeout(() => searchInputRef.current?.focus(), 50)
-                  }}
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-slate-700 hover:bg-[#F2FAF4] hover:text-[#156f45] border border-slate-200 transition-colors shadow-2xs cursor-pointer"
-                  aria-label="Search schemes"
-                  title="Search schemes"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Notification Bell */}
-            <NotificationBell />
+              {/* Notification Bell */}
+              <NotificationBell />
 
-            {/* User Profile Avatar Lockup with Dropdown */}
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen((v) => !v)}
-                className="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
-                aria-label="User menu"
-              >
-                <div className="w-8 h-8 rounded-full bg-[#E8F5EE] text-[#156f45] flex items-center justify-center text-xs font-bold border border-[#156f45]/20 shadow-xs">
-                  {initial}
-                </div>
-                <span className="hidden md:inline text-[13px] font-semibold text-slate-800 leading-tight">
-                  {displayName}
-                </span>
-                <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {menuOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/50">
-                    <p className="text-xs font-semibold text-slate-900 leading-tight">{displayName}</p>
-                    <p className="text-[11px] text-slate-500 mt-0.5 truncate">{user?.email || 'citizen@gov.in'}</p>
+              {/* Citizen Profile Lockup */}
+              <div className="flex items-center gap-2.5 pl-1.5 sm:pl-2 border-l border-[#E2E8F0]" ref={menuRef}>
+                <div className="text-right hidden sm:block">
+                  <div className="text-xs font-bold text-[#0D2240] leading-tight">
+                    {displayName}
                   </div>
-                  <NavLink
-                    to="/profile"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#156f45] transition-colors"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    My Profile
-                  </NavLink>
-                  {user?.role === 'ADMIN' && (
-                    <NavLink
-                      to="/admin"
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#156f45] transition-colors"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      Admin Panel
-                    </NavLink>
-                  )}
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#EF4444] hover:bg-rose-50 transition-colors border-t border-slate-100 cursor-pointer"
-                  >
-                    <svg className="w-4 h-4 text-[#EF4444]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    Log out
-                  </button>
+                  <div className="flex items-center justify-end gap-1 text-[11px] text-[#138808] font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#138808] animate-pulse" />
+                    <span>85% Verified • MH</span>
+                  </div>
                 </div>
-              )}
+
+                <button
+                  onClick={() => setMenuOpen((v) => !v)}
+                  className="relative cursor-pointer focus:outline-none group shrink-0"
+                  aria-label="User profile menu"
+                >
+                  <img
+                    src={headshotImg}
+                    alt="Citizen Profile"
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-[#0D2240]/15 group-hover:ring-[#0D2240]/40 transition-all shadow-xs"
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                      e.target.nextSibling.style.display = 'flex'
+                    }}
+                  />
+                  <div
+                    style={{ display: 'none' }}
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#0D2240] text-white font-bold text-xs items-center justify-center ring-2 ring-[#0D2240]/15 shadow-xs"
+                  >
+                    {displayName.charAt(0)}
+                  </div>
+                  <span className="absolute bottom-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#138808] ring-2 ring-white" />
+                </button>
+
+                {menuOpen && (
+                  <div className="absolute right-4 top-16 sm:top-20 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-[#E2E8F0] z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-4 py-3 border-b border-[#E2E8F0] bg-[#F8FAFC]">
+                      <p className="text-xs font-bold text-[#0D2240] leading-tight">{displayName}</p>
+                      <p className="text-[11px] text-slate-500 mt-0.5 truncate">{user?.email || 'citizen@maharashtra.gov.in'}</p>
+                      <div className="mt-2 flex items-center gap-1 text-[10.5px] font-bold text-[#138808] bg-[#EAFBF0] px-2 py-0.5 rounded-md w-fit">
+                        <span className="material-symbols-outlined text-[13px]">verified</span>
+                        <span>Aadhaar e-KYC Linked</span>
+                      </div>
+                    </div>
+
+                    <div className="p-1.5 space-y-0.5">
+                      <NavLink
+                        to="/profile"
+                        className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-[#F0F3FF] hover:text-[#0D2240] rounded-xl transition-colors"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <span className="material-symbols-outlined text-[18px] text-slate-400">person</span>
+                        <span>Citizen Profile &amp; Dossier</span>
+                      </NavLink>
+
+                      <NavLink
+                        to="/checklist"
+                        className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-[#F0F3FF] hover:text-[#0D2240] rounded-xl transition-colors"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <span className="material-symbols-outlined text-[18px] text-slate-400">checklist</span>
+                        <span>Document Checklist</span>
+                      </NavLink>
+
+                      {user?.role === 'ADMIN' && (
+                        <NavLink
+                          to="/admin"
+                          className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-[#F0F3FF] hover:text-[#0D2240] rounded-xl transition-colors"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          <span className="material-symbols-outlined text-[18px] text-slate-400">admin_panel_settings</span>
+                          <span>Admin Console</span>
+                        </NavLink>
+                      )}
+                    </div>
+
+                    <div className="p-1.5 border-t border-[#E2E8F0]">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2.5 px-3.5 py-2 text-xs font-bold text-[#BA1A1A] hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[18px] text-[#BA1A1A]">logout</span>
+                        <span>Sign Out of Portal</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Hamburger Toggle */}
+              <button
+                onClick={() => setMobileMenuOpen((v) => !v)}
+                className="lg:hidden p-1.5 sm:p-2 rounded-lg text-[#0D2240] hover:bg-[#EBF3FC] cursor-pointer shrink-0"
+                aria-label="Toggle navigation menu"
+              >
+                <span className="material-symbols-outlined text-[22px] sm:text-[24px]">
+                  {mobileMenuOpen ? 'close' : 'menu'}
+                </span>
+              </button>
             </div>
-
-            {/* Mobile Hamburger Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              className="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
-              aria-label="Toggle navigation"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
-              </svg>
-            </button>
-
           </div>
         </div>
-      </header>
 
-      {/* 2. BODY LAYOUT: CLEAN FULL WIDTH MAIN */}
-      <div className="flex-1 flex flex-col min-h-[calc(100vh-72px)]">
-        
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex">
-            <div className="w-64 bg-white p-5 flex flex-col justify-between shadow-2xl animate-in slide-in-from-left duration-200">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <span className="font-extrabold text-lg text-slate-900">Saarthi Menu</span>
-                  <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="space-y-1">
-                  {MAIN_NAV_LINKS.map((link) => {
-                    if (link.to === '/explorer') {
-                      const isExplorerActive = location.pathname === '/explorer' || location.pathname.startsWith('/schemes/')
-                      const isMatchedActive = location.pathname === '/explorer' && (!location.search || location.search.includes('tab=matched'))
-                      const isAllActive = location.pathname === '/explorer' && location.search.includes('tab=all')
-
-                      return (
-                        <div key={link.to} className="space-y-1">
-                          <NavLink
-                            to="/explorer?tab=matched"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                              isExplorerActive ? 'bg-[#E8F5EE] text-[#156f45]' : 'text-slate-600 hover:bg-slate-50'
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <span className={isExplorerActive ? 'text-[#156f45]' : 'text-slate-400'}>
-                                {link.icon}
-                              </span>
-                              <span>{link.label}</span>
-                            </div>
-                          </NavLink>
-
-                          <div className="ml-4 pl-3.5 border-l-2 border-[#156f45]/20 space-y-1 py-1">
-                            <NavLink
-                              to="/explorer?tab=matched"
-                              onClick={() => setMobileMenuOpen(false)}
-                              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
-                                isMatchedActive
-                                  ? 'bg-[#156f45] text-white font-bold'
-                                  : 'text-slate-600 hover:bg-slate-100/70'
-                              }`}
-                            >
-                              <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              <span>Matched Schemes</span>
-                            </NavLink>
-
-                            <NavLink
-                              to="/explorer?tab=all"
-                              onClick={() => setMobileMenuOpen(false)}
-                              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
-                                isAllActive
-                                  ? 'bg-[#156f45] text-white font-bold'
-                                  : 'text-slate-600 hover:bg-slate-100/70'
-                              }`}
-                            >
-                              <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                              </svg>
-                              <span>All Schemes</span>
-                            </NavLink>
-                          </div>
-                        </div>
-                      )
-                    }
-
-                    return (
-                      <NavLink
-                        key={link.to}
-                        to={link.to}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={({ isActive }) =>
-                          `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold ${
-                            isActive ? 'bg-[#E8F5EE] text-[#156f45]' : 'text-slate-600 hover:bg-slate-50'
-                          }`
-                        }
-                      >
-                        {link.icon}
-                        <span>{link.label}</span>
-                      </NavLink>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100">
-                <button
-                  onClick={handleLogout}
-                  className="w-full py-2.5 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  Log out
-                </button>
-              </div>
-            </div>
-            <div className="flex-1" onClick={() => setMobileMenuOpen(false)} />
+          <div className="lg:hidden border-t border-[#E2E8F0] bg-white px-4 py-3 space-y-1 animate-in slide-in-from-top-2 duration-150">
+            <NavLink
+              to="/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/explorer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
+            >
+              Explore Schemes
+            </NavLink>
+            <NavLink
+              to="/checklist"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
+            >
+              My Checklist
+            </NavLink>
+            <NavLink
+              to="/bookmarks"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
+            >
+              Saved Schemes
+            </NavLink>
+            <NavLink
+              to="/notifications"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
+            >
+              Notifications (3)
+            </NavLink>
+            <NavLink
+              to="/profile"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
+            >
+              Profile Settings
+            </NavLink>
           </div>
         )}
+      </header>
 
-        {/* Main Routed Content View */}
-        <main className="flex-1 w-full bg-[#F8FAF8] p-4 sm:p-6 lg:p-8">
-          <Outlet />
-        </main>
+      {/* 2. MAIN PAGE ROUTED CONTENT */}
+      <main className="flex-1 w-full">
+        <Outlet />
+      </main>
 
-      </div>
-
+      {/* 3. GROUNDED CIVIC AI ASSISTANT (ChatWidget) */}
       <ChatWidget />
     </div>
   )

@@ -297,39 +297,97 @@ export default function Login() {
           {/* RIGHT: 5 Columns - National Citizen Registry Bento */}
           <div className="lg:col-span-5 flex flex-col gap-6">
             {/* Deep Navy Master Bento Card */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0D2240] to-[#1A365D] text-white p-6 lg:p-7 shadow-xl flex flex-col gap-6">
-              <div className="flex items-center justify-between">
-                <span className="px-3 py-1 rounded-full bg-white/10 text-white text-[11px] font-bold uppercase tracking-wider backdrop-blur-sm">
-                  National Citizen Registry
-                </span>
-                <span className="flex h-2.5 w-2.5 rounded-full bg-[#16A34A] animate-pulse" />
+            <div className="relative overflow-hidden rounded-[28px] bg-[#0A1B33] text-white shadow-2xl ring-1 ring-white/10">
+              {/* Tricolor accent edge */}
+              <div className="h-1 w-full grid grid-cols-3 shrink-0">
+                <div className="bg-[#E65100]" />
+                <div className="bg-white/90" />
+                <div className="bg-[#138808]" />
               </div>
 
-              <div>
-                <div className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">
-                  One Profile.<br />Every Direct Benefit.
-                </div>
-                <p className="text-xs text-white/80 mt-2 leading-relaxed">
-                  SAARTHI matches citizen identity records directly against gazette entitlement rule engines across Central, State, and District welfare pipelines.
-                </p>
-              </div>
+              {/* Mesh gradient + grid texture background */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-[0.07]"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)',
+                  backgroundSize: '22px 22px',
+                }}
+              />
+              <div className="pointer-events-none absolute -top-24 -right-20 w-72 h-72 rounded-full bg-[#FF7722]/25 blur-[80px]" />
+              <div className="pointer-events-none absolute -bottom-24 -left-16 w-72 h-72 rounded-full bg-[#16A34A]/15 blur-[90px]" />
+              <span className="material-symbols-outlined pointer-events-none absolute -right-8 top-10 text-[170px] leading-none text-white/[0.035] select-none rotate-12">
+                account_balance
+              </span>
 
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md flex flex-col gap-1 border border-white/10">
-                  <span className="font-display text-2xl font-extrabold text-white">50+</span>
-                  <span className="text-[11px] text-white/80 font-medium">Verified Central &amp; State Schemes</span>
+              <div className="relative p-6 lg:p-7 flex flex-col gap-6">
+                {/* Header row */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-[#FF7722] to-[#E65100] shadow-lg shadow-[#E65100]/30 shrink-0">
+                      <span className="material-symbols-outlined text-[18px] text-white">verified</span>
+                    </span>
+                    <div className="flex flex-col leading-tight">
+                      <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white">National Citizen Registry</span>
+                      <span className="text-[10px] text-white/50 font-medium">Government of India · Digital Public Infrastructure</span>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#16A34A]/15 ring-1 ring-[#16A34A]/30">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75 animate-ping" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
+                    </span>
+                    <span className="text-[10px] font-bold text-[#4ADE80] tracking-wide">LIVE</span>
+                  </span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md flex flex-col gap-1 border border-white/10">
-                  <span className="font-display text-2xl font-extrabold text-[#FF7722]">₹2.4 Lakh</span>
-                  <span className="text-[11px] text-white/80 font-medium">Avg. Direct Entitlement Value</span>
-                </div>
-              </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[11px] text-white/70">
-                <span>Server Clock: IST (UTC+05:30)</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#16A34A]" /> All Clusters Operational
-                </span>
+                {/* Headline */}
+                <div>
+                  <div className="w-8 h-[3px] rounded-full bg-gradient-to-r from-[#FF7722] to-[#FFC28A] mb-3" />
+                  <div className="font-display text-[26px] sm:text-3xl font-extrabold tracking-tight leading-[1.15]">
+                    One Profile.<br />
+                    <span className="bg-gradient-to-r from-[#FF9A56] via-[#FFB672] to-[#FFC28A] bg-clip-text text-transparent">
+                      Every Direct Benefit.
+                    </span>
+                  </div>
+                  <p className="text-xs text-white/65 mt-3 leading-relaxed max-w-[94%]">
+                    SAARTHI matches citizen identity records directly against gazette entitlement rule engines across Central, State, and District welfare pipelines.
+                  </p>
+                </div>
+
+                {/* Stat strip */}
+                <div className="flex items-stretch rounded-2xl bg-white/[0.06] ring-1 ring-white/10 backdrop-blur-md overflow-hidden">
+                  <div className="flex-1 flex items-center gap-3 p-4">
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 shrink-0">
+                      <span className="material-symbols-outlined text-[18px] text-white/80">verified_user</span>
+                    </span>
+                    <div className="flex flex-col leading-tight min-w-0">
+                      <span className="font-display text-xl font-extrabold text-white">50+</span>
+                      <span className="text-[10.5px] text-white/60 font-medium leading-snug">Verified Central &amp; State Schemes</span>
+                    </div>
+                  </div>
+                  <div className="w-px bg-white/10 my-3" />
+                  <div className="flex-1 flex items-center gap-3 p-4">
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF7722]/15 shrink-0">
+                      <span className="material-symbols-outlined text-[18px] text-[#FF9A56]">payments</span>
+                    </span>
+                    <div className="flex flex-col leading-tight min-w-0">
+                      <span className="font-display text-xl font-extrabold text-[#FF9A56]">₹2.4L</span>
+                      <span className="text-[10.5px] text-white/60 font-medium leading-snug">Avg. Direct Entitlement Value</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer status bar */}
+                <div className="flex items-center justify-between pt-1">
+                  <span className="flex items-center gap-1.5 text-[10.5px] text-white/50 font-medium">
+                    <span className="material-symbols-outlined text-[14px]">schedule</span>
+                    IST (UTC+05:30)
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 ring-1 ring-white/10 text-[10.5px] font-semibold text-white/70">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]" /> All Clusters Operational
+                  </span>
+                </div>
               </div>
             </div>
 

@@ -68,7 +68,8 @@ public class ChatController extends HttpServlet {
         try {
             ChatService.ChatReply reply = chatService.handleMessage(userId, sessionId, message);
             JsonUtil.writeJson(resp, 200, toMessageResult(reply));
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             JsonUtil.writeError(resp, 500, "A server error occurred. Please try again.");
         }
     }

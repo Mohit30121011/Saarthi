@@ -1,19 +1,19 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { updateProfile } from '../../api/profile'
 import { STATE_DISTRICTS, getDistrictsForState } from '../../data/indianDistricts'
 import onboardingHero from '../../assets/onboarding-hero.png'
-import emblemIndia from '../../assets/emblem-india.svg'
+import saarthiLogoSvg from '../../assets/saarthi-portal-logo.svg'
 
 const TOTAL_STEPS = 6
 
 const STEP_TITLES = [
-  'Personal details',
-  'Location',
-  'Income & occupation',
-  'Category & education',
-  'Special criteria',
-  'Review & confirm',
+  'Personal & Domicile',
+  'Location & Jurisdiction',
+  'Income & Occupation',
+  'Social Category & Education',
+  'Special Criteria & Tags',
+  'Review & Confirm Snapshot',
 ]
 
 const GENDERS = ['MALE', 'FEMALE', 'OTHER']
@@ -37,13 +37,10 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const filtered = options.filter((opt) =>
-    opt.toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = options.filter((opt) => opt.toLowerCase().includes(search.toLowerCase()))
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Trigger button */}
       <button
         type="button"
         disabled={disabled}
@@ -52,46 +49,39 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
           setOpen(!open)
           setSearch('')
         }}
-        className={`w-full flex items-center justify-between rounded-xl px-3.5 h-11.5 border transition-all text-left ${
+        className={`w-full flex items-center justify-between rounded-xl px-3.5 h-12 border transition-all text-left ${
           disabled
-            ? 'bg-slate-100/70 border-slate-200 text-slate-400 cursor-not-allowed opacity-75'
+            ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed opacity-75'
             : open
-            ? 'border-[#156f45] ring-2 ring-[#156f45]/20 bg-white cursor-pointer'
-            : 'bg-[#EDF3FC] border-transparent hover:border-emerald-300 cursor-pointer'
+            ? 'border-[#0D2240] ring-2 ring-[#0D2240]/15 bg-white cursor-pointer'
+            : 'bg-[#F8FAFC] border-[#E2E8F0] hover:border-[#0D2240]/50 cursor-pointer'
         }`}
       >
-        <span className={`text-sm font-medium truncate pr-2 ${value ? 'text-slate-900' : 'text-slate-400'}`}>
+        <span className={`text-sm truncate pr-2 ${value ? 'text-[#0D2240] font-bold' : 'text-[#44474E]'}`}>
           {value || placeholder}
         </span>
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
-            open ? 'rotate-180 text-[#156f45]' : ''
+        <span
+          className={`material-symbols-outlined text-[18px] text-[#44474E] transition-transform duration-200 ${
+            open ? 'rotate-180 text-[#0D2240]' : ''
           }`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+          expand_more
+        </span>
       </button>
 
-      {/* Floating custom dropdown menu */}
       {open && !disabled && (
-        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 bg-white rounded-2xl shadow-[0_20px_45px_rgba(0,0,0,0.16)] border border-slate-100 p-2">
-          {options.length > 7 && (
-            <div className="px-1 pb-2 border-b border-slate-100 mb-1">
-              <div className="relative flex items-center bg-[#F1F5F9] rounded-lg px-2.5 h-8">
-                <svg className="w-3.5 h-3.5 text-slate-400 mr-2 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 105.65 5.65a7.5 7.5 0 0010.7 10.7z" />
-                </svg>
+        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 bg-white rounded-xl shadow-xl border border-[#E2E8F0] p-2">
+          {options.length > 6 && (
+            <div className="px-1 pb-2 border-b border-[#E2E8F0] mb-1">
+              <div className="relative flex items-center bg-[#F8FAFC] rounded-lg px-2.5 h-9 border border-[#E2E8F0]">
+                <span className="material-symbols-outlined text-slate-400 text-[18px] mr-2">search</span>
                 <input
                   type="text"
-                  placeholder="Type to search..."
+                  placeholder="Search options…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   autoFocus
-                  className="w-full bg-transparent border-none outline-none text-xs text-slate-800 placeholder-slate-400 p-0 focus:ring-0"
+                  className="w-full bg-transparent border-none outline-none text-xs text-[#0D2240] placeholder:text-slate-400 p-0 focus:ring-0 font-medium"
                 />
               </div>
             </div>
@@ -99,7 +89,7 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
 
           <div className="max-h-52 overflow-y-auto space-y-0.5 pr-1 text-xs">
             {filtered.length === 0 ? (
-              <div className="px-3 py-3 text-slate-400 text-center">No options match "{search}"</div>
+              <div className="px-3 py-3 text-[#44474E] text-center font-medium">No options match "{search}"</div>
             ) : (
               filtered.map((opt) => {
                 const isSelected = value === opt
@@ -111,17 +101,15 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
                       onChange(opt)
                       setOpen(false)
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl font-medium transition-all text-left cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg font-medium transition-all text-left cursor-pointer ${
                       isSelected
-                        ? 'bg-[#ECFDF5] text-[#156f45] font-bold'
-                        : 'text-slate-700 hover:bg-[#F8FAFC] hover:text-slate-950'
+                        ? 'bg-[#EBF3FC] text-[#0D2240] font-bold'
+                        : 'text-[#111C2D] hover:bg-[#F0F3FF]'
                     }`}
                   >
                     <span>{opt}</span>
                     {isSelected && (
-                      <svg className="w-4 h-4 text-[#156f45] shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
+                      <span className="material-symbols-outlined text-[#0D2240] text-[18px]">check</span>
                     )}
                   </button>
                 )
@@ -134,74 +122,47 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
   )
 }
 
-
-function StepProgressBar({ step }) {
-  return (
-    <div className="mb-5">
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] font-bold text-[#156f45] uppercase tracking-wider">
-          Step {step} of {TOTAL_STEPS}
-        </span>
-        <span className="text-[11px] font-semibold text-slate-500">
-          {STEP_TITLES[step - 1]}
-        </span>
-      </div>
-      <div className="flex gap-1.5 h-1.5 w-full">
-        {Array.from({ length: TOTAL_STEPS }, (_, i) => (
-          <div
-            key={i}
-            className={`flex-1 rounded-full transition-all duration-300 ${
-              i + 1 < step
-                ? 'bg-[#156f45]'
-                : i + 1 === step
-                ? 'bg-[#f59e0b]'
-                : 'bg-slate-200'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
-
 function ChipGroup({ options, value, onChange }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          onClick={() => onChange(opt)}
-          className={`px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all duration-150 cursor-pointer ${
-            value === opt
-              ? 'bg-[#156f45] text-white border-[#156f45] shadow-sm'
-              : 'bg-[#EDF3FC] text-slate-700 border-transparent hover:border-emerald-300 hover:bg-emerald-50/70'
-          }`}
-        >
-          {opt}
-        </button>
-      ))}
+      {options.map((opt) => {
+        const isSelected = value === opt
+        return (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => onChange(opt)}
+            className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all duration-150 cursor-pointer ${
+              isSelected
+                ? 'bg-[#0D2240] text-white border-[#0D2240] shadow-xs'
+                : 'bg-white text-[#44474E] border-[#E2E8F0] hover:border-[#0D2240]/40 hover:bg-[#F0F3FF]'
+            }`}
+          >
+            {opt}
+          </button>
+        )
+      })}
     </div>
   )
 }
 
 function ToggleRow({ label, why, value, onChange }) {
   return (
-    <div className="flex items-center justify-between py-2.5 border-b border-slate-100 last:border-0">
+    <div className="flex items-center justify-between py-3.5 border-b border-[#E2E8F0] last:border-0">
       <div>
-        <p className="text-xs font-semibold text-slate-800">{label}</p>
-        {why && <p className="text-[11px] text-slate-400 mt-0.5">{why}</p>}
+        <p className="text-sm font-bold text-[#0D2240]">{label}</p>
+        {why && <p className="text-xs text-[#44474E] mt-0.5">{why}</p>}
       </div>
       <button
         type="button"
         onClick={() => onChange(!value)}
-        className={`w-11 h-6 rounded-full relative transition-colors duration-200 shrink-0 cursor-pointer ${
-          value ? 'bg-[#156f45]' : 'bg-slate-200'
+        className={`w-12 h-6 rounded-full relative transition-colors duration-200 shrink-0 cursor-pointer ${
+          value ? 'bg-[#138808]' : 'bg-slate-300'
         }`}
       >
         <span
-          className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${
-            value ? 'translate-x-5.5' : 'translate-x-0.5'
+          className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-xs transition-transform duration-200 ${
+            value ? 'translate-x-6.5' : 'translate-x-0.5'
           }`}
         />
       </button>
@@ -234,6 +195,22 @@ export default function OnboardingWizard() {
 
   function next() {
     setError('')
+    if (step === 1 && (!form.dateOfBirth || !form.gender)) {
+      setError('Please provide your date of birth and select your gender.')
+      return
+    }
+    if (step === 2 && !form.state) {
+      setError('Please select your state domicile.')
+      return
+    }
+    if (step === 3 && form.annualIncome === '') {
+      setError('Please enter your approximate annual family income.')
+      return
+    }
+    if (step === 4 && (!form.category || !form.educationLevel)) {
+      setError('Please select your social category and education level.')
+      return
+    }
     setStep((s) => Math.min(TOTAL_STEPS, s + 1))
   }
 
@@ -258,410 +235,427 @@ export default function OnboardingWizard() {
     }
   }
 
+  // Calculate age helper
+  const ageString = form.dateOfBirth
+    ? (() => {
+        const birth = new Date(form.dateOfBirth)
+        const diff = Date.now() - birth.getTime()
+        const ageDate = new Date(diff)
+        const years = Math.abs(ageDate.getUTCFullYear() - 1970)
+        return !isNaN(years)
+          ? `${years} Years • Eligible for youth, student & skill allowances`
+          : null
+      })()
+    : null
+
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F2F7F2] font-sans selection:bg-[#156f45]/20 selection:text-[#10241A]">
-      
-      {/* LEFT: Full-Bleed Hero Artwork (Single seamless container, zero padding) */}
-      <div className="relative w-full lg:w-[60%] xl:w-[62%] min-h-[420px] sm:min-h-[540px] lg:min-h-screen overflow-hidden bg-[#E9F3EB]">
-        <img
-          src={onboardingHero}
-          alt="Saarthi - A Brighter Tomorrow Together"
-          className="w-full h-full object-cover object-left"
-        />
+    <div className="min-h-screen w-full flex flex-col font-sans text-[#111C2D]">
+      {/* Tricolor Header Ribbon */}
+      <div className="h-1.5 w-full grid grid-cols-3 fixed top-0 left-0 right-0 z-50">
+        <div className="bg-[#E65100] h-full" />
+        <div className="bg-white h-full" />
+        <div className="bg-[#138808] h-full" />
       </div>
 
-      {/* RIGHT: 40% Clean Onboarding Wizard Pane */}
-      <div className="w-full lg:w-[40%] xl:w-[38%] min-h-screen bg-white flex flex-col justify-center items-center p-6 sm:p-8 xl:p-12 z-10 shadow-[-12px_0_35px_rgba(0,0,0,0.04)] border-l border-slate-100 overflow-y-auto">
-        <div className="w-full max-w-[460px] my-auto flex flex-col justify-between py-2">
-          
-          {/* Top Row: Citizen Portal Badge + Indian Emblem */}
-          <div className="flex items-center justify-between gap-3 mb-4">
-            {/* Verified Citizen Portal Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ECFDF5] border border-emerald-200/80 text-[11px] font-semibold text-[#047857] shadow-sm">
-              <svg className="w-3.5 h-3.5 fill-[#10B981] text-white" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>Verified Citizen Portal</span>
-            </div>
+      <div className="flex-1 w-full flex flex-col lg:flex-row pt-1.5">
+        {/* LEFT: Hero Civic Artwork Pane */}
+        <div className="relative w-full lg:w-[45%] xl:w-[46%] min-h-[380px] lg:min-h-[calc(100vh-6px)] overflow-hidden bg-[#0D2240] flex flex-col justify-between p-8 lg:p-12 text-white">
+          <img
+            src={onboardingHero}
+            alt="Saarthi Citizen Onboarding"
+            className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0D2240] via-[#0D2240]/80 to-[#0D2240]/40" />
 
-            {/* State Emblem of India */}
-            <div className="flex items-center gap-2 text-right">
-              <img
-                src={emblemIndia}
-                alt="National Emblem"
-                className="h-9 w-auto object-contain opacity-85"
-              />
-              <div className="flex flex-col text-left leading-tight">
-                <span className="text-[10px] font-bold text-slate-800 tracking-tight">Government of India</span>
-                <span className="text-[9.5px] font-semibold text-slate-500 font-devanagari">भारत सरकार</span>
-              </div>
-            </div>
+          {/* Top Emblem / Logo */}
+          <div className="relative z-10">
+            <Link to="/dashboard" className="inline-block bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl">
+              <img src={saarthiLogoSvg} alt="SAARTHI Logo" className="h-8 w-auto object-contain" />
+            </Link>
           </div>
 
-          {/* Step Progress Bar */}
-          <StepProgressBar step={step} />
-
-          {/* Error Notice */}
-          {error && (
-            <div className="mb-4 rounded-xl bg-red-50 border-l-4 border-red-500 p-3 text-xs text-red-700 flex items-center justify-between" role="alert">
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <span>{error}</span>
-              </div>
-              <button onClick={() => setError('')} className="text-red-400 hover:text-red-600 font-bold ml-2">×</button>
+          {/* Bottom Headline Details */}
+          <div className="relative z-10 space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E65100] text-white text-[11px] font-bold uppercase tracking-wider shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              <span>Government of India &amp; Maharashtra</span>
             </div>
-          )}
+            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+              Citizen Entitlement &amp; Welfare Gateway
+            </h2>
+            <p className="text-xs sm:text-sm text-white/80 max-w-md leading-relaxed">
+              Complete your profile in 6 simple steps to unlock tailored Central &amp; State welfare schemes directly mapped to your demographic credentials.
+            </p>
 
-          {/* Wizard Steps Form */}
-          <div className="min-h-[260px] flex flex-col justify-center">
-            {/* Step 1: Personal Details */}
-            {step === 1 && (
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight">
-                    Tell us about you
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Helps us identify age- or gender-specific scheme eligibility.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5" htmlFor="dob">
-                    Date of birth
-                  </label>
-                  <div className="relative flex items-center bg-[#EDF3FC] rounded-xl px-3.5 h-11.5 border border-transparent focus-within:border-[#156f45] focus-within:ring-2 focus-within:ring-[#156f45]/20 transition-all">
-                    <input
-                      id="dob"
-                      type="date"
-                      value={form.dateOfBirth}
-                      onChange={(e) => set('dateOfBirth', e.target.value)}
-                      className="w-full bg-transparent border-none outline-none text-sm text-slate-900 font-medium p-0 focus:ring-0"
-                    />
-                  </div>
-                  <p className="text-[10.5px] text-slate-400 mt-1">Used to calculate your age against scheme requirements</p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-2">
-                    Gender
-                  </label>
-                  <ChipGroup options={GENDERS} value={form.gender} onChange={(v) => set('gender', v)} />
-                </div>
-              </div>
-            )}
-
-            {/* Step 2: Location */}
-            {step === 2 && (
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight">
-                    Where do you live?
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Many schemes are state-specific — this unlocks regional matches.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
-                    State / UT
-                  </label>
-                  <CustomSelect
-                    options={INDIAN_STATES}
-                    value={form.state}
-                    onChange={(val) => {
-                      set('state', val)
-                      const newDistricts = getDistrictsForState(val)
-                      if (!newDistricts.includes(form.district)) {
-                        set('district', '')
-                      }
-                    }}
-                    placeholder="Select your state or UT"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
-                    District
-                  </label>
-                  <CustomSelect
-                    options={getDistrictsForState(form.state)}
-                    value={form.district}
-                    onChange={(val) => set('district', val)}
-                    disabled={!form.state}
-                    placeholder={form.state ? 'Select official district' : 'Select a state first'}
-                  />
-                  {form.state ? (
-                    <p className="text-[10.5px] text-slate-400 mt-1">
-                      Showing official districts of {form.state} ({getDistrictsForState(form.state).length} districts)
-                    </p>
-                  ) : (
-                    <p className="text-[10.5px] text-amber-600 mt-1 font-medium">
-                      Please select your State / UT first to see official districts
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Step 3: Income & Occupation */}
-            {step === 3 && (
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight">
-                    Income &amp; occupation
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Many schemes have income ceilings — unlocks targeted financial benefits.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5" htmlFor="income">
-                    Annual family income (₹)
-                  </label>
-                  <div className="relative flex items-center bg-[#EDF3FC] rounded-xl px-3.5 h-11.5 border border-transparent focus-within:border-[#156f45] focus-within:ring-2 focus-within:ring-[#156f45]/20 transition-all">
-                    <span className="text-slate-400 font-bold text-sm mr-2">₹</span>
-                    <input
-                      id="income"
-                      type="number"
-                      min="0"
-                      placeholder="e.g. 250000"
-                      value={form.annualIncome}
-                      onChange={(e) => set('annualIncome', e.target.value)}
-                      className="w-full bg-transparent border-none outline-none text-sm text-slate-900 placeholder-slate-400 font-medium p-0 focus:ring-0"
-                    />
-                  </div>
-                  <p className="text-[10.5px] text-slate-400 mt-1">Total household income before deductions</p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-2">
-                    Occupation
-                  </label>
-                  <ChipGroup options={OCCUPATIONS} value={form.occupation} onChange={(v) => set('occupation', v)} />
-                </div>
-              </div>
-            )}
-
-            {/* Step 4: Category & Education */}
-            {step === 4 && (
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight">
-                    Category &amp; education
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Helps match affirmative action, scholarships, and skill development schemes.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-2">
-                    Social category
-                  </label>
-                  <ChipGroup options={CATEGORIES} value={form.category} onChange={(v) => set('category', v)} />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
-                    Highest education level
-                  </label>
-                  <CustomSelect
-                    options={EDUCATION_LEVELS}
-                    value={form.educationLevel}
-                    onChange={(val) => set('educationLevel', val)}
-                    placeholder="Select education level"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Step 5: Special Criteria */}
-            {step === 5 && (
-              <div className="space-y-3">
-                <div>
-                  <h2 className="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight">
-                    Special criteria
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Optional, but these unlock high-priority subsidized schemes.
-                  </p>
-                </div>
-
-                <div className="bg-[#EDF3FC]/50 rounded-2xl p-3 border border-slate-100 divide-y divide-slate-100">
-                  <ToggleRow
-                    label="Persons with Disabilities (PwD)"
-                    why="Unlocks specialized disability welfare and equipment grants"
-                    value={form.disabilityStatus}
-                    onChange={(v) => set('disabilityStatus', v)}
-                  />
-                  <ToggleRow
-                    label="Below Poverty Line (BPL) / Antyodaya"
-                    why="Unlocks ration subsidies, housing, and healthcare aid"
-                    value={form.isBpl}
-                    onChange={(v) => set('isBpl', v)}
-                  />
-                  <ToggleRow
-                    label="Minority Community"
-                    why="Unlocks minority scholarships and entrepreneurship support"
-                    value={form.isMinority}
-                    onChange={(v) => set('isMinority', v)}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Step 6: Review & Confirm */}
-            {step === 6 && (
-              <div className="space-y-3">
-                <div>
-                  <h2 className="text-2xl sm:text-[26px] font-black text-slate-900 tracking-tight">
-                    Review &amp; confirm
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Verify your details before discovering matching schemes.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-100 bg-[#EDF3FC]/40 divide-y divide-slate-100 overflow-hidden text-xs">
-                  {[
-                    ['Date of birth', form.dateOfBirth || '—'],
-                    ['Gender', form.gender || '—'],
-                    ['State / District', `${form.state || '—'} ${form.district ? `(${form.district})` : ''}`],
-                    ['Annual income', form.annualIncome ? `₹${Number(form.annualIncome).toLocaleString('en-IN')}` : '—'],
-                    ['Occupation', form.occupation || '—'],
-                    ['Category', form.category || '—'],
-                    ['Education', form.educationLevel || '—'],
-                    [
-                      'Special tags',
-                      [
-                        form.disabilityStatus ? 'PwD' : null,
-                        form.isBpl ? 'BPL' : null,
-                        form.isMinority ? 'Minority' : null,
-                      ].filter(Boolean).join(', ') || 'None',
-                    ],
-                  ].map(([label, val]) => (
-                    <div key={label} className="flex items-center justify-between px-3.5 py-2">
-                      <span className="text-slate-500">{label}</span>
-                      <span className="font-semibold text-slate-800">{val}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Navigation Controls */}
-          <div className="flex items-center justify-between gap-3 mt-6 pt-4 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={back}
-              disabled={step === 1}
-              className="px-5 h-11 rounded-full text-xs font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 active:scale-[0.99] disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
-            >
-              ← Back
-            </button>
-
-            {step < TOTAL_STEPS ? (
-              <button
-                type="button"
-                onClick={next}
-                className="px-6 h-11 rounded-full bg-[#156f45] hover:bg-[#115e3b] active:scale-[0.99] text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-[#156f45]/20 transition-all cursor-pointer"
-              >
-                <span>Continue</span>
-                <span className="text-sm">→</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleFinish}
-                disabled={saving}
-                className="px-6 h-11 rounded-full bg-[#156f45] hover:bg-[#115e3b] active:scale-[0.99] text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-[#156f45]/20 transition-all disabled:opacity-60 cursor-pointer"
-              >
-                <span>{saving ? 'Saving profile…' : 'Finish & see my schemes'}</span>
-                {!saving && <span className="text-sm">✓</span>}
-              </button>
-            )}
-          </div>
-
-          {/* Trust Badges Row */}
-          <div className="flex items-center justify-between gap-2 mt-5 pt-3.5 border-t border-slate-100 text-[10px] text-slate-500 font-medium">
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#156f45]" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-              </svg>
-              <span>Secure &amp; Encrypted</span>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#156f45]" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-              </svg>
-              <span>Aadhaar Compatible</span>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#156f45]" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
-                <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h3a1 1 0 100-2H9z" clipRule="evenodd" />
-              </svg>
-              <span>PAN &amp; Ration Card</span>
-            </div>
-          </div>
-
-          {/* Decorative Bottom: Monuments Watermark & Tricolor Wave Script */}
-          <div className="mt-4 pt-1 flex items-end justify-between relative select-none pointer-events-none">
-            {/* Left: Indian Monuments Line Art Silhouette */}
-            <div className="opacity-25 text-emerald-800">
-              <svg className="h-9 w-auto" viewBox="0 0 240 50" fill="none" stroke="currentColor" strokeWidth="1.2">
-                <path d="M10 50 L14 15 L18 50 M12 35 H16 M13 25 H15" />
-                <path d="M30 50 V20 H58 V50 M38 50 V32 Q44 26 50 32 V50 M32 17 H56 M36 12 H52 V17" />
-                <path d="M70 50 V28 H76 V50 M82 50 V28 H88 V50 M70 28 Q79 20 88 28" />
-                <path d="M110 50 V18 L112 50 M111 28 H111.5" />
-                <path d="M118 50 V30 H142 V50 M124 50 V38 Q130 32 136 38 V50 M122 30 Q130 14 138 30 M130 14 V8" />
-                <path d="M150 50 V18 L148 50 M149 28 H148.5" />
-                <path d="M165 50 V32 H172 V28 H178 V32 H185 V28 H191 V32 H198 V50" />
-                <path d="M178 28 Q184.5 22 191 28 M184.5 22 V18" />
-                <path d="M210 50 Q220 25 225 50 M215 50 Q225 30 235 50" />
-              </svg>
-            </div>
-
-            {/* Right: Tricolor Wave + Calligraphy */}
-            <div className="flex flex-col items-end">
-              <span className="font-caveat text-xl sm:text-2xl text-slate-800/90 tracking-wide -mb-1 rotate-[-2deg]">
-                A Better Tomorrow Together
+            <div className="pt-3 flex items-center gap-4 text-xs font-semibold text-white/90">
+              <span className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px] text-[#16A34A]">verified</span>
+                <span>Gazette Grounded</span>
               </span>
-              
-              <svg className="w-28 sm:w-32 h-6" viewBox="0 0 140 24" fill="none">
-                <path
-                  d="M0 8 C30 18, 70 2, 105 10 C120 14, 135 8, 140 6"
-                  stroke="#FF9933"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M0 12 C30 22, 70 6, 105 14 C120 18, 135 12, 140 10"
-                  stroke="#E2E8F0"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M0 16 C30 26, 70 10, 105 18 C120 22, 135 16, 140 14"
-                  stroke="#138808"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <span>•</span>
+              <span className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px] text-[#FF7722]">security</span>
+                <span>Privacy Protected</span>
+              </span>
             </div>
           </div>
+        </div>
 
+        {/* RIGHT: Onboarding Wizard Pane */}
+        <div className="w-full lg:w-[55%] xl:w-[54%] min-h-screen bg-white flex flex-col justify-between p-6 sm:p-10 lg:p-12 overflow-y-auto">
+          <div className="w-full max-w-xl mx-auto my-auto space-y-6">
+            {/* Top Security Context Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#E2E8F0] text-[#44474E] text-xs">
+              <div className="flex items-center gap-2 font-bold text-[#0D2240]">
+                <span className="w-2 h-2 rounded-full bg-[#138808] animate-pulse" />
+                <span>OFFICIAL CITIZEN VERIFICATION ACTIVE</span>
+              </div>
+              <span className="bg-[#EBF3FC] text-[#0D2240] px-2.5 py-0.5 rounded-full font-bold text-[11px] flex items-center gap-1">
+                <span className="material-symbols-outlined text-[14px]">lock</span>
+                <span>256-Bit Encrypted Vault</span>
+              </span>
+            </div>
+
+            {/* Stepper Header */}
+            <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#E2E8F0] flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-7 h-7 rounded-full bg-[#E65100] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                    {step}
+                  </span>
+                  <span className="font-display font-bold text-base text-[#0D2240]">
+                    {STEP_TITLES[step - 1]}
+                  </span>
+                </div>
+                <span className="text-xs text-[#44474E] font-bold">
+                  Step {step} of {TOTAL_STEPS}
+                </span>
+              </div>
+
+              {/* Segmented Track Bar with Tricolor Progression */}
+              <div className="w-full bg-[#DEE8FF] h-2 rounded-full overflow-hidden flex gap-1">
+                {Array.from({ length: TOTAL_STEPS }, (_, i) => (
+                  <div
+                    key={i}
+                    className={`flex-1 h-full rounded-full transition-all duration-300 ${
+                      i + 1 < step
+                        ? 'bg-[#138808]'
+                        : i + 1 === step
+                        ? 'bg-[#E65100]'
+                        : 'bg-[#DEE8FF]'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Match Opportunity Banner */}
+            <div className="bg-[#0D2240] text-white rounded-xl p-4 shadow-md relative overflow-hidden flex items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-[#FF7722] text-[24px] mt-0.5 shrink-0">
+                  auto_awesome
+                </span>
+                <div>
+                  <span className="text-[10.5px] bg-[#E65100] text-white px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                    Eligibility Engine Active
+                  </span>
+                  <h4 className="font-display font-bold text-sm text-white mt-1">
+                    Completing your profile unlocks tailored central and state welfare entitlements!
+                  </h4>
+                  <p className="text-xs text-white/80 mt-0.5">
+                    Direct benefit transfers, fee waivers &amp; statutory grants mapped to your credentials
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Error Notice */}
+            {error && (
+              <div className="p-3.5 rounded-xl bg-red-50 text-red-700 border border-red-200 flex items-center justify-between text-xs font-semibold">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px]">error</span>
+                  <span>{error}</span>
+                </div>
+                <button onClick={() => setError('')} className="font-bold text-base cursor-pointer">×</button>
+              </div>
+            )}
+
+            {/* Step Form Bodies */}
+            <div className="min-h-[280px] flex flex-col justify-center">
+              {/* Step 1: Personal Details */}
+              {step === 1 && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[#0D2240]">
+                      Personal &amp; Demographic Identity
+                    </h3>
+                    <p className="text-xs text-[#44474E] mt-1">
+                      Helps identify age- and gender-specific welfare entitlement criteria.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-1.5" htmlFor="dob">
+                      Date of Birth (DOB) <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative flex items-center bg-[#F8FAFC] rounded-xl px-3.5 h-12 border border-[#E2E8F0] focus-within:border-[#0D2240] focus-within:ring-2 focus-within:ring-[#0D2240]/10 transition-all">
+                      <input
+                        id="dob"
+                        type="date"
+                        value={form.dateOfBirth}
+                        onChange={(e) => set('dateOfBirth', e.target.value)}
+                        className="w-full bg-transparent border-none outline-none text-sm text-[#0D2240] font-medium p-0 focus:ring-0"
+                      />
+                    </div>
+                    {ageString && (
+                      <div className="mt-2 flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#EAFBF0] text-[#138808] text-xs font-bold border border-[#16A34A]/20">
+                        <span className="material-symbols-outlined text-[16px]">verified</span>
+                        <span>{ageString}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-2">
+                      Gender Identity <span className="text-red-500">*</span>
+                    </label>
+                    <ChipGroup options={GENDERS} value={form.gender} onChange={(v) => set('gender', v)} />
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Location */}
+              {step === 2 && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[#0D2240]">
+                      Where is your state domicile?
+                    </h3>
+                    <p className="text-xs text-[#44474E] mt-1">
+                      State domicile unlocks specialized state government resolutions and local welfare funds.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-1.5">
+                      State / Union Territory <span className="text-red-500">*</span>
+                    </label>
+                    <CustomSelect
+                      options={INDIAN_STATES}
+                      value={form.state}
+                      onChange={(val) => {
+                        set('state', val)
+                        const newDistricts = getDistrictsForState(val)
+                        if (!newDistricts.includes(form.district)) {
+                          set('district', '')
+                        }
+                      }}
+                      placeholder="Select your State or UT"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-1.5">
+                      District Jurisdiction
+                    </label>
+                    <CustomSelect
+                      options={getDistrictsForState(form.state)}
+                      value={form.district}
+                      onChange={(val) => set('district', val)}
+                      disabled={!form.state}
+                      placeholder={form.state ? 'Select official district' : 'Select a state first'}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Income & Occupation */}
+              {step === 3 && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[#0D2240]">
+                      Income &amp; Occupation
+                    </h3>
+                    <p className="text-xs text-[#44474E] mt-1">
+                      Used to determine eligibility against statutory income ceilings.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-1.5" htmlFor="income">
+                      Annual Gross Family Income (₹) <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative flex items-center bg-[#F8FAFC] rounded-xl px-3.5 h-12 border border-[#E2E8F0] focus-within:border-[#0D2240] focus-within:ring-2 focus-within:ring-[#0D2240]/10 transition-all">
+                      <span className="font-bold text-[#44474E] mr-2">₹</span>
+                      <input
+                        id="income"
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 350000"
+                        value={form.annualIncome}
+                        onChange={(e) => set('annualIncome', e.target.value)}
+                        className="w-full bg-transparent border-none outline-none text-sm text-[#0D2240] font-medium p-0 focus:ring-0"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-1.5">
+                      Primary Occupation
+                    </label>
+                    <CustomSelect
+                      options={OCCUPATIONS}
+                      value={form.occupation}
+                      onChange={(v) => set('occupation', v)}
+                      placeholder="Select occupation category"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Category & Education */}
+              {step === 4 && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[#0D2240]">
+                      Social Category &amp; Highest Education
+                    </h3>
+                    <p className="text-xs text-[#44474E] mt-1">
+                      Required for constitutional reservation benefits and scholarship eligibility.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-2">
+                      Social Category <span className="text-red-500">*</span>
+                    </label>
+                    <ChipGroup options={CATEGORIES} value={form.category} onChange={(v) => set('category', v)} />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#0D2240] mb-1.5">
+                      Highest Completed Education Level <span className="text-red-500">*</span>
+                    </label>
+                    <CustomSelect
+                      options={EDUCATION_LEVELS}
+                      value={form.educationLevel}
+                      onChange={(v) => set('educationLevel', v)}
+                      placeholder="Select highest education level"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Step 5: Special Criteria */}
+              {step === 5 && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[#0D2240]">
+                      Special Entitlement Criteria
+                    </h3>
+                    <p className="text-xs text-[#44474E] mt-1">
+                      Optional, but unlocks targeted grants and priority benefits.
+                    </p>
+                  </div>
+
+                  <div className="bg-[#F8FAFC] rounded-2xl p-4 border border-[#E2E8F0] divide-y divide-[#E2E8F0]">
+                    <ToggleRow
+                      label="Persons with Disabilities (PwD / UDID)"
+                      why="Unlocks specialized disability welfare and assistive equipment grants"
+                      value={form.disabilityStatus}
+                      onChange={(v) => set('disabilityStatus', v)}
+                    />
+                    <ToggleRow
+                      label="Below Poverty Line (BPL) / Antyodaya Ration"
+                      why="Unlocks food security, housing subsidies, and healthcare waivers"
+                      value={form.isBpl}
+                      onChange={(v) => set('isBpl', v)}
+                    />
+                    <ToggleRow
+                      label="Minority Community Member"
+                      why="Unlocks minority development scholarships and entrepreneurship support"
+                      value={form.isMinority}
+                      onChange={(v) => set('isMinority', v)}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Step 6: Review & Confirm */}
+              {step === 6 && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[#0D2240]">
+                      Review &amp; Confirm Snapshot
+                    </h3>
+                    <p className="text-xs text-[#44474E] mt-1">
+                      Verify your demographic details before running the matching engine.
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] divide-y divide-[#E2E8F0] overflow-hidden text-xs">
+                    {[
+                      ['Date of Birth', form.dateOfBirth || '—'],
+                      ['Gender', form.gender || '—'],
+                      ['State / District', `${form.state || '—'} ${form.district ? `(${form.district})` : ''}`],
+                      ['Annual Income', form.annualIncome ? `₹${Number(form.annualIncome).toLocaleString('en-IN')}` : '—'],
+                      ['Occupation', form.occupation || '—'],
+                      ['Social Category', form.category || '—'],
+                      ['Education Level', form.educationLevel || '—'],
+                      [
+                        'Special Tags',
+                        [
+                          form.disabilityStatus ? 'PwD' : null,
+                          form.isBpl ? 'BPL' : null,
+                          form.isMinority ? 'Minority' : null,
+                        ].filter(Boolean).join(', ') || 'None',
+                      ],
+                    ].map(([label, val]) => (
+                      <div key={label} className="flex items-center justify-between px-4 py-2.5">
+                        <span className="text-[#44474E] font-medium">{label}</span>
+                        <span className="font-bold text-[#0D2240]">{val}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Navigation Controls */}
+            <div className="flex items-center justify-between gap-3 pt-4 border-t border-[#E2E8F0]">
+              <button
+                type="button"
+                onClick={back}
+                disabled={step === 1}
+                className="px-5 h-11 rounded-xl text-xs font-bold text-[#0D2240] border border-[#E2E8F0] hover:bg-[#F0F3FF] active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+              >
+                ← Back
+              </button>
+
+              {step < TOTAL_STEPS ? (
+                <button
+                  type="button"
+                  onClick={next}
+                  className="px-6 h-11 rounded-xl bg-[#0D2240] hover:bg-[#1A365D] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer"
+                >
+                  <span>Continue</span>
+                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleFinish}
+                  disabled={saving}
+                  className="px-6 h-11 rounded-xl bg-[#E65100] hover:bg-[#FF7722] text-white text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all disabled:opacity-60 cursor-pointer"
+                >
+                  <span>{saving ? 'Saving Profile Snapshot…' : 'Finish & Discover Schemes'}</span>
+                  {!saving && <span className="material-symbols-outlined text-[18px]">verified</span>}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
   )
 }
