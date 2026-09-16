@@ -70,7 +70,7 @@ export default function Checklist() {
   const [sortBy, setSortBy] = useState('category')
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
   const sortDropdownRef = useRef(null)
-  const [collapsedCategories, setCollapsedCategories] = useState({})
+  const [openCategories, setOpenCategories] = useState({})
   const [selectedDocForSchemes, setSelectedDocForSchemes] = useState(null)
   const [showDigiLockerModal, setShowDigiLockerModal] = useState(false)
   const [digiLockerConnected, setDigiLockerConnected] = useState(false)
@@ -141,8 +141,8 @@ export default function Checklist() {
     }
   }
 
-  function toggleCategoryCollapse(category) {
-    setCollapsedCategories((prev) => ({
+  function toggleCategory(category) {
+    setOpenCategories((prev) => ({
       ...prev,
       [category]: !prev[category],
     }))
@@ -424,25 +424,62 @@ export default function Checklist() {
               </div>
             </div>
 
+            {/* Global Expand / Collapse All Controls */}
+            <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-on-surface-variant">
+              <span>{visibleCategories.length} document categories (click any category to view requirements)</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const allOpen = {}
+                    visibleCategories.forEach((c) => {
+                      allOpen[c] = true
+                    })
+                    setOpenCategories(allOpen)
+                  }}
+                  className="px-2.5 py-1 rounded-md bg-surface-container-low hover:bg-surface-container text-chakra-blue font-semibold transition-colors cursor-pointer text-xs"
+                >
+                  Expand All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpenCategories({})}
+                  className="px-2.5 py-1 rounded-md bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-semibold transition-colors cursor-pointer text-xs"
+                >
+                  Collapse All
+                </button>
+              </div>
+            </div>
+
             {/* Categories & Docs */}
             {visibleCategories.map((category, catIdx) => {
               const items = filteredChecklist[category] || []
-              const isCollapsed = collapsedCategories[category]
+              const isOpen = Boolean(openCategories[category])
               const catTotal = (checklist[category] || []).length
               const catChecked = (checklist[category] || []).filter((i) => i.checked).length
               const meta = CATEGORY_META[category] || CATEGORY_META['Other']
               const isAllVerified = catTotal > 0 && catChecked === catTotal
 
               return (
-                <div key={category} className="bg-slate-surface-elevated rounded-xl shadow-md p-6">
-                  {/* Category Header */}
-                  <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-border">
+                <div
+                  key={category}
+                  className={`bg-slate-surface-elevated rounded-xl shadow-xs hover:shadow-md transition-all border border-slate-border/70 p-5 ${
+                    isOpen ? 'ring-1 ring-chakra-blue/10' : ''
+                  }`}
+                >
+                  {/* Category Header (Clickable Accordion) */}
+                  <div
+                    onClick={() => toggleCategory(category)}
+                    className={`flex items-center justify-between cursor-pointer select-none transition-all ${
+                      isOpen ? 'pb-4 mb-5 border-b border-slate-border' : ''
+                    }`}
+                  >
                     <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm ${meta.badgeColor}`}>
+                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 ${meta.badgeColor}`}>
                         {catIdx + 1}
                       </div>
                       <div>
-                        <h3 className="font-headline-sm text-headline-sm font-bold text-chakra-blue">
+                        <h3 className="font-headline-sm text-headline-sm font-bold text-chakra-blue hover:text-kesari-saffron transition-colors">
                           {category}
                         </h3>
                         <span className="font-label-sm text-label-sm text-on-surface-variant">
@@ -455,20 +492,29 @@ export default function Checklist() {
                       {isAllVerified ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-harita-green-soft text-harita-green font-label-md text-label-md font-bold">
                           <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                          All Verified
+                          <span className="hidden sm:inline">All Verified</span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-partial-amber-soft text-partial-amber font-label-md text-label-md font-bold">
                           <span className="material-symbols-outlined text-[16px]">priority_high</span>
-                          Action Required
+                          <span className="hidden sm:inline">Action Required</span>
                         </span>
                       )}
                       <button
-                        onClick={() => toggleCategoryCollapse(category)}
-                        className="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
-                        title="Collapse or Expand"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleCategory(category)
+                        }}
+                        className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer"
+                        title={isOpen ? 'Collapse section' : 'Expand section'}
+                        aria-expanded={isOpen}
                       >
-                        <span className={`material-symbols-outlined text-[20px] transform transition-transform ${isCollapsed ? '' : 'rotate-180'}`}>
+                        <span
+                          className={`material-symbols-outlined text-[22px] transform transition-transform duration-200 block ${
+                            isOpen ? 'rotate-180' : ''
+                          }`}
+                        >
                           expand_more
                         </span>
                       </button>
@@ -476,8 +522,8 @@ export default function Checklist() {
                   </div>
 
                   {/* Doc Items Container */}
-                  {!isCollapsed && (
-                    <div className="flex flex-col gap-4">
+                  {isOpen && (
+                    <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-top-1 duration-150">
                       {items.map((item) => {
                         const isChecked = item.checked
                         const desc =
