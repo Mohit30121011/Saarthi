@@ -17,3 +17,11 @@ dist/
 # OS
 Thumbs.db
 .DS_Store
+/build/
+
+# Scratch & Temporary
+scratch_*.txt
+original_*.txt
+*.tmp
+image-Picsart-*.png
+/src/

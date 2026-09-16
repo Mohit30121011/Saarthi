@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { getSchemeDetail } from '../api/schemes'
 import { addBookmark, removeBookmark, getBookmarks } from '../api/bookmarks'
 import { useAuth } from '../context/AuthContext'
@@ -18,6 +18,7 @@ const ATTRIBUTE_LABELS = {
 
 export default function SchemeDetail() {
   const { schemeId } = useParams()
+  const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   const [detail, setDetail] = useState(null)
   const [tab, setTab] = useState('Overview')
@@ -56,7 +57,12 @@ export default function SchemeDetail() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <Link to="/explorer" className="text-sm text-saarthi-green hover:underline">&larr; Back to Explorer</Link>
+      <button
+        onClick={() => navigate(-1)}
+        className="text-xs font-semibold text-[#156f45] hover:underline flex items-center gap-1.5 mb-3"
+      >
+        <span>←</span> <span>Back</span>
+      </button>
 
       <div className="flex items-start justify-between gap-4 mt-4 mb-2">
         <div>

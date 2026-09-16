@@ -4,11 +4,12 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080/saarthi',
+        target: 'http://localhost:8080/Saarthi',
         changeOrigin: true,
       },
     },
