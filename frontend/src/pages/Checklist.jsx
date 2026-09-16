@@ -127,7 +127,7 @@ export default function Checklist() {
 
     triggerToast(
       nextChecked
-        ? `✓ "${documentName}" marked as verified & ready in dossier`
+        ? `"${documentName}" marked as verified & ready in dossier`
         : `"${documentName}" marked as pending action`,
       nextChecked ? 'success' : 'info'
     )
@@ -564,7 +564,7 @@ export default function Checklist() {
                                   <button
                                     onClick={() => {
                                       handleToggle(item.documentName, false)
-                                      triggerToast(`✓ Fetched "${item.documentName}" via MahaOnline e-District`, 'success')
+                                      triggerToast(`Fetched "${item.documentName}" via MahaOnline e-District`, 'success')
                                     }}
                                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-chakra-blue font-label-md text-label-md font-semibold hover:bg-surface-variant transition-colors cursor-pointer"
                                     type="button"
@@ -837,7 +837,7 @@ export default function Checklist() {
                 onClick={() => {
                   setDigiLockerConnected(true)
                   setShowDigiLockerModal(false)
-                  triggerToast('✓ DigiLocker Vault synced! All verified records updated.', 'success')
+                  triggerToast('DigiLocker Vault synced! All verified records updated.', 'success')
                 }}
                 className="flex-1 py-3 rounded-lg bg-harita-green hover:bg-harita-green-vibrant text-on-primary font-label-lg font-bold transition-colors cursor-pointer"
               >
@@ -856,12 +856,34 @@ export default function Checklist() {
 
       {/* Micro-interaction Notification Toast */}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-chakra-blue text-on-primary px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5 duration-200">
-          <span className="material-symbols-outlined text-harita-green-vibrant text-[22px]">
-            {toast.type === 'error' ? 'error' : 'check_circle'}
+        <aside
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#0D2240] text-white border border-white/20 px-4 sm:px-5 py-3 rounded-xl shadow-[0_12px_36px_rgba(13,34,64,0.45)] flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5 duration-200 max-w-[92vw] sm:max-w-md pointer-events-auto"
+        >
+          <span
+            className={`material-symbols-outlined text-[22px] shrink-0 ${
+              toast.type === 'error'
+                ? 'text-[#EF4444]'
+                : toast.type === 'info'
+                ? 'text-[#60A5FA]'
+                : 'text-[#16A34A]'
+            }`}
+          >
+            {toast.type === 'error' ? 'error' : toast.type === 'info' ? 'info' : 'check_circle'}
           </span>
-          <span className="font-label-lg text-label-lg font-medium">{toast.message}</span>
-        </div>
+          <span className="text-white text-xs sm:text-sm font-semibold tracking-wide leading-snug">
+            {toast.message}
+          </span>
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            className="text-white/60 hover:text-white ml-auto p-1 rounded-md transition-colors cursor-pointer shrink-0"
+            aria-label="Dismiss notification"
+          >
+            <span className="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </aside>
       )}
     </div>
   )
