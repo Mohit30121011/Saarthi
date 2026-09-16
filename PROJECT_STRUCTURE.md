@@ -8,12 +8,13 @@
 Saarthi/
 ├── backend/
 │   ├── src/com/saarthi/
-│   │   ├── controller/    8   servlets — HTTP, RBAC checks, call services, write JSON (never a raw model object, see Gson gotcha below)
-│   │   ├── service/       8   business logic: eligibility matching, checklist dedup, notification triggers, admin audit trail
-│   │   ├── dao/          10   JDBC only: queries, no business logic
-│   │   ├── model/         9   domain entities (User, Scheme, EligibilityRule, Bookmark, etc.)
+│   │   ├── controller/    9   servlets — HTTP, RBAC checks, call services, write JSON (never a raw model object, see Gson gotcha below)
+│   │   ├── service/       9   business logic: eligibility matching, checklist dedup, notification triggers, admin audit trail, chatbot grounding
+│   │   ├── dao/          12   JDBC only: queries, no business logic
+│   │   ├── model/        11   domain entities (User, Scheme, EligibilityRule, Bookmark, ChatSession, etc.)
 │   │   ├── filter/        1   AuthFilter — JWT verification + role gate for /api/admin/*
-│   │   └── util/          4   DB pool, JSON (Gson) helpers, JWT, password hashing
+│   │   ├── integration/   3   outbound HTTP to third-party APIs (LlmClient interface + GeminiClient/GrokClient — chatbot only, Gemini primary/Grok fallback)
+│   │   └── util/          5   DB pool, JSON (Gson) helpers, JWT, password hashing, chatbot config loader
 │   │
 │   └── WebContent/
 │       ├── assets/              built frontend bundle (JS/CSS, copied in from frontend/dist on deploy)
@@ -63,8 +64,9 @@ Saarthi/
 | `BookmarkController` | `BookmarkService` | `BookmarkDAO` |
 | `NotificationController` | `NotificationService` | `NotificationDAO`, `SchemeMatchSnapshotDAO` |
 | `AdminController` | `AdminService` | `SchemeDAO`, `EligibilityRuleDAO`, `DocumentDAO`, `AdminAuditDAO` |
+| `ChatController` | `ChatService` | `SchemeDAO`, `DocumentDAO`, `ProfileDAO`, `ChatSessionDAO`, `ChatHistoryDAO`, plus `EligibilityService` (reused, not duplicated) and `integration.GeminiClient`/`GrokClient` |
 
-`EligibilityService` is the core matching engine (SRS §5.1–5.3 — rule evaluation, confidence scoring, ranking). `AdminService` is the only service that writes to `AdminAuditDAO` on every mutation, producing the audit trail FR9.3 requires.
+`EligibilityService` is the core matching engine (SRS §5.1–5.3 — rule evaluation, confidence scoring, ranking) and also exposes a public tri-state `evaluate()`/`evaluateCandidates()` that `ChatService` reuses for deterministic eligibility answers (FR8.5) — the chatbot never re-implements this logic. `AdminService` is the only service that writes to `AdminAuditDAO` on every mutation, producing the audit trail FR9.3 requires.
 
 ## Known gotchas baked into this structure (don't "fix" without re-reading why)
 

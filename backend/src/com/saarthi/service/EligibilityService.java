@@ -44,6 +44,26 @@ public class EligibilityService {
 
     private enum RuleOutcome { PASS, FAIL, UNVERIFIABLE }
 
+    /** Unlike SchemeMatch.Confidence (STRONG/PARTIAL only — NOT_MATCHED schemes are simply excluded from the dashboard), this includes NOT_MATCHED: ChatService (FR8.5) needs to tell a citizen "no" as plainly as "yes"/"partial". */
+    public enum Verdict { STRONG, PARTIAL, NOT_MATCHED }
+
+    /** One scheme's deterministic evaluation, tri-state. Reused verbatim by ChatService so the chatbot never re-implements eligibility logic (FR8.6/FR8.12). */
+    public static final class EligibilityResult {
+        private final Scheme scheme;
+        private final Verdict verdict;
+        private final List<String> missingFields;
+
+        public EligibilityResult(Scheme scheme, Verdict verdict, List<String> missingFields) {
+            this.scheme = scheme;
+            this.verdict = verdict;
+            this.missingFields = missingFields;
+        }
+
+        public Scheme getScheme() { return scheme; }
+        public Verdict getVerdict() { return verdict; }
+        public List<String> getMissingFields() { return missingFields; }
+    }
+
     /** FR3.1-FR3.6/FR3.4 — used both for the initial dashboard load and the "refresh matches" action. */
     public List<SchemeMatch> getPersonalizedMatches(int userId) throws SQLException {
         UserProfile profile = profileDAO.findByUserId(userId).orElseGet(UserProfile::new);
@@ -61,8 +81,24 @@ public class EligibilityService {
         return rank(matches);
     }
 
-    /** Section 5.1/5.2 — evaluates one scheme's rules against one profile. Returns null for NOT_MATCHED. */
+    /** Section 5.1/5.2 — evaluates one scheme's rules against one profile. Returns null for NOT_MATCHED (dashboard excludes it entirely). Delegates to the tri-state evaluate() below so there is exactly one place this logic lives. */
     private SchemeMatch evaluateScheme(Scheme scheme, UserProfile profile, List<EligibilityRule> rules) {
+        EligibilityResult result = evaluate(scheme, profile, rules);
+        if (result.getVerdict() == Verdict.NOT_MATCHED) {
+            return null;
+        }
+        SchemeMatch.Confidence confidence = result.getVerdict() == Verdict.STRONG
+                ? SchemeMatch.Confidence.STRONG
+                : SchemeMatch.Confidence.PARTIAL;
+        return new SchemeMatch(scheme, confidence, result.getMissingFields());
+    }
+
+    /**
+     * Section 5.1/5.2, tri-state — the single implementation of "does this profile match this
+     * scheme," reused by both the Dashboard path (evaluateScheme, above) and ChatService
+     * (FR8.5/FR8.6), so eligibility logic is never duplicated per FR8.12.
+     */
+    public EligibilityResult evaluate(Scheme scheme, UserProfile profile, List<EligibilityRule> rules) {
         boolean anyFailed = false;
         Set<String> missingFields = new LinkedHashSet<>();
 
@@ -76,12 +112,22 @@ public class EligibilityService {
         }
 
         if (anyFailed) {
-            return null; // NOT_MATCHED — confirmed non-match, excluded from the dashboard
+            return new EligibilityResult(scheme, Verdict.NOT_MATCHED, List.of());
         }
         if (!missingFields.isEmpty()) {
-            return new SchemeMatch(scheme, SchemeMatch.Confidence.PARTIAL, new ArrayList<>(missingFields));
+            return new EligibilityResult(scheme, Verdict.PARTIAL, new ArrayList<>(missingFields));
         }
-        return new SchemeMatch(scheme, SchemeMatch.Confidence.STRONG, List.of());
+        return new EligibilityResult(scheme, Verdict.STRONG, List.of());
+    }
+
+    /** Convenience wrapper for ChatService — evaluates a small candidate set (not the full catalog) against one profile, fetching each scheme's rules via the existing DAO (Section 5.6 Step 2). */
+    public List<EligibilityResult> evaluateCandidates(UserProfile profile, List<Scheme> candidates) throws SQLException {
+        List<EligibilityResult> results = new ArrayList<>();
+        for (Scheme scheme : candidates) {
+            List<EligibilityRule> rules = ruleDAO.findBySchemeId(scheme.getSchemeId());
+            results.add(evaluate(scheme, profile, rules));
+        }
+        return results;
     }
 
     /** Section 5.1 — a single rule row against the profile. NULL profile attribute = UNVERIFIABLE, never FAIL. */

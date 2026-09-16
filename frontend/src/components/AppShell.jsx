@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../api/notifications'
+import ChatWidget from './ChatWidget'
 import saarthiLogo from '../assets/saarthi-logo.png'
 
 const MAIN_NAV_LINKS = [
@@ -602,6 +603,8 @@ export default function AppShell() {
         </main>
 
       </div>
+
+      <ChatWidget />
     </div>
   )
 }

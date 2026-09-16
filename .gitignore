@@ -7,6 +7,7 @@
 # Compiled backend output + local DB credentials
 backend/WebContent/WEB-INF/classes/com/
 backend/WebContent/WEB-INF/classes/db.properties
+backend/WebContent/WEB-INF/classes/chatbot.properties
 
 # Frontend (once scaffolded)
 node_modules/
