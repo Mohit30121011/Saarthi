@@ -1,7 +1,13 @@
-import { useEffect, useState, useId } from 'react'
+import { useEffect, useState, useRef, useId } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getChecklist, toggleChecklistItem } from '../api/checklist'
 import checklistHeroImg from '../assets/checklist-hero.jpg'
+
+const SORT_OPTIONS = [
+  { id: 'category', label: 'Category' },
+  { id: 'name', label: 'Document Name' },
+  { id: 'status', label: 'Status (Pending first)' },
+]
 
 // Curated helpful subtitles for categories
 const CATEGORY_META = {
@@ -101,12 +107,26 @@ export default function Checklist() {
   const [error, setError] = useState('')
   const [activeFilter, setActiveFilter] = useState('all') // 'all', 'not_collected', 'collected', 'mandatory', 'optional'
   const [sortBy, setSortBy] = useState('category') // 'category', 'name', 'status'
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
+  const sortDropdownRef = useRef(null)
   const [collapsedCategories, setCollapsedCategories] = useState({})
   const [openMenuDoc, setOpenMenuDoc] = useState(null)
   const [uploadedFiles, setUploadedFiles] = useState({})
   const [selectedDocForSchemes, setSelectedDocForSchemes] = useState(null)
   const [showGuidanceModal, setShowGuidanceModal] = useState(false)
   const [showDigiLockerModal, setShowDigiLockerModal] = useState(false)
+  const [toast, setToast] = useState(null)
+  const toastTimeoutRef = useRef(null)
+
+  function triggerToast(message, type = 'success', documentName = null, currentChecked = false) {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current)
+    }
+    setToast({ message, type, documentName, currentChecked })
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null)
+    }, 4000)
+  }
 
   function load() {
     setLoading(true)
@@ -119,34 +139,51 @@ export default function Checklist() {
 
   useEffect(load, [])
 
-  // Close 3-dots menu on outside click
+  // Close menus on outside click
   useEffect(() => {
-    function handleClickOutside() {
+    function handleClickOutside(event) {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
+        setSortDropdownOpen(false)
+      }
       setOpenMenuDoc(null)
     }
-    if (openMenuDoc) {
+    if (openMenuDoc || sortDropdownOpen) {
       window.addEventListener('click', handleClickOutside)
       return () => window.removeEventListener('click', handleClickOutside)
     }
-  }, [openMenuDoc])
+  }, [openMenuDoc, sortDropdownOpen])
 
   async function handleToggle(documentName, currentlyChecked) {
+    const nextChecked = !currentlyChecked
+
     // optimistic update
     setChecklist((prev) => {
       if (!prev) return prev
       const next = { ...prev }
       for (const category of Object.keys(next)) {
         next[category] = next[category].map((item) =>
-          item.documentName === documentName ? { ...item, checked: !currentlyChecked } : item
+          item.documentName === documentName ? { ...item, checked: nextChecked } : item
         )
       }
       return next
     })
+
+    // Show toast message
+    triggerToast(
+      nextChecked
+        ? `✓ "${documentName}" marked as collected`
+        : `"${documentName}" marked as not collected`,
+      nextChecked ? 'success' : 'info',
+      documentName,
+      nextChecked
+    )
+
     try {
-      const updated = await toggleChecklistItem(documentName, !currentlyChecked)
+      const updated = await toggleChecklistItem(documentName, nextChecked)
       setChecklist(updated)
     } catch {
       load() // revert to server truth on failure
+      triggerToast(`Could not update "${documentName}". Retrying…`, 'error')
     }
   }
 
@@ -154,8 +191,9 @@ export default function Checklist() {
     const file = event.target.files?.[0]
     if (file) {
       setUploadedFiles((prev) => ({ ...prev, [documentName]: file.name }))
-      // Also automatically mark as checked if not already checked
+      // Mark as checked if not already checked
       handleToggle(documentName, false)
+      triggerToast(`✓ "${file.name}" uploaded for ${documentName}`, 'success')
     }
   }
 
@@ -168,10 +206,141 @@ export default function Checklist() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[450px] text-center p-8">
-        <div className="w-12 h-12 rounded-full border-3 border-[#156f45] border-t-transparent animate-spin mb-4" />
-        <p className="font-fraunces text-xl font-semibold text-[#10241A]">Consolidating your documents…</p>
-        <p className="text-sm text-[#8A9A90] mt-1">Cross-checking requirements across all your eligible schemes</p>
+      <div className="w-full max-w-[1400px] mx-auto pb-16 animate-pulse">
+        {/* Top Status Indicator */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="w-2 h-2 rounded-full bg-[#156f45] animate-ping" />
+          <span className="text-xs font-semibold text-[#52796F]">
+            Consolidating required documents across your eligible schemes…
+          </span>
+        </div>
+
+        {/* 1. TOP HERO BANNER SKELETON */}
+        <div className="relative overflow-hidden rounded-2xl bg-[#EBF5EE] border border-[#D4E8DC] p-6 sm:p-8 min-h-[190px] flex items-center justify-between mb-6">
+          <div className="space-y-3 max-w-lg w-full">
+            <div className="h-3.5 w-24 bg-emerald-200/70 rounded-full" />
+            <div className="h-8 w-72 bg-emerald-300/50 rounded-xl" />
+            <div className="h-4 w-96 bg-emerald-200/60 rounded-full" />
+            <div className="h-3.5 w-4/5 bg-emerald-200/40 rounded-full" />
+          </div>
+          <div className="hidden md:flex w-64 h-36 bg-emerald-200/30 rounded-2xl shrink-0" />
+        </div>
+
+        {/* 2. FILTER STRIP SKELETON */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <div className="h-9 w-36 bg-slate-200 rounded-full" />
+            <div className="h-9 w-32 bg-slate-100 rounded-full" />
+            <div className="h-9 w-28 bg-slate-100 rounded-full" />
+            <div className="h-9 w-28 bg-slate-100 rounded-full" />
+            <div className="h-9 w-24 bg-slate-100 rounded-full" />
+          </div>
+          <div className="h-9 w-36 bg-slate-100 rounded-xl shrink-0 self-end sm:self-auto" />
+        </div>
+
+        {/* 3. TWO-COLUMN GRID SKELETON */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Left Column: Category Cards */}
+          <div className="lg:col-span-8 space-y-4">
+            {/* Category Card 1 */}
+            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs">
+              <div className="flex items-center justify-between pb-4 border-b border-[#F0F4F1]">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 shrink-0" />
+                  <div className="space-y-1.5">
+                    <div className="h-5 w-36 bg-slate-200 rounded" />
+                    <div className="h-3 w-56 bg-slate-100 rounded" />
+                  </div>
+                </div>
+                <div className="h-6 w-28 bg-slate-100 rounded-full" />
+              </div>
+
+              {/* Rows inside Card 1 */}
+              <div className="divide-y divide-[#F0F4F1] pt-1">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className="py-4 flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3.5 flex-1">
+                      <div className="w-5 h-5 rounded-md bg-slate-100 shrink-0 mt-1" />
+                      <div className="space-y-2 flex-1">
+                        <div className="h-4 w-44 bg-slate-200 rounded" />
+                        <div className="h-3 w-64 bg-slate-100 rounded" />
+                        <div className="flex gap-2 pt-1">
+                          <div className="h-5 w-24 bg-slate-100 rounded-md" />
+                          <div className="h-5 w-20 bg-slate-100 rounded-md" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="h-7 w-20 bg-slate-100 rounded-xl shrink-0" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Category Card 2 */}
+            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs">
+              <div className="flex items-center justify-between pb-4 border-b border-[#F0F4F1]">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 shrink-0" />
+                  <div className="space-y-1.5">
+                    <div className="h-5 w-40 bg-slate-200 rounded" />
+                    <div className="h-3 w-48 bg-slate-100 rounded" />
+                  </div>
+                </div>
+                <div className="h-6 w-28 bg-slate-100 rounded-full" />
+              </div>
+
+              <div className="divide-y divide-[#F0F4F1] pt-1">
+                {[1, 2].map((n) => (
+                  <div key={n} className="py-4 flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3.5 flex-1">
+                      <div className="w-5 h-5 rounded-md bg-slate-100 shrink-0 mt-1" />
+                      <div className="space-y-2 flex-1">
+                        <div className="h-4 w-40 bg-slate-200 rounded" />
+                        <div className="h-3 w-56 bg-slate-100 rounded" />
+                        <div className="flex gap-2 pt-1">
+                          <div className="h-5 w-24 bg-slate-100 rounded-md" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="h-7 w-20 bg-slate-100 rounded-xl shrink-0" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: 3 Cards */}
+          <div className="lg:col-span-4 space-y-5">
+            {/* Progress Card Skeleton */}
+            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs space-y-4">
+              <div className="h-5 w-28 bg-slate-200 rounded" />
+              <div className="flex items-center gap-4">
+                <div className="w-20 h-20 rounded-full bg-slate-100 shrink-0" />
+                <div className="space-y-2 flex-1">
+                  <div className="h-5 w-24 bg-slate-200 rounded" />
+                  <div className="h-3 w-32 bg-slate-100 rounded" />
+                </div>
+              </div>
+              <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+            </div>
+
+            {/* Quick Actions Card Skeleton */}
+            <div className="bg-white rounded-2xl border border-[#E2ECE5] p-5 shadow-xs space-y-3">
+              <div className="h-5 w-28 bg-slate-200 rounded mb-2" />
+              <div className="h-12 w-full bg-slate-50 rounded-xl" />
+              <div className="h-12 w-full bg-slate-50 rounded-xl" />
+              <div className="h-12 w-full bg-slate-50 rounded-xl" />
+            </div>
+
+            {/* Tip Card Skeleton */}
+            <div className="bg-[#FFFBEB] border border-[#FDE68A]/70 rounded-2xl p-5 shadow-xs space-y-2.5">
+              <div className="h-4 w-16 bg-amber-200/80 rounded" />
+              <div className="h-3.5 w-full bg-amber-200/50 rounded" />
+              <div className="h-3.5 w-3/4 bg-amber-200/50 rounded" />
+              <div className="h-3 w-28 bg-amber-300/70 rounded mt-3" />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -376,22 +545,62 @@ export default function Checklist() {
           </button>
         </div>
 
-        {/* Sort By Dropdown */}
-        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+        {/* Sort By Custom Dropdown */}
+        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto relative" ref={sortDropdownRef}>
           <span className="text-xs font-medium text-[#707A70]">Sort by</span>
           <div className="relative">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="text-xs font-semibold text-[#10241A] bg-white border border-[#E7ECE3] rounded-xl px-3 py-2 pr-8 appearance-none focus:outline-none focus:border-[#156f45] shadow-2xs cursor-pointer"
+            <button
+              type="button"
+              onClick={() => setSortDropdownOpen((prev) => !prev)}
+              className={`min-w-[140px] flex items-center justify-between gap-2.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-white border transition-all cursor-pointer shadow-2xs ${
+                sortDropdownOpen
+                  ? 'border-[#156f45] ring-2 ring-[#156f45]/20 text-[#10241A]'
+                  : 'border-[#156f45] text-[#10241A] hover:border-[#115e3b]'
+              }`}
             >
-              <option value="category">Category</option>
-              <option value="name">Document Name</option>
-              <option value="status">Status (Pending first)</option>
-            </select>
-            <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-[#707A70]">
-              ▾
-            </span>
+              <span>{SORT_OPTIONS.find((o) => o.id === sortBy)?.label || 'Category'}</span>
+              <svg
+                className={`w-3.5 h-3.5 text-[#156f45] transform transition-transform duration-200 ${
+                  sortDropdownOpen ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {sortDropdownOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-52 bg-white rounded-xl shadow-[0_12px_28px_rgba(16,36,26,0.12)] border border-[#E7ECE3] p-1.5 z-40 animate-fade-in">
+                {SORT_OPTIONS.map((opt) => {
+                  const isSelected = sortBy === opt.id
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => {
+                        setSortBy(opt.id)
+                        setSortDropdownOpen(false)
+                      }}
+                      className={`w-full text-left px-3 py-2 text-xs rounded-lg flex items-center justify-between transition-colors cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#F2FAF4] text-[#156f45] font-bold'
+                          : 'text-[#3C4A42] hover:bg-[#F4F9F5] hover:text-[#10241A] font-medium'
+                      }`}
+                    >
+                      <span>{opt.label}</span>
+                      {isSelected && (
+                        <svg className="w-3.5 h-3.5 text-[#156f45] stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -502,11 +711,14 @@ export default function Checklist() {
                             </button>
 
                             {/* Info */}
-                            <div className="min-w-0 flex-1">
+                            <div
+                              className="min-w-0 flex-1 cursor-pointer select-none"
+                              onClick={() => handleToggle(item.documentName, isChecked)}
+                            >
                               <div className="flex items-center gap-1.5 flex-wrap">
                                 <span
                                   className={`text-sm sm:text-[15px] font-semibold transition-all ${
-                                    isChecked ? 'line-through text-[#8A9A90]' : 'text-[#10241A]'
+                                    isChecked ? 'line-through text-[#8A9A90]' : 'text-[#10241A] hover:text-[#156f45]'
                                   }`}
                                 >
                                   {item.documentName}
@@ -522,7 +734,10 @@ export default function Checklist() {
 
                               {/* Contributing schemes */}
                               {item.contributingSchemes && item.contributingSchemes.length > 0 && (
-                                <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+                                <div
+                                  className="flex flex-wrap items-center gap-1.5 mt-2.5"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
                                   {item.contributingSchemes.slice(0, 3).map((s) => (
                                     <span
                                       key={s.schemeId}
@@ -534,7 +749,10 @@ export default function Checklist() {
                                   {item.contributingSchemes.length > 3 && (
                                     <button
                                       type="button"
-                                      onClick={() => setSelectedDocForSchemes(item)}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        setSelectedDocForSchemes(item)
+                                      }}
                                       className="inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#EDF5F0] text-[#156f45] border border-[#D4E8DC] hover:bg-[#E0F2E9] transition-colors cursor-pointer"
                                     >
                                       +{item.contributingSchemes.length - 3} more
@@ -928,6 +1146,46 @@ export default function Checklist() {
           </div>
         </div>
       )}
+
+      {/* 4. FLOATING TOAST NOTIFICATION */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[#10241A] text-white px-4 py-3 rounded-2xl shadow-[0_14px_36px_rgba(0,0,0,0.28)] border border-[#2D3E33] animate-in slide-in-from-bottom-5 duration-200"
+        >
+          <div
+            className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs ${
+              toast.type === 'error' ? 'bg-[#C0473B] text-white' : 'bg-[#156f45] text-white'
+            }`}
+          >
+            {toast.type === 'error' ? '!' : '✓'}
+          </div>
+          <div className="flex-1 min-w-0 pr-2">
+            <p className="text-xs sm:text-sm font-semibold text-white truncate">{toast.message}</p>
+          </div>
+          {toast.documentName && (
+            <button
+              type="button"
+              onClick={() => {
+                handleToggle(toast.documentName, toast.currentChecked)
+                setToast(null)
+              }}
+              className="text-xs font-bold text-[#A5F4BD] hover:underline px-1.5 py-0.5 cursor-pointer"
+            >
+              Undo
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            className="text-slate-400 hover:text-white text-xs p-1 ml-1 cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </div>
   )
 }
+
