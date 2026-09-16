@@ -4,6 +4,9 @@ Paste this whole file as your first message in the new session to pick up exactl
 
 ---
 
+## Repo layout note
+Reference/spec docs that aren't live code or the primary planning docs — the Stitch design-prompt folders (`app modules/`, `user onboarding/`), `stitch_screens/`, and stale duplicate exports (old-name `.docx` files, `SRS_render.html`, `Saarthi_SRS.docx/.pdf`, `srs_harness.md`) — now live under `extras/` to keep the root clean. `RESUME.md`, `PLAN.md`, `SRS.md`, `DATASET_PLAN.md`, and `Saarthi_Synopsis.md` stay at root as the actively-referenced docs. See `PROJECT_STRUCTURE.md` for the full folder tree and layer conventions.
+
 ## What this project is
 **Saarthi** — a personalized government scheme discovery platform for Indian citizens. Full docs already written and finalized: `SRS.md` (authoritative spec, 5 core algorithms, full DB schema), `PLAN.md` (stack, build order), `DATASET_PLAN.md` (dataset sourcing methodology), `Saarthi_Synopsis.md`. Don't re-derive requirements — read these first.
 
@@ -59,14 +62,14 @@ Sourced via 4 parallel research agents (per `DATASET_PLAN.md`'s "batches of 15-2
 The user stopped two more research agents mid-run (targeting Pension/Welfare/Disability and more Maharashtra schemes, toward `DATASET_PLAN.md`'s 80+ target) — currently paused, not resumed. Ask before restarting dataset expansion; the user has toggled this on/off a few times in this session.
 
 ## Frontend — MVP loop + most pages done
-Vite + React scaffolded at `D:\Sarthi\frontend`. Design tokens (colors, Fraunces/Inter fonts, shadows, shape language) carried over exactly from `user onboarding/00-design-system.md` and `app modules/00-design-system-extension.md` into a Tailwind v4 `@theme` block in `src/index.css`. **Gotcha:** in Tailwind v4, `@import url(...)` for external fonts must come **before** `@import "tailwindcss"` in the CSS file — the latter expands inline, so anything textually after it in the source ends up after real content in the flattened output, which violates CSS's "imports must be first" rule.
+Vite + React scaffolded at `D:\Sarthi\frontend`. Design tokens (colors, Fraunces/Inter fonts, shadows, shape language) carried over exactly from `extras/user onboarding/00-design-system.md` and `extras/app modules/00-design-system-extension.md` into a Tailwind v4 `@theme` block in `src/index.css`. **Gotcha:** in Tailwind v4, `@import url(...)` for external fonts must come **before** `@import "tailwindcss"` in the CSS file — the latter expands inline, so anything textually after it in the source ends up after real content in the flattened output, which violates CSS's "imports must be first" rule.
 
 **Pages built and wired into `App.jsx`:** Login, Signup, Forgot Password (UI-only — no backend endpoint exists for this yet, intentionally deferred), 6-step Onboarding wizard, Dashboard, Scheme Explorer, Scheme Detail (Overview/Eligibility/Documents/How to Apply tabs), Checklist, Bookmarks, Notifications, Profile. Shared components: `AppShell` (nav bar + notification dropdown + profile menu), `SchemeCard`, `CategoryChips`, `AuthLayout`.
 
 **Verified end-to-end in real headless-Chromium sessions** (Playwright, installed as a dev dependency — `frontend/e2e-drive.mjs` and `frontend/smoke-test.mjs` are reusable smoke-test scripts, not one-off scratch files): fresh signup → onboarding → dashboard with correctly-matched scheme cards, plus every other page — zero console errors, zero 5xx responses, screenshots checked against the design spec by actually looking at them, not just trusting "it rendered."
 
 **NOT yet built:**
-- **Admin frontend page** — backend is ready (`GET/POST/PUT/DELETE /api/admin/schemes[/{id}]`, `.../rules[/{id}]`, `.../documents[/{id}]`), just needs the React page. Per `app modules/09-admin-panel.md`: dark-sidebar utilitarian style (deliberately NOT the citizen app's light claymorphism — don't "fix" this), dense data table, slide-over edit drawer. This was the very next thing in progress when this session ended.
+- **Admin frontend page** — backend is ready (`GET/POST/PUT/DELETE /api/admin/schemes[/{id}]`, `.../rules[/{id}]`, `.../documents[/{id}]`), just needs the React page. Per `extras/app modules/09-admin-panel.md`: dark-sidebar utilitarian style (deliberately NOT the citizen app's light claymorphism — don't "fix" this), dense data table, slide-over edit drawer. This was the very next thing in progress when this session ended.
 - Chatbot widget (deferred per plan, same as backend).
 - Guest-mode browsing (FR4.1 says Explorer/Scheme Detail should work for logged-out Guests too) — currently both are behind `ProtectedRoute` as a scope cut. If you build guest mode, the nav bar also needs a logged-out variant (Log in / Create account buttons instead of bell/avatar) per the design ext. doc.
 - Forgot Password has no real backend endpoint — `password_reset_tokens` table exists in schema but no `AuthService`/`AuthController` method uses it yet.
@@ -80,7 +83,7 @@ Vite + React scaffolded at `D:\Sarthi\frontend`. Design tokens (colors, Fraunces
 - Git: repo initialized, `.gitignore` covers `.metadata/` (Eclipse workspace), `node_modules/`, `db.properties`. Several commits made locally. **The `git push` to `https://github.com/Mohit30121011/Saarthi.git` was blocked by an auto-mode safety classifier (flagged as "data exfiltration")** — this has not been resolved; the user needs to either push it themselves or grant the Bash permission explicitly. Don't retry it silently.
 
 ## Immediate next action when you resume
-**Admin frontend page core CRUD loop is built and verified end-to-end** (schemes list, edit drawer, eligibility rules sub-editor, required documents sub-editor, add-scheme flow — all tested live through a real browser session this session, not just code review). Some secondary spec items from `app modules/09-admin-panel.md` are still missing (listed below). Read that spec doc before continuing.
+**Admin frontend page core CRUD loop is built and verified end-to-end** (schemes list, edit drawer, eligibility rules sub-editor, required documents sub-editor, add-scheme flow — all tested live through a real browser session this session, not just code review). Some secondary spec items from `extras/app modules/09-admin-panel.md` are still missing (listed below). Read that spec doc before continuing.
 
 **Built and verified working (Sep 15 2026 session):**
 - `frontend/src/api/admin.js` — API client for all `/api/admin/*` endpoints, matches `backend/src/com/saarthi/controller/AdminController.java`'s DTO shapes 1:1.
