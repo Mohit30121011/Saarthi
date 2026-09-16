@@ -16,7 +16,7 @@ import java.time.Duration;
 public class GeminiClient implements LlmClient {
 
     private static final String ENDPOINT_TEMPLATE =
-            "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s";
+            "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent";
 
     private final HttpClient http = HttpClient.newHttpClient();
     private final String apiKey = ChatbotConfig.geminiApiKey();
@@ -52,9 +52,10 @@ public class GeminiClient implements LlmClient {
         generationConfig.addProperty("temperature", 0.3);
         body.add("generationConfig", generationConfig);
 
-        String url = String.format(ENDPOINT_TEMPLATE, model, apiKey);
+        String url = String.format(ENDPOINT_TEMPLATE, model);
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .header("Content-Type", "application/json")
+                .header("x-goog-api-key", apiKey)
                 .timeout(Duration.ofSeconds(25))
                 .POST(HttpRequest.BodyPublishers.ofString(JsonUtil.gson().toJson(body)))
                 .build();

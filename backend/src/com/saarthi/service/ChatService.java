@@ -9,7 +9,7 @@ import com.saarthi.dao.DocumentDAO;
 import com.saarthi.dao.ProfileDAO;
 import com.saarthi.dao.SchemeDAO;
 import com.saarthi.integration.GeminiClient;
-import com.saarthi.integration.GrokClient;
+import com.saarthi.integration.GroqClient;
 import com.saarthi.integration.LlmClient;
 import com.saarthi.model.ChatMessage;
 import com.saarthi.model.ChatSession;
@@ -48,7 +48,7 @@ public class ChatService {
     private static final String DISCLAIMER =
             "Eligibility shown here is provisional. Please confirm final eligibility on the scheme's official application portal before applying.";
     private static final String NOT_CONFIGURED_MESSAGE =
-            "The Saarthi Assistant isn't set up yet — an administrator needs to add a Gemini or Grok API key to chatbot.properties.";
+            "The Saarthi Assistant isn't set up yet — an administrator needs to add a Gemini or Groq API key to chatbot.properties.";
     private static final Set<String> STOPWORDS = Set.of(
             "the", "a", "an", "is", "am", "are", "was", "were", "for", "and", "or", "to", "of", "in", "on",
             "i", "my", "me", "do", "does", "can", "will", "what", "which", "how", "about", "this", "that",
@@ -62,7 +62,7 @@ public class ChatService {
     private final ChatSessionDAO sessionDAO = new ChatSessionDAO();
     private final ChatHistoryDAO historyDAO = new ChatHistoryDAO();
     private final LlmClient gemini = new GeminiClient();
-    private final LlmClient grok = new GrokClient();
+    private final LlmClient groq = new GroqClient();
 
     public static final class ChatReply {
         public final Integer sessionId;
@@ -438,14 +438,14 @@ public class ChatService {
             try {
                 return gemini.complete(systemPrompt, userPrompt);
             } catch (Exception e) {
-                System.err.println("ChatService: Gemini call failed, falling back to Grok: " + e.getMessage());
+                System.err.println("ChatService: Gemini call failed, falling back to Groq: " + e.getMessage());
             }
         }
-        if (grok.isConfigured()) {
+        if (groq.isConfigured()) {
             try {
-                return grok.complete(systemPrompt, userPrompt);
+                return groq.complete(systemPrompt, userPrompt);
             } catch (Exception e) {
-                System.err.println("ChatService: Grok call failed: " + e.getMessage());
+                System.err.println("ChatService: Groq call failed: " + e.getMessage());
             }
         }
         return null;

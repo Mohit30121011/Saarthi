@@ -13,7 +13,7 @@ Saarthi/
 │   │   ├── dao/          12   JDBC only: queries, no business logic
 │   │   ├── model/        11   domain entities (User, Scheme, EligibilityRule, Bookmark, ChatSession, etc.)
 │   │   ├── filter/        1   AuthFilter — JWT verification + role gate for /api/admin/*
-│   │   ├── integration/   3   outbound HTTP to third-party APIs (LlmClient interface + GeminiClient/GrokClient — chatbot only, Gemini primary/Grok fallback)
+│   │   ├── integration/   3   outbound HTTP to third-party APIs (LlmClient interface + GeminiClient/GroqClient — chatbot only, Gemini primary/Groq fallback)
 │   │   └── util/          5   DB pool, JSON (Gson) helpers, JWT, password hashing, chatbot config loader
 │   │
 │   └── WebContent/
@@ -64,7 +64,7 @@ Saarthi/
 | `BookmarkController` | `BookmarkService` | `BookmarkDAO` |
 | `NotificationController` | `NotificationService` | `NotificationDAO`, `SchemeMatchSnapshotDAO` |
 | `AdminController` | `AdminService` | `SchemeDAO`, `EligibilityRuleDAO`, `DocumentDAO`, `AdminAuditDAO` |
-| `ChatController` | `ChatService` | `SchemeDAO`, `DocumentDAO`, `ProfileDAO`, `ChatSessionDAO`, `ChatHistoryDAO`, plus `EligibilityService` (reused, not duplicated) and `integration.GeminiClient`/`GrokClient` |
+| `ChatController` | `ChatService` | `SchemeDAO`, `DocumentDAO`, `ProfileDAO`, `ChatSessionDAO`, `ChatHistoryDAO`, plus `EligibilityService` (reused, not duplicated) and `integration.GeminiClient`/`GroqClient` |
 
 `EligibilityService` is the core matching engine (SRS §5.1–5.3 — rule evaluation, confidence scoring, ranking) and also exposes a public tri-state `evaluate()`/`evaluateCandidates()` that `ChatService` reuses for deterministic eligibility answers (FR8.5) — the chatbot never re-implements this logic. `AdminService` is the only service that writes to `AdminAuditDAO` on every mutation, producing the audit trail FR9.3 requires.
 

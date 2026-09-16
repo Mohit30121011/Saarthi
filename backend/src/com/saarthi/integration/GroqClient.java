@@ -12,23 +12,23 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-/** xAI Grok (OpenAI-compatible chat/completions) — fallback chat provider if Gemini fails. */
-public class GrokClient implements LlmClient {
+/** Groq (OpenAI-compatible chat/completions, LPU-hosted open models) — fallback chat provider if Gemini fails. */
+public class GroqClient implements LlmClient {
 
-    private static final String ENDPOINT = "https://api.x.ai/v1/chat/completions";
+    private static final String ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
     private final HttpClient http = HttpClient.newHttpClient();
-    private final String apiKey = ChatbotConfig.grokApiKey();
-    private final String model = ChatbotConfig.grokModel();
+    private final String apiKey = ChatbotConfig.groqApiKey();
+    private final String model = ChatbotConfig.groqModel();
 
     @Override
     public boolean isConfigured() {
-        return ChatbotConfig.isGrokConfigured();
+        return ChatbotConfig.isGroqConfigured();
     }
 
     @Override
     public String name() {
-        return "Grok";
+        return "Groq";
     }
 
     @Override
@@ -55,7 +55,7 @@ public class GrokClient implements LlmClient {
 
         HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() / 100 != 2) {
-            throw new IOException("Grok API HTTP " + response.statusCode() + ": " + response.body());
+            throw new IOException("Groq API HTTP " + response.statusCode() + ": " + response.body());
         }
 
         JsonObject json = JsonUtil.gson().fromJson(response.body(), JsonObject.class);

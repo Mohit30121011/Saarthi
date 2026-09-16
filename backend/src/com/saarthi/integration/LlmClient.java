@@ -2,7 +2,7 @@ package com.saarthi.integration;
 
 import java.io.IOException;
 
-/** Common contract for the two interchangeable chat model providers (Gemini, Grok). */
+/** Common contract for the two interchangeable chat model providers (Gemini, Groq). */
 public interface LlmClient {
 
     /** True once a real (non-placeholder) API key is present for this provider. */
@@ -15,6 +15,6 @@ public interface LlmClient {
      */
     String complete(String systemPrompt, String userPrompt) throws IOException, InterruptedException;
 
-    /** Provider name for logging/diagnostics ("Gemini" / "Grok"). */
+    /** Provider name for logging/diagnostics ("Gemini" / "Groq"). */
     String name();
 }
