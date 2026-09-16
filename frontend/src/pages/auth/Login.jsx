@@ -1,270 +1,376 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import loginHero from '../../assets/login-hero.png'
-import emblemIndia from '../../assets/emblem-india.svg'
+import saarthiLogoSvg from '../../assets/saarthi-portal-logo.svg'
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [role, setRole] = useState('citizen') // 'citizen' or 'admin'
+  const [identity, setIdentity] = useState('')
   const [password, setPassword] = useState('')
+  const [captchaInput, setCaptchaInput] = useState('')
+  const [captchaCode, setCaptchaCode] = useState('7 X 4 K 9')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  function refreshCaptcha() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+    let res = ''
+    for (let i = 0; i < 5; i++) {
+      res += chars.charAt(Math.floor(Math.random() * chars.length)) + (i < 4 ? ' ' : '')
+    }
+    setCaptchaCode(res)
+    setCaptchaInput('')
+  }
+
+  function playAudioCaptcha() {
+    const utterance = new SpeechSynthesisUtterance(captchaCode.replace(/\s/g, ' '))
+    utterance.lang = 'en-IN'
+    window.speechSynthesis?.speak(utterance)
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     setLoading(true)
     try {
-      await login({ email, password })
-      navigate('/dashboard')
+      // The backend accepts email/password. Identity can be email or mapped to user email
+      const emailParam = identity.includes('@') ? identity : `${identity}@saarthi.gov.in`
+      await login({ email: emailParam, password })
+      if (role === 'admin') {
+        navigate('/admin')
+      } else {
+        navigate('/dashboard')
+      }
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid email or password. Please try again.')
+      setError(err.response?.data?.error || 'Invalid credentials or access token. Please verify and try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F2F7F2] font-sans selection:bg-[#156f45]/20 selection:text-[#10241A]">
-      
-      {/* LEFT: Full-Bleed Hero Artwork (Single seamless container, zero padding) */}
-      <div className="relative w-full lg:w-[60%] xl:w-[62%] min-h-[420px] sm:min-h-[540px] lg:min-h-screen overflow-hidden bg-[#E9F3EB]">
-        <img
-          src={loginHero}
-          alt="Saarthi - Your Guide to Government Schemes"
-          className="w-full h-full object-cover object-left"
-        />
+    <div className="min-h-screen bg-[#F8FAFC] font-sans text-[#111C2D] flex flex-col">
+      {/* Top Tricolor Decorative Ribbon */}
+      <div className="h-1.5 w-full grid grid-cols-3 shrink-0">
+        <div className="bg-[#E65100] h-full" />
+        <div className="bg-white h-full" />
+        <div className="bg-[#138808] h-full" />
       </div>
 
-      {/* RIGHT: 40% Clean Authentication Pane */}
-      <div className="w-full lg:w-[40%] xl:w-[38%] min-h-screen bg-white flex flex-col justify-center items-center p-6 sm:p-8 xl:p-12 z-10 shadow-[-12px_0_35px_rgba(0,0,0,0.04)] border-l border-slate-100 overflow-y-auto">
-        <div className="w-full max-w-[460px] my-auto flex flex-col justify-between py-2">
-          
-          {/* Card Top Row: Citizen Portal Badge + Indian Emblem */}
-          <div className="flex items-center justify-between gap-3">
-            {/* Verified Citizen Portal Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ECFDF5] border border-emerald-200/80 text-[11px] font-semibold text-[#047857] shadow-sm">
-              <svg className="w-3.5 h-3.5 fill-[#10B981] text-white" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span>Verified Citizen Portal</span>
-            </div>
-
-            {/* State Emblem of India */}
-            <div className="flex items-center gap-2 text-right">
-              <img
-                src={emblemIndia}
-                alt="National Emblem"
-                className="h-9 w-auto object-contain opacity-85"
-              />
-              <div className="flex flex-col text-left leading-tight">
-                <span className="text-[10px] font-bold text-slate-800 tracking-tight">Government of India</span>
-                <span className="text-[9.5px] font-semibold text-slate-500 font-devanagari">भारत सरकार</span>
-              </div>
-            </div>
+      {/* Top Header Bar */}
+      <header className="bg-white border-b border-[#E2E8F0] px-4 sm:px-6 lg:px-8 py-3 shadow-[0_1px_8px_rgba(0,0,0,0.02)]">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src={saarthiLogoSvg} alt="SAARTHI Official Logo" className="h-9 w-auto object-contain" />
           </div>
+          <div className="flex items-center gap-4 text-xs font-semibold text-[#44474E]">
+            <div className="hidden sm:flex items-center gap-1.5 bg-[#EBF3FC] text-[#0D2240] px-2.5 py-1 rounded-md">
+              <span className="material-symbols-outlined text-[15px]">verified_user</span>
+              <span>National Welfare Discovery Portal</span>
+            </div>
+            <Link to="/signup" className="text-[#E65100] hover:underline font-bold">
+              New Citizen Registration →
+            </Link>
+          </div>
+        </div>
+      </header>
 
-          {/* Title & Subtitle */}
-          <div className="mt-7 mb-6">
-            <h2 className="text-3xl sm:text-[34px] font-black text-slate-900 tracking-tight">
-              Welcome back
-            </h2>
-            <p className="text-xs sm:text-[13px] text-slate-500 mt-1.5 font-normal leading-relaxed">
-              Log in to see personalized schemes and benefits you qualify for.
+      {/* Main Content Area */}
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-8 lg:py-12">
+        {/* Page Identity Header */}
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-6 pb-8">
+          <div className="flex flex-col gap-2 max-w-2xl min-w-0 w-full">
+            <h1 className="font-display text-lg sm:text-2xl lg:text-4xl font-extrabold tracking-tight text-[#0D2240] truncate">
+              Unified Citizen &amp; Official Access Gateway
+            </h1>
+            <p className="text-xs sm:text-sm text-[#44474E] truncate">
+              Sign in to view your personalized Central &amp; Maharashtra scheme eligibility.
             </p>
           </div>
+        </div>
 
-          {/* Error Notice */}
-          {error && (
-            <div className="mb-4 rounded-xl bg-red-50 border-l-4 border-red-500 p-3 text-xs text-red-700 flex items-center justify-between" role="alert">
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <span>{error}</span>
-              </div>
-              <button onClick={() => setError('')} className="text-red-400 hover:text-red-600 font-bold ml-2">×</button>
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Address */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-800 mb-1.5" htmlFor="email">
-                Email address
-              </label>
-              <div className="relative flex items-center bg-[#EDF3FC] rounded-xl px-3.5 h-12 border border-transparent focus-within:border-[#156f45] focus-within:ring-2 focus-within:ring-[#156f45]/20 transition-all">
-                <svg className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="admin@icms.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-sm text-slate-900 placeholder-slate-400 font-medium p-0 focus:ring-0"
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold text-slate-800" htmlFor="password">
-                  Password
-                </label>
-                <Link
-                  to="/forgot-password"
-                  className="text-xs font-semibold text-[#156f45] hover:underline transition-colors"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <div className="relative flex items-center bg-[#EDF3FC] rounded-xl px-3.5 h-12 border border-transparent focus-within:border-[#156f45] focus-within:ring-2 focus-within:ring-[#156f45]/20 transition-all">
-                <svg className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  placeholder="••••••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-sm text-slate-900 placeholder-slate-400 font-medium p-0 pr-8 focus:ring-0"
-                />
+        {/* 12-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT: 7 Columns - Authentication Form */}
+          <div className="lg:col-span-7 flex flex-col bg-white rounded-2xl border border-[#E2E8F0] shadow-md p-6 lg:p-8">
+            {/* Role Switch Tabs */}
+            <div className="flex items-center justify-between mb-6 pb-2">
+              <div className="flex p-1 bg-[#F0F3FF] rounded-xl w-full max-w-md">
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label="Toggle password visibility"
-                  className="absolute right-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                  onClick={() => setRole('citizen')}
+                  className={`flex-1 py-2.5 px-2 sm:px-4 rounded-lg text-[11px] sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${
+                    role === 'citizen'
+                      ? 'bg-[#0D2240] text-white shadow-sm'
+                      : 'text-[#44474E] hover:text-[#0D2240]'
+                  }`}
                 >
-                  {showPassword ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  )}
+                  <span className="material-symbols-outlined text-[18px] shrink-0">person</span>
+                  <span className="whitespace-nowrap">Citizen Portal <span className="hidden sm:inline font-normal opacity-80 text-xs">(नागरिक)</span></span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole('admin')}
+                  className={`flex-1 py-2.5 px-2 sm:px-4 rounded-lg text-[11px] sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${
+                    role === 'admin'
+                      ? 'bg-[#0D2240] text-white shadow-sm'
+                      : 'text-[#44474E] hover:text-[#0D2240]'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[18px] shrink-0">badge</span>
+                  <span className="whitespace-nowrap">Officer Console <span className="hidden sm:inline font-normal opacity-80 text-xs">(अधिकारी)</span></span>
                 </button>
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-2">
+            {/* Role Notice Banner */}
+            {role === 'citizen' ? (
+              <div className="flex items-center gap-3 p-3.5 mb-6 rounded-xl bg-[#EBF3FC] text-[#0D2240] text-xs">
+                <span className="material-symbols-outlined text-[20px] text-[#0D2240] shrink-0">info</span>
+                <div>
+                  <span className="font-bold">Aadhaar / Ration Card / Parivar ID:</span> Sign in to access your direct benefit entitlement dossier, auto-filled state forms, and family quotas.
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 p-3.5 mb-6 rounded-xl bg-[#FEF3C7] text-[#D97706] text-xs">
+                <span className="material-symbols-outlined text-[20px] shrink-0">admin_panel_settings</span>
+                <div>
+                  <span className="font-bold">Restricted Government Personnel Gateway:</span> NIC SSO / Parichay OAuth authentication required for District Collectors, Taluka Officers, and Verifiers.
+                </div>
+              </div>
+            )}
+
+            {/* Error Notice */}
+            {error && (
+              <div className="mb-6 rounded-xl bg-red-50 border-l-4 border-red-500 p-3 text-xs text-red-700 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px] text-red-500">error</span>
+                  <span>{error}</span>
+                </div>
+                <button onClick={() => setError('')} className="text-red-400 hover:text-red-600 font-bold ml-2">✕</button>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              {/* Identity Input */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-[#0D2240]" htmlFor="identity-input">
+                  Aadhaar Number / Registered Mobile / Email
+                </label>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined absolute left-3.5 text-[20px] text-slate-400 pointer-events-none">
+                    fingerprint
+                  </span>
+                  <input
+                    id="identity-input"
+                    type="text"
+                    required
+                    value={identity}
+                    onChange={(e) => setIdentity(e.target.value)}
+                    placeholder={role === 'citizen' ? 'e.g. 9876 5432 1098 or mohit@saarthi.gov.in' : 'officer@gov.in'}
+                    className="w-full h-12 pl-11 pr-4 bg-[#F0F3FF] border border-[#DEE8FF] text-[#111C2D] rounded-xl text-sm focus:bg-white focus:border-[#0D2240] focus:ring-2 focus:ring-[#0D2240]/10 focus:outline-none transition-all placeholder:text-slate-400 font-medium"
+                  />
+                </div>
+                <p className="text-[11px] text-[#44474E]">
+                  For Aadhaar, enter 12-digit number without hyphens. OTP verification available on registered SIM.
+                </p>
+              </div>
+
+              {/* Password Input */}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-[#0D2240]" htmlFor="password-input">
+                    Access Password
+                  </label>
+                  <Link to="/forgot-password" className="text-xs text-[#E65100] hover:underline font-bold">
+                    Forgot Password?
+                  </Link>
+                </div>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined absolute left-3.5 text-[20px] text-slate-400 pointer-events-none">
+                    password
+                  </span>
+                  <input
+                    id="password-input"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full h-12 pl-11 pr-12 bg-[#F0F3FF] border border-[#DEE8FF] text-[#111C2D] rounded-xl text-sm focus:bg-white focus:border-[#0D2240] focus:ring-2 focus:ring-[#0D2240]/10 focus:outline-none transition-all placeholder:text-slate-400 font-medium"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 p-1 text-slate-400 hover:text-[#0D2240] cursor-pointer"
+                    aria-label="Toggle password visibility"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">
+                      {showPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* CAPTCHA Box */}
+              <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <div className="bg-white px-4 py-2 rounded-lg border border-[#E2E8F0] flex items-center gap-2 select-none shadow-xs">
+                    <span className="font-display text-xl font-black tracking-widest text-[#0D2240] line-through decoration-[#E65100] decoration-2 select-none font-mono">
+                      {captchaCode}
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider pl-2 border-l border-slate-200">
+                      CAPTCHA
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <button
+                      type="button"
+                      onClick={refreshCaptcha}
+                      className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-[#0D2240] border border-[#E2E8F0] transition-colors shadow-2xs cursor-pointer"
+                      title="Reload CAPTCHA"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">refresh</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={playAudioCaptcha}
+                      className="p-1.5 rounded-lg bg-white hover:bg-slate-100 text-[#0D2240] border border-[#E2E8F0] transition-colors shadow-2xs cursor-pointer"
+                      title="Listen to audio captcha"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">volume_up</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="w-full sm:flex-1">
+                  <input
+                    type="text"
+                    required
+                    maxLength={10}
+                    value={captchaInput}
+                    onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
+                    placeholder="Enter characters"
+                    className="w-full h-11 px-3 bg-white border border-[#E2E8F0] text-[#0D2240] rounded-lg text-sm text-center font-mono font-bold tracking-widest uppercase focus:outline-none focus:border-[#0D2240] shadow-inner"
+                  />
+                </div>
+              </div>
+
+              {/* Security Protection Notice */}
+              <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FFF3EB] border border-[#E65100]/20 text-[#E65100]">
+                <span className="material-symbols-outlined text-[18px] shrink-0 mt-0.5">gpp_maybe</span>
+                <div className="text-xs">
+                  <span className="font-bold">Security Protection Active:</span> Automatic lockout of access credentials after 5 consecutive failed attempts for a cooling duration of 15 minutes.
+                </div>
+              </div>
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 rounded-full bg-[#156f45] hover:bg-[#115e3b] active:scale-[0.99] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#156f45]/25 transition-all duration-200 disabled:opacity-60 cursor-pointer"
+                className="w-full h-12 rounded-xl bg-[#E65100] hover:bg-[#FF7722] text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
-                <span>{loading ? 'Logging in…' : 'Log in'}</span>
-                {!loading && <span className="text-base leading-none">→</span>}
+                <span>{loading ? 'Authenticating...' : 'Sign In to SAARTHI'}</span>
+                <span className="material-symbols-outlined text-[20px]">login</span>
               </button>
-            </div>
-          </form>
 
-          {/* Divider: New here? */}
-          <div className="relative flex items-center justify-center my-5">
-            <div className="w-full border-t border-slate-200" />
-            <span className="absolute bg-white px-3 text-[11px] font-medium text-slate-400">
-              New here?
-            </span>
+              {/* Registration Link */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#E2E8F0] text-center sm:text-left">
+                <div className="text-xs text-[#44474E]">
+                  Don't have an active account?
+                </div>
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EAFBF0] text-[#138808] border border-[#16A34A]/30 hover:bg-[#138808] hover:text-white text-xs font-bold transition-all shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
+                  <span>Register with Aadhaar / DigiLocker</span>
+                </Link>
+              </div>
+            </form>
           </div>
 
-          {/* Secondary Button: Create an account */}
-          <Link
-            to="/signup"
-            className="w-full h-11 rounded-full border border-[#86efac] bg-white hover:bg-emerald-50/60 active:scale-[0.99] text-[#156f45] font-semibold text-sm flex items-center justify-center transition-all duration-150 shadow-sm"
-          >
-            Create an account
-          </Link>
+          {/* RIGHT: 5 Columns - National Citizen Registry Bento */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            {/* Deep Navy Master Bento Card */}
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0D2240] to-[#1A365D] text-white p-6 lg:p-7 shadow-xl flex flex-col gap-6">
+              <div className="flex items-center justify-between">
+                <span className="px-3 py-1 rounded-full bg-white/10 text-white text-[11px] font-bold uppercase tracking-wider backdrop-blur-sm">
+                  National Citizen Registry
+                </span>
+                <span className="flex h-2.5 w-2.5 rounded-full bg-[#16A34A] animate-pulse" />
+              </div>
 
-          {/* Trust Badges Row */}
-          <div className="flex items-center justify-between gap-2 mt-6 pt-4 border-t border-slate-100 text-[10px] text-slate-500 font-medium">
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#156f45]" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-              </svg>
-              <span>Secure &amp; Encrypted</span>
+              <div>
+                <div className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">
+                  One Profile.<br />Every Direct Benefit.
+                </div>
+                <p className="text-xs text-white/80 mt-2 leading-relaxed">
+                  SAARTHI matches citizen identity records directly against gazette entitlement rule engines across Central, State, and District welfare pipelines.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md flex flex-col gap-1 border border-white/10">
+                  <span className="font-display text-2xl font-extrabold text-white">50+</span>
+                  <span className="text-[11px] text-white/80 font-medium">Verified Central &amp; State Schemes</span>
+                </div>
+                <div className="p-3.5 rounded-xl bg-white/10 backdrop-blur-md flex flex-col gap-1 border border-white/10">
+                  <span className="font-display text-2xl font-extrabold text-[#FF7722]">₹2.4 Lakh</span>
+                  <span className="text-[11px] text-white/80 font-medium">Avg. Direct Entitlement Value</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[11px] text-white/70">
+                <span>Server Clock: IST (UTC+05:30)</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#16A34A]" /> All Clusters Operational
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#156f45]" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-              </svg>
-              <span>Aadhaar Compatible</span>
-            </div>
+            {/* Grievance & Help Desk Card */}
+            <div className="rounded-2xl bg-white border border-[#E2E8F0] p-6 shadow-sm flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#FFF3EB] text-[#E65100] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[24px]">support_agent</span>
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-[#0D2240]">Toll-Free Grievance &amp; Help Desk</div>
+                  <div className="text-xs text-slate-500">National Citizen Consumer Helpline</div>
+                </div>
+              </div>
 
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#156f45]" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
-                <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h3a1 1 0 100-2H9z" clipRule="evenodd" />
-              </svg>
-              <span className="hidden sm:inline">PAN &amp; Ration Card</span>
-              <span className="sm:hidden">PAN/Ration</span>
-            </div>
-          </div>
+              <div className="flex items-center justify-between p-3 rounded-xl bg-[#F0F3FF]">
+                <div className="flex items-center gap-2 font-display text-base font-bold text-[#0D2240]">
+                  <span className="material-symbols-outlined text-[#E65100]">call</span>
+                  <span>14566 / 1800-111-555</span>
+                </div>
+                <span className="px-2 py-0.5 rounded bg-[#EAFBF0] text-[#138808] text-[11px] font-bold">24x7 Active</span>
+              </div>
 
-          {/* Decorative Bottom: Monuments Watermark & Tricolor Wave Script */}
-          <div className="mt-5 pt-2 flex items-end justify-between relative select-none pointer-events-none">
-            {/* Left: Indian Monuments Line Art Silhouette */}
-            <div className="opacity-25 text-emerald-800">
-              <svg className="h-9 w-auto" viewBox="0 0 240 50" fill="none" stroke="currentColor" strokeWidth="1.2">
-                <path d="M10 50 L14 15 L18 50 M12 35 H16 M13 25 H15" />
-                <path d="M30 50 V20 H58 V50 M38 50 V32 Q44 26 50 32 V50 M32 17 H56 M36 12 H52 V17" />
-                <path d="M70 50 V28 H76 V50 M82 50 V28 H88 V50 M70 28 Q79 20 88 28" />
-                <path d="M110 50 V18 L112 50 M111 28 H111.5" />
-                <path d="M118 50 V30 H142 V50 M124 50 V38 Q130 32 136 38 V50 M122 30 Q130 14 138 30 M130 14 V8" />
-                <path d="M150 50 V18 L148 50 M149 28 H148.5" />
-                <path d="M165 50 V32 H172 V28 H178 V32 H185 V28 H191 V32 H198 V50" />
-                <path d="M178 28 Q184.5 22 191 28 M184.5 22 V18" />
-                <path d="M210 50 Q220 25 225 50 M215 50 Q225 30 235 50" />
-              </svg>
-            </div>
-
-            {/* Right: Tricolor Wave + Calligraphy */}
-            <div className="flex flex-col items-end">
-              <span className="font-caveat text-xl sm:text-2xl text-slate-800/90 tracking-wide -mb-1 rotate-[-2deg]">
-                A Better Tomorrow Together
-              </span>
-              
-              <svg className="w-28 sm:w-32 h-6" viewBox="0 0 140 24" fill="none">
-                <path
-                  d="M0 8 C30 18, 70 2, 105 10 C120 14, 135 8, 140 6"
-                  stroke="#FF9933"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M0 12 C30 22, 70 6, 105 14 C120 18, 135 12, 140 10"
-                  stroke="#E2E8F0"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M0 16 C30 26, 70 10, 105 18 C120 22, 135 16, 140 14"
-                  stroke="#138808"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col gap-1">
+                  <span className="text-xs font-bold text-[#0D2240] flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[15px]">help</span> Help Guides
+                  </span>
+                  <span className="text-[11px] text-[#44474E]">How to register with Aadhaar OTP</span>
+                </div>
+                <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col gap-1">
+                  <span className="text-xs font-bold text-[#0D2240] flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[15px]">report_problem</span> File Grievance
+                  </span>
+                  <span className="text-[11px] text-[#44474E]">Escalate to State Ombudsperson</span>
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
-      </div>
-
+      </main>
     </div>
   )
 }
