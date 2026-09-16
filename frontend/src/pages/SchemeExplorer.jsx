@@ -6,11 +6,12 @@ import { getBookmarks } from '../api/bookmarks'
 import { getProfile } from '../api/profile'
 import { useAuth } from '../context/AuthContext'
 import SchemeCard from '../components/SchemeCard'
+import SchemeCompareModal from '../components/SchemeCompareModal'
 import { SchemeCardSkeleton } from '../components/Skeletons'
 
 export default function SchemeExplorer() {
   const { isAuthenticated } = useAuth()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const [level, setLevel] = useState('all') // 'all', 'central', 'state'
@@ -23,6 +24,37 @@ export default function SchemeExplorer() {
   const [profile, setProfile] = useState(null)
   const [catalogSchemes, setCatalogSchemes] = useState([])
   const [matchedItems, setMatchedItems] = useState([])
+  const [compareSchemeA, setCompareSchemeA] = useState(null)
+  const [compareSchemeB, setCompareSchemeB] = useState(null)
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState(false)
+
+  function handleToggleCompare(scheme) {
+    if (!compareSchemeA) {
+      setCompareSchemeA(scheme)
+      setIsCompareModalOpen(true)
+    } else if (compareSchemeA.schemeId === scheme.schemeId) {
+      if (compareSchemeB) {
+        setCompareSchemeA(compareSchemeB)
+        setCompareSchemeB(null)
+      } else {
+        setCompareSchemeA(null)
+      }
+    } else if (!compareSchemeB) {
+      setCompareSchemeB(scheme)
+      setIsCompareModalOpen(true)
+    } else if (compareSchemeB.schemeId === scheme.schemeId) {
+      setCompareSchemeB(null)
+    } else {
+      setCompareSchemeB(scheme)
+      setIsCompareModalOpen(true)
+    }
+  }
+
+  function handleClearCompare() {
+    setCompareSchemeA(null)
+    setCompareSchemeB(null)
+    setIsCompareModalOpen(false)
+  }
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -345,6 +377,9 @@ export default function SchemeExplorer() {
                       return next
                     })
                   }}
+                  onCompare={handleToggleCompare}
+                  isComparing={compareSchemeA?.schemeId === scheme.schemeId || compareSchemeB?.schemeId === scheme.schemeId}
+                  showCompare={true}
                 />
               )
             })}
@@ -382,12 +417,31 @@ export default function SchemeExplorer() {
                       {s.deadline || '30 Apr 2025'}
                     </td>
                     <td className="p-4 text-right">
-                      <Link
-                        to={`/schemes/${s.schemeId}`}
-                        className="px-3 py-1.5 bg-[#0D2240] text-white font-bold rounded-lg hover:bg-[#1A365D] transition-colors"
-                      >
-                        View
-                      </Link>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleCompare(s)}
+                          className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                            compareSchemeA?.schemeId === s.schemeId || compareSchemeB?.schemeId === s.schemeId
+                              ? 'bg-[#0D2240] text-white'
+                              : 'bg-[#F0F3FF] hover:bg-[#DEE8FF] text-[#0D2240] border border-[#DEE8FF]'
+                          }`}
+                          title="Compare scheme"
+                        >
+                          <span className="material-symbols-outlined text-[15px]">compare_arrows</span>
+                          <span>
+                            {compareSchemeA?.schemeId === s.schemeId || compareSchemeB?.schemeId === s.schemeId
+                              ? 'Comparing'
+                              : 'Compare'}
+                          </span>
+                        </button>
+                        <Link
+                          to={`/schemes/${s.schemeId}`}
+                          className="px-3 py-1.5 bg-[#0D2240] text-white font-bold rounded-lg hover:bg-[#1A365D] transition-colors"
+                        >
+                          View
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -395,6 +449,62 @@ export default function SchemeExplorer() {
             </table>
           </div>
         )}
+
+        {/* Floating Compare Schemes Dock */}
+        {compareSchemeA && (
+          <aside aria-label="Compare Schemes Tray" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-[#0D2240] text-white px-4 sm:px-6 py-3.5 rounded-2xl shadow-2xl border border-white/10 flex flex-wrap items-center justify-between gap-4 max-w-2xl w-[94%] animate-in fade-in slide-in-from-bottom-5 duration-200">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[#FF7722] text-[20px]">compare_arrows</span>
+              </div>
+              <div className="min-w-0">
+                <div className="text-[11px] uppercase font-bold text-white/70 tracking-wider">
+                  Compare Schemes ({compareSchemeB ? '2 of 2 Selected' : '1 of 2 Selected'})
+                </div>
+                <div className="text-xs font-bold text-white truncate">
+                  {compareSchemeA.name} {compareSchemeB ? `vs ${compareSchemeB.name}` : '(Select a 2nd scheme)'}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsCompareModalOpen(true)}
+                className="px-4 py-2 rounded-lg bg-[#E65100] hover:bg-[#FF7722] text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>{compareSchemeB ? 'View Comparison' : 'Open Compare Window'}</span>
+                <span className="material-symbols-outlined text-[15px]">open_in_new</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleClearCompare}
+                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors cursor-pointer"
+                title="Clear comparison selection"
+              >
+                <span className="material-symbols-outlined text-[18px]">close</span>
+              </button>
+            </div>
+          </aside>
+        )}
+
+        {/* Compare Schemes Modal */}
+        <SchemeCompareModal
+          isOpen={isCompareModalOpen}
+          onClose={() => setIsCompareModalOpen(false)}
+          initialSchemeA={compareSchemeA}
+          initialSchemeB={compareSchemeB}
+          allSchemes={catalogSchemes}
+          bookmarkedIds={bookmarkedIds}
+          onBookmarkChange={(id, saved) => {
+            setBookmarkedIds((prev) => {
+              const next = new Set(prev)
+              if (saved) next.add(id)
+              else next.delete(id)
+              return next
+            })
+          }}
+        />
       </div>
     </div>
   )

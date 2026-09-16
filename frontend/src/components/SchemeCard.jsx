@@ -30,6 +30,9 @@ export default function SchemeCard({
   bookmarked: initialBookmarked,
   onBookmarkChange,
   showBookmark = true,
+  onCompare,
+  isComparing = false,
+  showCompare = true,
 }) {
   const navigate = useNavigate()
   const [isSaved, setIsSaved] = useState(!!initialBookmarked)
@@ -74,7 +77,9 @@ export default function SchemeCard({
   return (
     <article
       onClick={() => navigate(`/schemes/${scheme.schemeId}`)}
-      className="relative flex flex-col justify-between rounded-xl bg-white border border-[#E2E8F0] shadow-sm hover:shadow-xl hover:border-[#CBD5E1] transition-all duration-200 overflow-hidden cursor-pointer group"
+      className={`relative flex flex-col justify-between rounded-xl bg-white border shadow-sm hover:shadow-xl hover:border-[#CBD5E1] transition-all duration-200 overflow-hidden cursor-pointer group ${
+        isComparing ? 'border-[#0D2240] ring-2 ring-[#0D2240]/20' : 'border-[#E2E8F0]'
+      }`}
     >
       {/* Tricolor Micro-Accent on Card Top */}
       <div className="h-1 w-full bg-gradient-to-r from-[#E65100] via-white to-[#138808]" />
@@ -218,7 +223,25 @@ export default function SchemeCard({
           </span>
         </div>
 
-        <div className="flex items-center gap-2 flex-1 sm:flex-none min-w-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-none min-w-0">
+          {showCompare && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onCompare?.(scheme)
+              }}
+              className={`px-2.5 py-1.5 rounded-lg text-[11.5px] sm:text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+                isComparing
+                  ? 'bg-[#0D2240] text-white ring-2 ring-[#0D2240]/30'
+                  : 'bg-[#F0F3FF] hover:bg-[#DEE8FF] text-[#0D2240] border border-[#DEE8FF]'
+              }`}
+              title="Compare with another scheme"
+            >
+              <span className="material-symbols-outlined text-[15px]">compare_arrows</span>
+              <span>{isComparing ? 'Comparing' : 'Compare'}</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={(e) => {

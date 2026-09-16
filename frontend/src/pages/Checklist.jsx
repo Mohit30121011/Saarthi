@@ -71,7 +71,6 @@ export default function Checklist() {
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
   const sortDropdownRef = useRef(null)
   const [collapsedCategories, setCollapsedCategories] = useState({})
-  const [uploadedFiles, setUploadedFiles] = useState({})
   const [selectedDocForSchemes, setSelectedDocForSchemes] = useState(null)
   const [showDigiLockerModal, setShowDigiLockerModal] = useState(false)
   const [digiLockerConnected, setDigiLockerConnected] = useState(false)
@@ -142,15 +141,6 @@ export default function Checklist() {
     }
   }
 
-  function handleFileUpload(documentName, event) {
-    const file = event.target.files?.[0]
-    if (file) {
-      setUploadedFiles((prev) => ({ ...prev, [documentName]: file.name }))
-      handleToggle(documentName, false)
-      triggerToast(`✓ "${file.name}" uploaded for ${documentName}`, 'success')
-    }
-  }
-
   function toggleCategoryCollapse(category) {
     setCollapsedCategories((prev) => ({
       ...prev,
@@ -165,7 +155,6 @@ export default function Checklist() {
   const checkedItems = allItems.filter((i) => i.checked).length
   const notCollectedItems = totalItems - checkedItems
   const mandatoryItems = allItems.filter((i) => i.mandatory).length
-  const optionalItems = totalItems - mandatoryItems
 
   const percent = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0
   const circumference = 314.159
@@ -246,7 +235,7 @@ export default function Checklist() {
                 </span>
               </h1>
               <p className="font-body-md text-body-md text-surface-variant mt-3 max-w-2xl">
-                Unified de-duplicated checklist across matched schemes. Upload or link once via DigiLocker to apply effortlessly across Central &amp; Maharashtra welfare portals without redundant paperwork.
+                Unified de-duplicated checklist across matched schemes. Link once via DigiLocker to apply effortlessly across Central &amp; Maharashtra welfare portals without redundant paperwork.
               </p>
             </div>
 
@@ -491,7 +480,6 @@ export default function Checklist() {
                     <div className="flex flex-col gap-4">
                       {items.map((item) => {
                         const isChecked = item.checked
-                        const isUploaded = !!uploadedFiles[item.documentName]
                         const desc =
                           DOC_DESCRIPTIONS[item.documentName] ||
                           'Statutory proof required for scheme eligibility verification and direct sanctioning.'
@@ -530,7 +518,7 @@ export default function Checklist() {
                                   {isChecked ? (
                                     <span className="px-2.5 py-0.5 rounded-full bg-harita-green-soft text-harita-green font-label-sm text-label-sm font-bold flex items-center gap-1">
                                       <span className="material-symbols-outlined text-[14px]">lock</span>
-                                      {isUploaded ? 'File Uploaded • Ready' : 'DigiLocker Synced • Verified'}
+                                      DigiLocker Synced • Verified
                                     </span>
                                   ) : (
                                     <span className="px-2.5 py-0.5 rounded-full bg-partial-amber-soft text-partial-amber font-label-sm text-label-sm font-bold flex items-center gap-1">
@@ -573,16 +561,6 @@ export default function Checklist() {
 
                                 {/* Action Buttons */}
                                 <div className="mt-3.5 flex flex-wrap items-center gap-2.5">
-                                  <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-chakra-blue text-on-primary font-label-md text-label-md font-semibold hover:bg-chakra-blue-subtle transition-colors cursor-pointer">
-                                    <span className="material-symbols-outlined text-[16px]">upload_file</span>
-                                    <span>{isUploaded ? 'Replace Upload' : 'Upload Copy'}</span>
-                                    <input
-                                      type="file"
-                                      className="hidden"
-                                      onChange={(e) => handleFileUpload(item.documentName, e)}
-                                    />
-                                  </label>
-
                                   <button
                                     onClick={() => {
                                       handleToggle(item.documentName, false)
