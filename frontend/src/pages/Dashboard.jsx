@@ -206,13 +206,18 @@ export default function Dashboard() {
   const totalMatchesCount = data ? (data.totalMatches ?? allMatches.length) : 0
   const savedSchemesCount = bookmarks ? bookmarks.length : 0
 
-  // Count total documents needed across checklist
+  // Count total and collected documents across checklist
   let totalDocsCount = 0
+  let collectedDocsCount = 0
   if (checklist && typeof checklist === 'object') {
     Object.values(checklist).forEach((items) => {
-      if (Array.isArray(items)) totalDocsCount += items.length
+      if (Array.isArray(items)) {
+        totalDocsCount += items.length
+        collectedDocsCount += items.filter((i) => i.checked).length
+      }
     })
   }
+  const pendingDocsCount = totalDocsCount - collectedDocsCount
 
   // Calculate dynamic category counts from live matches
   const categoryCounts = {}
@@ -1178,9 +1183,16 @@ export default function Dashboard() {
         {/* RIGHT 4 COLS: YOUR NEXT STEPS CARD */}
         <div className="lg:col-span-4 bg-white border border-[#E5EBE5] rounded-[28px] p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <h2 className="font-fraunces text-xl font-bold text-slate-900">
-              Your next steps
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="font-fraunces text-xl font-bold text-slate-900">
+                Your next steps
+              </h2>
+              {completenessPercent === 100 && pendingDocsCount === 0 && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#156f45] bg-[#E8F5EE] px-2.5 py-0.5 rounded-full">
+                  ✓ Up to date
+                </span>
+              )}
+            </div>
 
             <div className="mt-5 space-y-3.5">
               
@@ -1190,8 +1202,12 @@ export default function Dashboard() {
                 className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 transition-colors group"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center shrink-0">
-                    1
+                  <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 ${
+                    completenessPercent === 100
+                      ? 'bg-emerald-100 text-[#156f45]'
+                      : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {completenessPercent === 100 ? '✓' : '1'}
                   </span>
                   <div className="w-9 h-9 rounded-full bg-emerald-100 text-[#156f45] flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1200,10 +1216,14 @@ export default function Dashboard() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-900 group-hover:text-[#156f45] transition-colors truncate">
-                      Complete your profile
+                      {completenessPercent === 100 ? 'Profile is up to date' : 'Complete your profile'}
                     </p>
                     <p className="text-[11px] text-slate-500 truncate">
-                      Add missing information to unlock more schemes.
+                      {completenessPercent === 100
+                        ? '100% completed. All criteria verified.'
+                        : partialMatchesCount > 0
+                        ? `Add details to unlock ${partialMatchesCount} potential schemes.`
+                        : `${completenessPercent}% complete · Add missing details.`}
                     </p>
                   </div>
                 </div>
@@ -1216,8 +1236,12 @@ export default function Dashboard() {
                 className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 transition-colors group"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center shrink-0">
-                    2
+                  <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 ${
+                    totalDocsCount > 0 && pendingDocsCount === 0
+                      ? 'bg-emerald-100 text-[#156f45]'
+                      : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {totalDocsCount > 0 && pendingDocsCount === 0 ? '✓' : '2'}
                   </span>
                   <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1226,10 +1250,18 @@ export default function Dashboard() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-900 group-hover:text-[#156f45] transition-colors truncate">
-                      Prepare required documents
+                      {totalDocsCount > 0 && pendingDocsCount === 0
+                        ? 'All documents ready'
+                        : 'Prepare required documents'}
                     </p>
                     <p className="text-[11px] text-slate-500 truncate">
-                      {totalDocsCount} documents needed across matched schemes.
+                      {totalDocsCount === 0
+                        ? 'Documents appear once schemes match.'
+                        : pendingDocsCount === 0
+                        ? `All ${totalDocsCount} documents collected & ready.`
+                        : collectedDocsCount > 0
+                        ? `${collectedDocsCount} of ${totalDocsCount} collected (${pendingDocsCount} pending).`
+                        : `${totalDocsCount} documents needed across matched schemes.`}
                     </p>
                   </div>
                 </div>
@@ -1242,8 +1274,12 @@ export default function Dashboard() {
                 className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 transition-colors group"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center shrink-0">
-                    3
+                  <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0 ${
+                    savedSchemesCount > 0
+                      ? 'bg-purple-100 text-purple-700'
+                      : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {savedSchemesCount > 0 ? savedSchemesCount : '3'}
                   </span>
                   <div className="w-9 h-9 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1252,10 +1288,14 @@ export default function Dashboard() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-900 group-hover:text-[#156f45] transition-colors truncate">
-                      Review saved schemes
+                      {savedSchemesCount > 0 ? 'Review saved schemes' : 'Save favorite schemes'}
                     </p>
                     <p className="text-[11px] text-slate-500 truncate">
-                      You have {savedSchemesCount} saved schemes.
+                      {savedSchemesCount === 0
+                        ? 'You have 0 saved schemes. Bookmark to track.'
+                        : savedSchemesCount === 1
+                        ? 'You have 1 saved scheme ready for review.'
+                        : `You have ${savedSchemesCount} saved schemes ready for review.`}
                     </p>
                   </div>
                 </div>
@@ -1265,27 +1305,42 @@ export default function Dashboard() {
               {/* Step 4: Check for new matches */}
               <button
                 onClick={handleRefresh}
-                className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 transition-colors group text-left"
+                disabled={refreshing}
+                className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 transition-colors group text-left cursor-pointer"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center shrink-0">
-                    4
+                  <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {refreshing ? (
+                      <span className="w-2.5 h-2.5 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      '4'
+                    )}
                   </span>
                   <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    <svg
+                      className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-900 group-hover:text-[#156f45] transition-colors truncate">
-                      Check for new matches
+                      {refreshing ? 'Refreshing matches…' : 'Check for new matches'}
                     </p>
                     <p className="text-[11px] text-slate-500 truncate">
-                      New schemes may be available based on updated criteria.
+                      {refreshing
+                        ? 'Syncing with central and state registries…'
+                        : `${strongMatchesCount} strong matches available · Click to re-check.`}
                     </p>
                   </div>
                 </div>
-                <span className="text-slate-400 group-hover:text-slate-700 ml-2">›</span>
+                <span className="text-slate-400 group-hover:text-slate-700 ml-2">
+                  {refreshing ? '…' : '›'}
+                </span>
               </button>
 
             </div>
