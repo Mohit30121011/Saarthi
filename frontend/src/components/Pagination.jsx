@@ -65,10 +65,10 @@ export default function Pagination({
   return (
     <nav
       aria-label="Scheme catalog pagination"
-      className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white/90 backdrop-blur-xs rounded-2xl border border-slate-border shadow-xs"
+      className="mt-8 mb-6 flex flex-col lg:flex-row items-center justify-between gap-4 p-4 lg:pr-64 bg-white/95 backdrop-blur-xs rounded-2xl border border-slate-border shadow-xs"
     >
       {/* Items Range Summary */}
-      <div className="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+      <div className="flex items-center gap-2 text-xs text-on-surface-variant font-medium shrink-0">
         <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-chakra-blue-light text-chakra-blue font-bold text-[10px]">
           <span className="material-symbols-outlined text-[14px]">format_list_bulleted</span>
         </span>
@@ -78,15 +78,15 @@ export default function Pagination({
           <strong className="font-bold text-chakra-blue">{totalItems}</strong> {itemLabel}
         </span>
         {totalPages > 1 && (
-          <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-[11px] font-semibold text-[#44474E] border border-slate-200">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-[11px] font-semibold text-[#44474E] border border-slate-200">
             Page {currentPage} of {totalPages}
           </span>
         )}
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination Controls - Safe Margin from Bottom-Right Floating Elements */}
       {totalPages > 1 && (
-        <div className="flex items-center gap-1.5 flex-wrap justify-center">
+        <div className="flex items-center gap-1.5 flex-wrap justify-center my-1 lg:my-0">
           {/* First Page Button (Desktop) */}
           <button
             type="button"

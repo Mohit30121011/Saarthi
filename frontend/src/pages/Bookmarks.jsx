@@ -178,7 +178,7 @@ export default function Bookmarks() {
       </div>
 
       {/* 2. CONTENT WORKSPACE */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-8 flex flex-col gap-6">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 pt-8 pb-36 flex flex-col gap-6">
         {/* Interactive Control Toolbar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 rounded-xl bg-slate-surface-elevated shadow-sm">
           {/* Category Tabs */}

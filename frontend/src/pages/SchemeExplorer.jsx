@@ -141,7 +141,7 @@ export default function SchemeExplorer() {
 
   return (
     <div className="w-full bg-[#F8FAFC] min-h-screen font-sans text-[#111C2D]">
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 pb-16 space-y-8 pt-6">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 space-y-8 pt-6 pb-36">
         
         {/* Top Stats & Search Bar Section */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0D2240] via-[#1A365D] to-[#0D2240] p-6 md:p-10 shadow-xl text-white">

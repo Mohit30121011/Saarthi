@@ -276,7 +276,7 @@ export default function Dashboard() {
 
   return (
     <div className="w-full bg-[#F8FAFC] min-h-screen font-sans text-[#111C2D]">
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-6 space-y-6">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 pt-6 pb-36 space-y-6">
         
         {/* Breadcrumb & Context Bar */}
         <div className="flex items-center justify-between gap-2 sm:gap-3 text-[#44474E] text-[11px] sm:text-xs font-semibold">
