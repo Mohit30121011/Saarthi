@@ -195,7 +195,6 @@ export function LanguageProvider({ children }) {
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      <div id="google_translate_element" className="hidden" style={{ display: 'none' }} />
       {children}
     </LanguageContext.Provider>
   )

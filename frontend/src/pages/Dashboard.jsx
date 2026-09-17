@@ -661,25 +661,30 @@ export default function Dashboard() {
               ) : (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {paginatedDossierSchemes.map((item) => (
-                      <SchemeCard
-                        key={item.scheme.schemeId}
-                        scheme={item.scheme}
-                        confidence={item.confidence}
-                        missingFields={item.missingFields}
-                        reasons={item.reasons}
-                        profile={profile}
-                        bookmarked={bookmarkedIds.has(item.scheme.schemeId)}
-                        onBookmarkChange={(id, saved) => {
-                          setBookmarkedIds((prev) => {
-                            const next = new Set(prev)
-                            if (saved) next.add(id)
-                            else next.delete(id)
-                            return next
-                          })
-                        }}
-                      />
-                    ))}
+                    {paginatedDossierSchemes.map((item, idx) => {
+                      const schemeObj = item?.scheme || item
+                      if (!schemeObj) return null
+                      const sId = schemeObj.schemeId ?? idx
+                      return (
+                        <SchemeCard
+                          key={sId}
+                          scheme={schemeObj}
+                          confidence={item?.confidence || 'STRONG'}
+                          missingFields={item?.missingFields}
+                          reasons={item?.reasons}
+                          profile={profile}
+                          bookmarked={bookmarkedIds.has(sId)}
+                          onBookmarkChange={(id, saved) => {
+                            setBookmarkedIds((prev) => {
+                              const next = new Set(prev)
+                              if (saved) next.add(id)
+                              else next.delete(id)
+                              return next
+                            })
+                          }}
+                        />
+                      )
+                    })}
                   </div>
 
                   {/* Dossier Pagination Controls */}

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { LanguageProvider } from './context/LanguageContext'
+import ErrorBoundary from './components/ErrorBoundary'
 import ProtectedRoute from './components/ProtectedRoute'
 import AppShell from './components/AppShell'
 import Login from './pages/auth/Login'
@@ -22,9 +23,10 @@ import AdminSchemes from './pages/admin/AdminSchemes'
 export default function App() {
   return (
     <BrowserRouter>
-      <LanguageProvider>
-        <AuthProvider>
-        <Routes>
+      <ErrorBoundary>
+        <LanguageProvider>
+          <AuthProvider>
+            <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -51,9 +53,10 @@ export default function App() {
           </Route>
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </AuthProvider>
-      </LanguageProvider>
+            </Routes>
+          </AuthProvider>
+        </LanguageProvider>
+      </ErrorBoundary>
     </BrowserRouter>
   )
 }

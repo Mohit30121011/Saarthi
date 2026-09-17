@@ -49,7 +49,7 @@ export default function SchemeCard({
   async function handleToggleBookmark(e) {
     e.preventDefault()
     e.stopPropagation()
-    if (busy) return
+    if (busy || !scheme?.schemeId) return
     setBusy(true)
     try {
       if (isSaved) {
@@ -68,6 +68,7 @@ export default function SchemeCard({
     }
   }
 
+  const schemeId = scheme?.schemeId ?? 0
   const isDisqualified = simulationTag?.type === 'disqualified'
   const isStrong = confidence === 'STRONG'
   const isPartial = confidence === 'PARTIAL'
@@ -84,7 +85,7 @@ export default function SchemeCard({
 
   return (
     <article
-      onClick={() => navigate(`/schemes/${scheme.schemeId}`)}
+      onClick={() => scheme?.schemeId && navigate(`/schemes/${scheme.schemeId}`)}
       className={`relative flex flex-col justify-between rounded-xl bg-white border shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden cursor-pointer group ${
         isDisqualified
           ? 'border-rose-300 bg-rose-50/15 hover:border-rose-400'
@@ -181,10 +182,10 @@ export default function SchemeCard({
           <h3 className={`font-display font-bold text-[15.5px] sm:text-[17px] tracking-tight transition-colors line-clamp-2 leading-snug ${
             isDisqualified ? 'text-slate-800' : 'text-[#0D2240] group-hover:text-[#1A365D]'
           }`}>
-            {scheme.name}
+            {scheme?.name || 'Welfare Scheme'}
           </h3>
           <p className="text-[10.5px] sm:text-[11px] text-[#44474E] font-mono truncate">
-            SCH-{isState ? 'MH' : 'CENTRAL'}-{scheme.schemeId.toString().padStart(3, '0')} • Direct Benefit Transfer
+            SCH-{isState ? 'MH' : 'CENTRAL'}-{schemeId.toString().padStart(3, '0')} • Direct Benefit Transfer
           </p>
         </div>
 
@@ -395,7 +396,7 @@ export default function SchemeCard({
             type="button"
             onClick={(e) => {
               e.stopPropagation()
-              navigate(`/schemes/${scheme.schemeId}`)
+              if (schemeId) navigate(`/schemes/${schemeId}`)
             }}
             className={`flex-1 sm:flex-none px-3 sm:px-3.5 py-1.5 rounded-lg text-[11.5px] sm:text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
               isDisqualified
