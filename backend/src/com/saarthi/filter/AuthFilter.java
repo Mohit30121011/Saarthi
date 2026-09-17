@@ -40,7 +40,8 @@ public class AuthFilter implements Filter {
             }
         }
         // FR4.x — Scheme Explorer/Detail/Reviews is browsable by Guests, not just logged-in citizens.
-        if (path.equals("/api/schemes") || path.startsWith("/api/schemes/")) {
+        if (path.equals("/api/schemes") || path.startsWith("/api/schemes/") ||
+            path.equals("/api/reviews") || path.startsWith("/api/reviews/")) {
             String authHeader = req.getHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring("Bearer ".length());

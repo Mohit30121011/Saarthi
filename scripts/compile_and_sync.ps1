@@ -3,7 +3,13 @@ $ErrorActionPreference = "Stop"
 
 $workspaceRoot = "d:\Saarthi"
 $projectRoot = "d:\Saarthi\Saarthi"
-$tomcatLib = "C:\Users\mohit\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99\lib"
+$tomcatLib = "C:\Users\Khushi Singh\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99\lib"
+if (-not (Test-Path $tomcatLib)) {
+    $tomcatLib = "C:\Users\mohit\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99\lib"
+}
+if (-not (Test-Path $tomcatLib)) {
+    $tomcatLib = "$HOME\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99\lib"
+}
 $webContent = "$projectRoot\backend\WebContent"
 $frontendDist = "$projectRoot\frontend\dist"
 
@@ -61,6 +67,16 @@ if (Test-Path $wtpRoot) {
     Write-Host "Synced classes, web.xml, lib to wtpwebapps/ROOT"
 }
 
+$tomcatWebapp = "C:\Users\Khushi Singh\Downloads\apache-tomcat-8.5.99-windows-x64\apache-tomcat-8.5.99\webapps\saarthi"
+if (Test-Path $tomcatWebapp) {
+    New-Item -ItemType Directory -Force -Path "$tomcatWebapp\WEB-INF\classes" | Out-Null
+    New-Item -ItemType Directory -Force -Path "$tomcatWebapp\WEB-INF\lib" | Out-Null
+    Copy-Item -Path "$webContent\WEB-INF\classes\*" -Destination "$tomcatWebapp\WEB-INF\classes" -Recurse -Force
+    Copy-Item -Path "$webContent\WEB-INF\web.xml" -Destination "$tomcatWebapp\WEB-INF\web.xml" -Force
+    Copy-Item -Path "$webContent\WEB-INF\lib\*" -Destination "$tomcatWebapp\WEB-INF\lib" -Recurse -Force
+    Write-Host "Synced classes, web.xml, lib to webapps/saarthi"
+}
+
 Write-Host "6. Syncing frontend dist to WebContent, wtpwebapps/Saarthi, and wtpwebapps/ROOT..."
 if (Test-Path $frontendDist) {
     # Remove stale assets in ROOT and Saarthi
@@ -71,6 +87,10 @@ if (Test-Path $frontendDist) {
     Copy-Item -Path "$frontendDist\*" -Destination $webContent -Recurse -Force
     Copy-Item -Path "$frontendDist\*" -Destination $wtpSaarthi -Recurse -Force
     Copy-Item -Path "$frontendDist\*" -Destination $wtpRoot -Recurse -Force
+    if (Test-Path $tomcatWebapp) {
+        Get-ChildItem -Path "$tomcatWebapp\assets\index-*.js", "$tomcatWebapp\assets\index-*.css" -ErrorAction SilentlyContinue | Remove-Item -Force
+        Copy-Item -Path "$frontendDist\*" -Destination $tomcatWebapp -Recurse -Force
+    }
     Write-Host "Synced frontend assets to all targets"
 }
 

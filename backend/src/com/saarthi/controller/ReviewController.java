@@ -16,14 +16,20 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@WebServlet({"/api/schemes/reviews", "/api/schemes/reviews/like", "/api/schemes/rating-summaries"})
+@WebServlet({"/api/reviews", "/api/reviews/*", "/api/schemes/reviews", "/api/schemes/reviews/*", "/api/schemes/rating-summaries"})
 public class ReviewController extends HttpServlet {
 
     private final ReviewService reviewService = new ReviewService();
 
+    private String getFullPath(HttpServletRequest req) {
+        String sp = req.getServletPath() != null ? req.getServletPath() : "";
+        String pi = req.getPathInfo() != null ? req.getPathInfo() : "";
+        return sp + pi;
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String path = req.getServletPath();
+        String path = getFullPath(req);
 
         if (path.endsWith("/rating-summaries")) {
             handleGetSummaries(req, resp);
@@ -34,7 +40,7 @@ public class ReviewController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String path = req.getServletPath();
+        String path = getFullPath(req);
 
         if (path.endsWith("/like")) {
             handleToggleLike(req, resp);
@@ -93,11 +99,11 @@ public class ReviewController extends HttpServlet {
         }
 
         int schemeId = body.has("schemeId") ? body.get("schemeId").getAsInt() : 0;
-        int rating = body.has("rating") ? body.get("rating").getAsInt() : 5;
-        String title = body.has("reviewTitle") ? body.get("reviewTitle").getAsString() : "";
-        String text = body.has("reviewText") ? body.get("reviewText").getAsString() : "";
-        int smoothness = body.has("processSmoothness") ? body.get("processSmoothness").getAsInt() : 5;
-        int weeks = body.has("approvalTimeWeeks") ? body.get("approvalTimeWeeks").getAsInt() : 2;
+        int rating = body.has("rating") ? body.get("rating").getAsInt() : (body.has("overallRating") ? body.get("overallRating").getAsInt() : 5);
+        String title = body.has("reviewTitle") ? body.get("reviewTitle").getAsString() : (body.has("title") ? body.get("title").getAsString() : "");
+        String text = body.has("reviewText") ? body.get("reviewText").getAsString() : (body.has("text") ? body.get("text").getAsString() : (body.has("review") ? body.get("review").getAsString() : (body.has("comment") ? body.get("comment").getAsString() : "")));
+        int smoothness = body.has("processSmoothness") ? body.get("processSmoothness").getAsInt() : (body.has("processEaseRating") ? body.get("processEaseRating").getAsInt() : 5);
+        int weeks = body.has("approvalTimeWeeks") ? body.get("approvalTimeWeeks").getAsInt() : (body.has("approvalTimeDays") ? (int) Math.max(1, Math.ceil(body.get("approvalTimeDays").getAsInt() / 7.0)) : 2);
         boolean benefit = !body.has("benefitReceived") || body.get("benefitReceived").getAsBoolean();
 
         if (schemeId <= 0) {

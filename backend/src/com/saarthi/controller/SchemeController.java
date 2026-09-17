@@ -6,6 +6,7 @@ import com.saarthi.model.Scheme;
 import com.saarthi.service.SchemeService;
 import com.saarthi.util.JsonUtil;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +26,16 @@ import java.util.stream.Collectors;
 public class SchemeController extends HttpServlet {
 
     private final SchemeService schemeService = new SchemeService();
+    private final ReviewController reviewController = new ReviewController();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
+        if (pathInfo != null && (pathInfo.startsWith("/reviews") || pathInfo.startsWith("/rating-summaries"))) {
+            reviewController.service(req, resp);
+            return;
+        }
+
         try {
             if (pathInfo == null || pathInfo.equals("/")) {
                 handleSearch(req, resp);
@@ -38,6 +45,16 @@ public class SchemeController extends HttpServlet {
         } catch (SQLException e) {
             JsonUtil.writeError(resp, 500, "A server error occurred. Please try again.");
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String pathInfo = req.getPathInfo();
+        if (pathInfo != null && (pathInfo.startsWith("/reviews") || pathInfo.startsWith("/rating-summaries"))) {
+            reviewController.service(req, resp);
+            return;
+        }
+        super.doPost(req, resp);
     }
 
     /** FR4.x — Explorer: filter by category/state and free-text keyword search. */
