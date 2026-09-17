@@ -147,6 +147,10 @@ export function LanguageProvider({ children }) {
     try {
       if (lang === 'en') {
         document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        if (window.location.hostname !== 'localhost') {
+          document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`
+          document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`
+        }
         document.cookie = 'googtrans=/en/en; path=/;'
       } else {
         const targetLang = `/en/${lang}`

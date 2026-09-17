@@ -58,8 +58,9 @@ export default function LanguageSwitcher() {
     try {
       const hostname = window.location.hostname
       if (langCode === 'en') {
-        // Clear translation cookie for English
+        // Clear translation cookie for English completely
         document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname}`
         document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname}`
         document.cookie = 'googtrans=/en/en; path=/;'
       } else {
@@ -67,6 +68,7 @@ export default function LanguageSwitcher() {
         document.cookie = `googtrans=${targetCookie}; path=/;`
         if (hostname !== 'localhost') {
           document.cookie = `googtrans=${targetCookie}; path=/; domain=.${hostname}`
+          document.cookie = `googtrans=${targetCookie}; path=/; domain=${hostname}`
         }
       }
 
@@ -75,18 +77,15 @@ export default function LanguageSwitcher() {
       if (combo) {
         combo.value = langCode === 'en' ? '' : langCode
         combo.dispatchEvent(new Event('change'))
-      } else {
-        // Retry if Google Translate initialized late
-        setTimeout(() => {
-          const retryCombo = document.querySelector('.goog-te-combo')
-          if (retryCombo) {
-            retryCombo.value = langCode === 'en' ? '' : langCode
-            retryCombo.dispatchEvent(new Event('change'))
-          }
-        }, 300)
       }
+
+      // Fast reload guarantees 100% pristine translation and full revert back to English
+      setTimeout(() => {
+        window.location.reload()
+      }, 100)
     } catch (err) {
       console.error('Failed to change language:', err)
+      window.location.reload()
     }
   }
 
