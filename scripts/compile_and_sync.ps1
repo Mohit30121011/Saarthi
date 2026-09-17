@@ -27,13 +27,25 @@ Write-Host "Compilation to $webContent\WEB-INF\classes completed successfully!"
 Write-Host "4. Copying resources (.properties)..."
 Copy-Item -Path "$projectRoot\backend\src\*.properties" -Destination "$webContent\WEB-INF\classes" -Force
 
-Write-Host "5. Syncing classes to build/classes and wtpwebapps..."
+Write-Host "5. Syncing classes to build/classes, src/main/webapp, and wtpwebapps..."
 if (Test-Path $buildClasses) {
     Copy-Item -Path "$webContent\WEB-INF\classes\*" -Destination $buildClasses -Recurse -Force
     Write-Host "Synced to build/classes"
 }
 
+$srcWebApp = "$projectRoot\src\main\webapp"
+if (Test-Path $srcWebApp) {
+    New-Item -ItemType Directory -Force -Path "$srcWebApp\WEB-INF\classes" | Out-Null
+    New-Item -ItemType Directory -Force -Path "$srcWebApp\WEB-INF\lib" | Out-Null
+    Copy-Item -Path "$webContent\WEB-INF\classes\*" -Destination "$srcWebApp\WEB-INF\classes" -Recurse -Force
+    Copy-Item -Path "$webContent\WEB-INF\web.xml" -Destination "$srcWebApp\WEB-INF\web.xml" -Force
+    Copy-Item -Path "$webContent\WEB-INF\lib\*" -Destination "$srcWebApp\WEB-INF\lib" -Recurse -Force
+    Write-Host "Synced classes, web.xml, lib to src/main/webapp"
+}
+
 if (Test-Path $wtpSaarthi) {
+    New-Item -ItemType Directory -Force -Path "$wtpSaarthi\WEB-INF\classes" | Out-Null
+    New-Item -ItemType Directory -Force -Path "$wtpSaarthi\WEB-INF\lib" | Out-Null
     Copy-Item -Path "$webContent\WEB-INF\classes\*" -Destination "$wtpSaarthi\WEB-INF\classes" -Recurse -Force
     Copy-Item -Path "$webContent\WEB-INF\web.xml" -Destination "$wtpSaarthi\WEB-INF\web.xml" -Force
     Copy-Item -Path "$webContent\WEB-INF\lib\*" -Destination "$wtpSaarthi\WEB-INF\lib" -Recurse -Force

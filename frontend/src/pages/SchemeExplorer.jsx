@@ -9,6 +9,8 @@ import SchemeCard from '../components/SchemeCard'
 import SchemeCompareModal from '../components/SchemeCompareModal'
 import Pagination from '../components/Pagination'
 import { SchemeCardSkeleton } from '../components/Skeletons'
+import TrendingSeasonalBanner from '../components/TrendingSeasonalBanner'
+import { isSchemeTrending, isSchemeSeasonal } from '../data/curatedSchemes'
 
 export default function SchemeExplorer() {
   const { isAuthenticated } = useAuth()
@@ -20,6 +22,8 @@ export default function SchemeExplorer() {
   const [ministry, setMinistry] = useState('all')
   const [sortBy, setSortBy] = useState('verified')
   const [viewMode, setViewMode] = useState('cards') // 'cards' or 'table'
+  const initialCuration = searchParams.get('curation') || (searchParams.get('trending') === 'true' ? 'trending' : 'all')
+  const [curationFilter, setCurationFilter] = useState(initialCuration)
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
   const [loading, setLoading] = useState(true)
   const [profile, setProfile] = useState(null)
@@ -93,9 +97,15 @@ export default function SchemeExplorer() {
     }
   }
 
-  // Filter schemes locally for instant ministry & sort responsiveness
+  // Filter schemes locally for instant ministry, sort & curation responsiveness
   const displayedSchemes = useMemo(() => {
     let list = [...catalogSchemes]
+
+    if (curationFilter === 'trending') {
+      list = list.filter((s) => isSchemeTrending(s))
+    } else if (curationFilter === 'seasonal') {
+      list = list.filter((s) => isSchemeSeasonal(s))
+    }
 
     if (level === 'central') {
       list = list.filter((s) => !s.state)
@@ -112,7 +122,7 @@ export default function SchemeExplorer() {
     }
 
     return list
-  }, [catalogSchemes, level, ministry, sortBy])
+  }, [catalogSchemes, curationFilter, level, ministry, sortBy])
 
   // Pagination: 3 rows x 3 columns = 9 cards per page
   const [currentPage, setCurrentPage] = useState(1)
@@ -120,7 +130,7 @@ export default function SchemeExplorer() {
 
   useEffect(() => {
     setCurrentPage(1)
-  }, [query, level, category, ministry, sortBy])
+  }, [query, level, category, ministry, sortBy, curationFilter])
 
   const totalPages = Math.ceil(displayedSchemes.length / SCHEMES_PER_PAGE)
   const paginatedSchemes = useMemo(() => {
@@ -134,6 +144,7 @@ export default function SchemeExplorer() {
     setCategory('all')
     setMinistry('all')
     setSortBy('verified')
+    setCurationFilter('all')
   }
 
   const centralCount = useMemo(() => catalogSchemes.filter((s) => !s.state).length, [catalogSchemes])
@@ -292,12 +303,151 @@ export default function SchemeExplorer() {
           </div>
         </div>
 
+        {/* Featured Trending & Seasonal Showcase Carousel Banner */}
+        <TrendingSeasonalBanner
+          catalogSchemes={catalogSchemes}
+          onSelectQuickFilter={(mode) => {
+            setCurationFilter(mode)
+            setCategory('all')
+            const anchor = document.getElementById('explorer-results-anchor')
+            if (anchor) anchor.scrollIntoView({ behavior: 'smooth' })
+          }}
+        />
+
+        {/* Quick Discovery Filter Chips Bar */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => setCurationFilter('all')}
+            className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+              curationFilter === 'all' && category === 'all'
+                ? 'bg-[#0D2240] text-white shadow-md'
+                : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:border-[#0D2240] hover:text-[#0D2240]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">apps</span>
+            <span>All Schemes ({catalogSchemes.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurationFilter('trending')
+              setCategory('all')
+            }}
+            className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+              curationFilter === 'trending'
+                ? 'bg-gradient-to-r from-[#E65100] to-[#FF7722] text-white shadow-md'
+                : 'bg-white border border-[#E2E8F0] text-[#E65100] hover:border-[#E65100] hover:bg-orange-50/50'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">local_fire_department</span>
+            <span>🔥 Trending Schemes</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurationFilter('seasonal')
+              setCategory('all')
+            }}
+            className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+              curationFilter === 'seasonal'
+                ? 'bg-gradient-to-r from-[#138808] to-[#16A34A] text-white shadow-md'
+                : 'bg-white border border-[#E2E8F0] text-[#138808] hover:border-[#138808] hover:bg-emerald-50/50'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">calendar_month</span>
+            <span>🌾 Seasonal &amp; Time-Sensitive</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurationFilter('all')
+              setCategory('Agriculture')
+            }}
+            className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+              category === 'Agriculture'
+                ? 'bg-[#0D2240] text-white shadow-md'
+                : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:border-[#0D2240]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">agriculture</span>
+            <span>🚜 Agriculture</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurationFilter('all')
+              setCategory('Education')
+            }}
+            className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+              category === 'Education'
+                ? 'bg-[#0D2240] text-white shadow-md'
+                : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:border-[#0D2240]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">school</span>
+            <span>🎓 Education &amp; Scholarships</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurationFilter('all')
+              setCategory('Healthcare')
+            }}
+            className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+              category === 'Healthcare'
+                ? 'bg-[#0D2240] text-white shadow-md'
+                : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:border-[#0D2240]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">local_hospital</span>
+            <span>🏥 Healthcare</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurationFilter('all')
+              setCategory('Employment')
+            }}
+            className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+              category === 'Employment'
+                ? 'bg-[#0D2240] text-white shadow-md'
+                : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:border-[#0D2240]'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[16px]">work</span>
+            <span>💼 MSME &amp; Employment</span>
+          </button>
+        </div>
+
         {/* Active Filter Chips & View Mode Toggle */}
         <div id="explorer-results-anchor" className="flex flex-wrap items-center justify-between gap-4 bg-white px-4 py-3 rounded-xl border border-[#E2E8F0] shadow-xs scroll-mt-24">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[11px] uppercase tracking-wider text-[#44474E] font-bold mr-1">
               Active Filters:
             </span>
+            {curationFilter === 'trending' && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-bold">
+                <span>🔥 Trending Schemes Only</span>
+                <button onClick={() => setCurationFilter('all')} className="hover:text-orange-950 cursor-pointer">
+                  <span className="material-symbols-outlined text-[13px]">close</span>
+                </button>
+              </span>
+            )}
+            {curationFilter === 'seasonal' && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                <span>🌾 Seasonal Windows Only</span>
+                <button onClick={() => setCurationFilter('all')} className="hover:text-emerald-950 cursor-pointer">
+                  <span className="material-symbols-outlined text-[13px]">close</span>
+                </button>
+              </span>
+            )}
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EBF3FC] text-[#0D2240] text-xs font-bold">
               <span>Level: {level === 'all' ? 'All (Central & State)' : level === 'central' ? 'Central' : 'Maharashtra'}</span>
               {level !== 'all' && (

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { addBookmark, removeBookmark } from '../api/bookmarks'
+import { getTrendingMeta, getSeasonalMeta } from '../data/curatedSchemes'
 
 function getDeterministicReason(scheme, profile) {
   const state = profile?.state || 'Maharashtra'
@@ -74,6 +75,9 @@ export default function SchemeCard({
     ? reasons.join('. ')
     : getDeterministicReason(scheme, profile)
 
+  const trendingMeta = getTrendingMeta(scheme)
+  const seasonalMeta = getSeasonalMeta(scheme)
+
   return (
     <article
       onClick={() => navigate(`/schemes/${scheme.schemeId}`)}
@@ -119,12 +123,29 @@ export default function SchemeCard({
           )}
         </div>
 
-        {/* Scheme Title */}
-        <div>
+        {/* Scheme Title & Curation Badges */}
+        <div className="space-y-1.5">
+          {(trendingMeta || seasonalMeta) && (
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {trendingMeta && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-[#E65100] text-[10px] sm:text-[10.5px] font-bold">
+                  <span className="material-symbols-outlined text-[13px]">local_fire_department</span>
+                  <span>{trendingMeta.badgeText}</span>
+                </span>
+              )}
+              {seasonalMeta && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-[#138808] text-[10px] sm:text-[10.5px] font-bold">
+                  <span className="material-symbols-outlined text-[13px]">calendar_month</span>
+                  <span>{seasonalMeta.statusTag}</span>
+                </span>
+              )}
+            </div>
+          )}
+
           <h3 className="font-display font-bold text-[15.5px] sm:text-[17px] text-[#0D2240] group-hover:text-[#1A365D] tracking-tight transition-colors line-clamp-2 leading-snug">
             {scheme.name}
           </h3>
-          <p className="text-[10.5px] sm:text-[11px] text-[#44474E] mt-1 font-mono truncate">
+          <p className="text-[10.5px] sm:text-[11px] text-[#44474E] font-mono truncate">
             SCH-{isState ? 'MH' : 'CENTRAL'}-{scheme.schemeId.toString().padStart(3, '0')} • Direct Benefit Transfer
           </p>
         </div>
