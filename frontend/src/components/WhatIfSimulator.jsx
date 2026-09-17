@@ -41,6 +41,75 @@ const PRESET_SCENARIOS = [
   },
 ]
 
+export const SCHEME_INCOME_CEILINGS = {
+  49: 21000,   // Sanjay Gandhi Niradhar Anudan Yojana
+  5: 100000,   // Pre-Matric Scholarship for Minorities
+  17: 100000,  // Mahatma Jyotiba Phule Jan Arogya Yojana (MJPJAY)
+  51: 100000,  // Lek Ladki Yojana
+  19: 120000,  // Ramai Awas Yojana
+  44: 125000,  // Rashtriya Arogya Nidhi (RAN)
+  26: 200000,  // Post-Matric Scholarship for Minorities
+  4: 250000,   // Post-Matric Scholarship for SC Students
+  21: 250000,  // PM YASASVI Scholarship
+  16: 350000,  // National Means-cum-Merit Scholarship (NMMS)
+  20: 450000,  // Central Sector Scheme of Scholarship for College and University Students
+  25: 600000,  // National Fellowship for OBC Students
+  18: 800000,  // Rajarshi Chhatrapati Shahu Maharaj Shikshan Shulk Shishyavrutti Yojana (EBC Scholarship)
+  22: 800000,  // AICTE Pragati Scholarship for Girls
+  23: 800000,  // AICTE Saksham Scholarship for Specially Abled Students
+  24: 800000,  // Top Class Education Scheme for SC Students
+  3: 900000,   // Pradhan Mantri Awas Yojana - Urban (PMAY-U 2.0)
+}
+
+export function getSimulationTag(item, simIncome, isDisqualified = false) {
+  const schemeId = item?.scheme?.schemeId
+  const ceiling = item?.ceilingValue || SCHEME_INCOME_CEILINGS[schemeId]
+
+  if (isDisqualified || item?.isDisqualified) {
+    const excess = ceiling && simIncome > ceiling ? simIncome - ceiling : null
+    const capFormatted = ceiling
+      ? ceiling >= 100000
+        ? `₹${(ceiling / 100000).toFixed(ceiling % 100000 === 0 ? 0 : 1)}L`
+        : `₹${ceiling.toLocaleString('en-IN')}`
+      : null
+
+    return {
+      type: 'disqualified',
+      label: capFormatted ? `EXCEEDS ${capFormatted} CAP` : 'DISQUALIFIED',
+      ceiling,
+      excess,
+      reason: ceiling
+        ? `Simulated income of ₹${Number(simIncome).toLocaleString('en-IN')} exceeds the statutory ceiling of ₹${Number(ceiling).toLocaleString('en-IN')} by +₹${Number(excess).toLocaleString('en-IN')}.`
+        : `Household income of ₹${Number(simIncome).toLocaleString('en-IN')} exceeds statutory eligibility ceiling.`,
+    }
+  }
+
+  if (item?.isOpportunity) {
+    return {
+      type: 'opportunity',
+      label: 'NEW OPPORTUNITY',
+      ceiling,
+    }
+  }
+
+  if (ceiling && ceiling >= simIncome) {
+    const capFormatted = ceiling >= 100000
+      ? `${(ceiling / 100000).toFixed(ceiling % 100000 === 0 ? 0 : 1)}L`
+      : ceiling.toLocaleString('en-IN')
+    return {
+      type: 'capped',
+      label: `ELIGIBLE (Cap ₹${capFormatted})`,
+      ceiling,
+      ceilingFormatted: capFormatted,
+    }
+  }
+
+  return {
+    type: 'universal',
+    label: 'UNIVERSAL (No Cap)',
+  }
+}
+
 export default function WhatIfSimulator({
   profile,
   bookmarkedIds = new Set(),
@@ -55,7 +124,7 @@ export default function WhatIfSimulator({
   const [simulationData, setSimulationData] = useState(null)
   const [loading, setLoading] = useState(false)
   // Default to 'all' so all qualified real schemes are displayed immediately on screen!
-  const [activeTab, setActiveTab] = useState('all') // 'all' | 'unlocked' | 'retained'
+  const [activeTab, setActiveTab] = useState('all') // 'all' | 'unlocked' | 'retained' | 'disqualified'
 
   useEffect(() => {
     let active = true
@@ -86,6 +155,7 @@ export default function WhatIfSimulator({
   const newlyUnlocked = simulationData?.newlyUnlocked || []
   const allMatches = simulationData?.matches || []
   const retained = simulationData?.retained || []
+  const lost = simulationData?.lost || []
 
   // Map newly unlocked schemes by schemeId for quick lookup
   const newlyUnlockedMap = useMemo(() => {
@@ -101,9 +171,21 @@ export default function WhatIfSimulator({
 
   // List to display according to active tab - NEVER return empty if allMatches exists!
   const displayedSchemes = useMemo(() => {
+    if (activeTab === 'disqualified') {
+      return lost.map((m) => {
+        const ceiling = SCHEME_INCOME_CEILINGS[m.scheme?.schemeId]
+        const excess = ceiling && simIncome > ceiling ? simIncome - ceiling : null
+        return {
+          ...m,
+          ceilingValue: ceiling,
+          excessValue: excess,
+          isDisqualified: true,
+          isOpportunity: false,
+        }
+      })
+    }
     if (activeTab === 'unlocked') {
       if (newlyUnlocked.length === 0) {
-        // If no newly unlocked schemes at this tier, show all valid schemes as fallback
         return allMatches.map((m) => ({ ...m, isOpportunity: false }))
       }
       return newlyUnlocked.map((item) => ({
@@ -114,22 +196,34 @@ export default function WhatIfSimulator({
       }))
     }
     if (activeTab === 'retained') {
-      return retained.map((m) => ({ ...m, isOpportunity: false }))
+      return retained.map((m) => {
+        const ceiling = SCHEME_INCOME_CEILINGS[m.scheme?.schemeId]
+        return {
+          ...m,
+          ceilingValue: ceiling,
+          isOpportunity: false,
+        }
+      })
     }
     // 'all' tab: display all real schemes, flagging newly unlocked ones with isOpportunity: true
     return allMatches.map((m) => {
       const opp = newlyUnlockedMap.get(m.scheme?.schemeId)
+      const ceiling = opp?.ceilingValue || SCHEME_INCOME_CEILINGS[m.scheme?.schemeId]
       if (opp) {
         return {
           ...m,
           ceilingRule: opp.ceilingRule,
-          ceilingValue: opp.ceilingValue,
+          ceilingValue: ceiling,
           isOpportunity: true,
         }
       }
-      return { ...m, isOpportunity: false }
+      return {
+        ...m,
+        ceilingValue: ceiling,
+        isOpportunity: false,
+      }
     })
-  }, [activeTab, newlyUnlocked, retained, allMatches, newlyUnlockedMap])
+  }, [activeTab, newlyUnlocked, retained, allMatches, lost, simIncome, newlyUnlockedMap])
 
   // Pagination: 2 rows of 3 columns = 6 items per page
   const ITEMS_PER_PAGE = 6
@@ -292,57 +386,76 @@ export default function WhatIfSimulator({
         </div>
 
         {/* Live Simulation Delta Summary Strip */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div className="p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[#EBF3FC] text-[#0D2240] flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] text-[#44474E] font-medium block">Income Differential</span>
+              <span className="text-[11px] text-[#44474E] font-medium block truncate">Income Differential</span>
               <div className="font-bold text-sm text-[#0D2240] truncate">
                 {incomeDelta === 0 ? (
-                  <span>Exact Profile Match</span>
+                  <span>Exact Match</span>
                 ) : incomeDelta > 0 ? (
-                  <span className="text-[#138808]">+{deltaFormatted} higher</span>
+                  <span className="text-[#138808]">+{deltaFormatted}</span>
                 ) : (
-                  <span className="text-[#E65100]">-{deltaFormatted} lower</span>
+                  <span className="text-[#E65100]">-{deltaFormatted}</span>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[#EAFBF0] text-[#138808] flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[20px]">checklist</span>
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] text-[#44474E] font-medium block">Qualified Schemes</span>
+              <span className="text-[11px] text-[#44474E] font-medium block truncate">Qualified Schemes</span>
               <span className="font-bold text-base text-[#0D2240]">
                 {simulationData?.simulatedMatchesCount ?? allMatches.length} Schemes
               </span>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#FFF3EB] text-[#E65100] flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-[20px]">stars</span>
+          {/* Disqualified Schemes Stat Card */}
+          <div className={`p-3.5 sm:p-4 rounded-xl border shadow-xs flex items-center gap-3 transition-colors ${
+            lost.length > 0
+              ? 'bg-rose-50/70 border-rose-200'
+              : 'bg-white border-slate-border'
+          }`}>
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+              lost.length > 0 ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-400'
+            }`}>
+              <span className="material-symbols-outlined text-[20px]">block</span>
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] text-[#44474E] font-medium block">Newly Unlocked Horizon</span>
-              <span className="font-bold text-base text-[#E65100]">
-                {newlyUnlocked.length} Opportunity Schemes
+              <span className="text-[11px] text-[#44474E] font-medium block truncate">Disqualified (Lost)</span>
+              <span className={`font-bold text-base ${lost.length > 0 ? 'text-rose-700' : 'text-[#0D2240]'}`}>
+                {lost.length} Ineligible
               </span>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-[#FFF3EB] text-[#E65100] flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-[20px]">stars</span>
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] text-[#44474E] font-medium block truncate">Newly Unlocked</span>
+              <span className="font-bold text-base text-[#E65100]">
+                {newlyUnlocked.length} Opportunity
+              </span>
+            </div>
+          </div>
+
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-border shadow-xs flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[#F0F3FF] text-[#0D2240] flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[20px]">verified</span>
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] text-[#44474E] font-medium block">Retained Baseline</span>
+              <span className="text-[11px] text-[#44474E] font-medium block truncate">Retained Baseline</span>
               <span className="font-bold text-base text-[#0D2240]">
-                {retained.length} Schemes Valid
+                {retained.length} Valid
               </span>
             </div>
           </div>
@@ -366,6 +479,30 @@ export default function WhatIfSimulator({
               activeTab === 'all' ? 'bg-[#138808] text-white' : 'bg-[#DEE8FF] text-[#0D2240]'
             }`}>
               {allMatches.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('disqualified')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'disqualified'
+                ? 'bg-rose-700 text-white shadow-xs'
+                : 'text-rose-700 hover:bg-rose-50'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[15px]">block</span>
+            <span>Disqualified at this Income</span>
+            <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
+              lost.length > 0
+                ? activeTab === 'disqualified'
+                  ? 'bg-white/20 text-white'
+                  : 'bg-rose-600 text-white animate-pulse'
+                : activeTab === 'disqualified'
+                ? 'bg-white/20 text-white'
+                : 'bg-rose-100 text-rose-800'
+            }`}>
+              {lost.length}
             </span>
           </button>
 
@@ -439,10 +576,14 @@ export default function WhatIfSimulator({
               <span className="material-symbols-outlined text-[24px]">info</span>
             </div>
             <h3 className="font-display font-bold text-base text-[#0D2240]">
-              No Matching Schemes in this Specific Bracket
+              {activeTab === 'disqualified'
+                ? 'No Disqualified Schemes in this Bracket'
+                : 'No Matching Schemes in this Specific Bracket'}
             </h3>
             <p className="text-xs text-[#44474E] leading-relaxed">
-              At ₹{simIncome.toLocaleString('en-IN')}, try selecting another preset (like ₹2.5 Lakh, ₹5.0 Lakh, or ₹8.0 Lakh) to view applicable welfare programs.
+              {activeTab === 'disqualified'
+                ? `At ₹${Number(simIncome).toLocaleString('en-IN')}, no previously matched schemes are disqualified by income ceilings.`
+                : `At ₹${Number(simIncome).toLocaleString('en-IN')}, try selecting another preset (like ₹2.5 Lakh, ₹5.0 Lakh, or ₹8.0 Lakh) to view applicable welfare programs.`}
             </p>
             <button
               onClick={() => {
@@ -456,8 +597,54 @@ export default function WhatIfSimulator({
           </div>
         ) : (
           <div className="space-y-5">
-            {/* Contextual Guidance Banner */}
-            {newlyUnlocked.length > 0 ? (
+            {/* Higher Income Disqualification Impact Alert */}
+            {incomeDelta > 0 && lost.length > 0 && (
+              <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-rose-900 shadow-xs">
+                <div className="flex items-start gap-2.5">
+                  <span className="material-symbols-outlined text-rose-600 text-[22px] shrink-0">
+                    warning
+                  </span>
+                  <div>
+                    <span className="font-bold text-rose-800 text-sm block mb-0.5">
+                      Statutory Income Ceiling Impact: {lost.length} Scheme{lost.length === 1 ? '' : 's'} Exceed Limit at ₹{Number(simIncome).toLocaleString('en-IN')}
+                    </span>
+                    <span className="text-rose-900/80 leading-relaxed">
+                      At this higher simulated income (+₹{deltaFormatted}), your household exceeds the statutory income ceilings for {lost.length} targeted schemes. <strong>{allMatches.length} schemes remain fully valid</strong> (including universal welfare programs with no income ceiling).
+                    </span>
+                  </div>
+                </div>
+                {activeTab !== 'disqualified' && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('disqualified')}
+                    className="shrink-0 px-3.5 py-1.5 rounded-lg bg-rose-700 text-white font-bold text-xs hover:bg-rose-800 cursor-pointer shadow-2xs flex items-center gap-1 self-start sm:self-auto whitespace-nowrap"
+                  >
+                    <span>View Disqualified Schemes ({lost.length})</span>
+                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Disqualified Tab Context Header */}
+            {activeTab === 'disqualified' && (
+              <div className="p-4 rounded-xl bg-rose-50/90 border border-rose-200 flex items-start gap-2.5 text-xs text-rose-900">
+                <span className="material-symbols-outlined text-rose-600 text-[22px] shrink-0">
+                  block
+                </span>
+                <div>
+                  <span className="font-bold text-rose-900 text-sm block mb-0.5">
+                    Showing {displayedSchemes.length} Schemes Disqualified at ₹{Number(simIncome).toLocaleString('en-IN')}
+                  </span>
+                  <span className="text-rose-800 leading-relaxed">
+                    These schemes are restricted to lower income brackets by government gazettes. Each card below shows its official statutory ceiling and how much your simulated income exceeds it.
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Contextual Guidance Banner for Newly Unlocked */}
+            {activeTab !== 'disqualified' && newlyUnlocked.length > 0 ? (
               <div className="p-4 rounded-xl bg-[#FFF3EB] border border-[#E65100]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[#0D2240] shadow-xs">
                 <div className="flex items-start gap-2.5">
                   <span className="material-symbols-outlined text-[#E65100] text-[22px] shrink-0">
@@ -465,7 +652,7 @@ export default function WhatIfSimulator({
                   </span>
                   <div>
                     <span className="font-bold text-[#E65100] text-sm block mb-0.5">
-                      Horizon Discovery: {newlyUnlocked.length} New Opportunity Scheme{newlyUnlocked.length === 1 ? '' : 's'} Unlocked at ₹{simIncome.toLocaleString('en-IN')}!
+                      Horizon Discovery: {newlyUnlocked.length} New Opportunity Scheme{newlyUnlocked.length === 1 ? '' : 's'} Unlocked at ₹{Number(simIncome).toLocaleString('en-IN')}!
                     </span>
                     <span className="text-[#44474E]">
                       Under this simulated scenario, your household falls within lower statutory income ceilings, unlocking these additional high-impact scholarships and welfare benefits.
@@ -483,7 +670,7 @@ export default function WhatIfSimulator({
                   </button>
                 )}
               </div>
-            ) : simIncome === registeredIncome ? (
+            ) : simIncome === registeredIncome && activeTab !== 'disqualified' ? (
               <div className="p-4 rounded-xl bg-[#EAFBF0] border border-[#16A34A]/30 flex items-start gap-3 text-xs text-[#0D2240] shadow-xs">
                 <span className="material-symbols-outlined text-[#138808] text-[22px] shrink-0">
                   verified
@@ -493,25 +680,22 @@ export default function WhatIfSimulator({
                     Official Baseline Scenario Active: All {allMatches.length} Matched Schemes Displayed
                   </span>
                   <span className="text-[#44474E] leading-relaxed">
-                    The simulated income (₹{simIncome.toLocaleString('en-IN')}) matches your registered citizen profile. All <strong>{allMatches.length} verified schemes</strong> are listed below. Click the quick scenario presets above (e.g. <strong>₹2.5 Lakh</strong>, <strong>₹1.0 Lakh</strong>, or <strong>₹8.0 Lakh</strong>) or drag the slider to explore other statutory income brackets!
+                    The simulated income (₹{Number(simIncome).toLocaleString('en-IN')}) matches your registered citizen profile. All <strong>{allMatches.length} verified schemes</strong> are listed below. Click the quick scenario presets above (e.g. <strong>₹2.5 Lakh</strong>, <strong>₹1.0 Lakh</strong>, or <strong>₹8.0 Lakh</strong>) or drag the slider to explore other statutory income brackets!
                   </span>
                 </div>
-              </div>
-            ) : activeTab === 'unlocked' && newlyUnlocked.length === 0 ? (
-              <div className="p-3.5 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] flex items-center gap-2.5 text-xs text-[#0D2240]">
-                <span className="material-symbols-outlined text-[#0D2240] text-[18px]">info</span>
-                <span>
-                  No additional schemes unlock beyond your baseline at ₹{simIncome.toLocaleString('en-IN')}. Showing all <strong>{allMatches.length} valid schemes</strong> below for this scenario.
-                </span>
               </div>
             ) : null}
 
             {/* List Header Strip */}
             <div id="whatif-schemes-list" className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-border">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A]" />
+                <span className={`w-2.5 h-2.5 rounded-full ${
+                  activeTab === 'disqualified' ? 'bg-rose-600' : 'bg-[#16A34A]'
+                }`} />
                 <span className="text-xs font-bold text-[#0D2240] uppercase tracking-wider">
-                  {activeTab === 'unlocked' && newlyUnlocked.length > 0
+                  {activeTab === 'disqualified'
+                    ? `Disqualified Schemes (${displayedSchemes.length})`
+                    : activeTab === 'unlocked' && newlyUnlocked.length > 0
                     ? `Newly Unlocked Schemes (${displayedSchemes.length})`
                     : activeTab === 'retained'
                     ? `Retained Schemes (${displayedSchemes.length})`
@@ -530,23 +714,32 @@ export default function WhatIfSimulator({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {paginatedSchemes.map((item) => (
-                <SchemeCard
-                  key={item.scheme.schemeId}
-                  scheme={item.scheme}
-                  confidence={item.confidence}
-                  missingFields={item.missingFields}
-                  profile={{ ...profile, annualIncome: simIncome }}
-                  bookmarked={bookmarkedIds.has(item.scheme.schemeId)}
-                  onBookmarkChange={onBookmarkChange}
-                  horizonBadge={
-                    item.ceilingValue
-                      ? `Ceiling: ₹${Number(item.ceilingValue).toLocaleString('en-IN')}`
-                      : `Valid under ₹${simIncome.toLocaleString('en-IN')}`
-                  }
-                  isOpportunity={item.isOpportunity}
-                />
-              ))}
+              {paginatedSchemes.map((item) => {
+                const simTag = getSimulationTag(item, simIncome, activeTab === 'disqualified')
+                const ceiling = item.ceilingValue || SCHEME_INCOME_CEILINGS[item.scheme?.schemeId]
+                return (
+                  <SchemeCard
+                    key={item.scheme.schemeId}
+                    scheme={item.scheme}
+                    confidence={item.confidence}
+                    missingFields={item.missingFields}
+                    profile={{ ...profile, annualIncome: simIncome }}
+                    bookmarked={bookmarkedIds.has(item.scheme.schemeId)}
+                    onBookmarkChange={onBookmarkChange}
+                    simulationTag={simTag}
+                    horizonBadge={
+                      simTag.type === 'disqualified'
+                        ? (ceiling
+                            ? `Statutory Cap: ₹${Number(ceiling).toLocaleString('en-IN')}`
+                            : 'Income Exceeded')
+                        : ceiling
+                        ? `Statutory Cap: ₹${Number(ceiling).toLocaleString('en-IN')}`
+                        : 'Universal Access (No Cap)'
+                    }
+                    isOpportunity={item.isOpportunity}
+                  />
+                )
+              })}
             </div>
 
             {/* Pagination Controls - Offset to never be blocked by floating AI assistant */}

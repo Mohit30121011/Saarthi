@@ -36,6 +36,7 @@ export default function SchemeCard({
   showCompare = true,
   horizonBadge = null,
   isOpportunity = false,
+  simulationTag = null,
 }) {
   const navigate = useNavigate()
   const [isSaved, setIsSaved] = useState(!!initialBookmarked)
@@ -67,6 +68,7 @@ export default function SchemeCard({
     }
   }
 
+  const isDisqualified = simulationTag?.type === 'disqualified'
   const isStrong = confidence === 'STRONG'
   const isPartial = confidence === 'PARTIAL'
   const category = scheme?.categoryName || 'Welfare'
@@ -83,12 +85,20 @@ export default function SchemeCard({
   return (
     <article
       onClick={() => navigate(`/schemes/${scheme.schemeId}`)}
-      className={`relative flex flex-col justify-between rounded-xl bg-white border shadow-sm hover:shadow-xl hover:border-[#CBD5E1] transition-all duration-200 overflow-hidden cursor-pointer group ${
-        isComparing ? 'border-[#0D2240] ring-2 ring-[#0D2240]/20' : 'border-[#E2E8F0]'
+      className={`relative flex flex-col justify-between rounded-xl bg-white border shadow-sm hover:shadow-xl transition-all duration-200 overflow-hidden cursor-pointer group ${
+        isDisqualified
+          ? 'border-rose-300 bg-rose-50/15 hover:border-rose-400'
+          : isComparing
+          ? 'border-[#0D2240] ring-2 ring-[#0D2240]/20'
+          : 'border-[#E2E8F0] hover:border-[#CBD5E1]'
       }`}
     >
-      {/* Tricolor Micro-Accent on Card Top */}
-      <div className="h-1 w-full bg-gradient-to-r from-[#E65100] via-white to-[#138808]" />
+      {/* Accent Stripe: Red for Disqualified, Tricolor for Standard */}
+      {isDisqualified ? (
+        <div className="h-1.5 w-full bg-gradient-to-r from-rose-600 via-rose-400 to-rose-600" />
+      ) : (
+        <div className="h-1 w-full bg-gradient-to-r from-[#E65100] via-white to-[#138808]" />
+      )}
 
       <div className="p-4 sm:p-6 space-y-3.5 sm:space-y-4">
         {/* Card Header / Meta Tags */}
@@ -104,8 +114,32 @@ export default function SchemeCard({
             </span>
           </div>
 
-          {/* Match Confidence Pill */}
-          {isStrong ? (
+          {/* Context-Aware Match Confidence / Simulation Status Badge */}
+          {simulationTag ? (
+            simulationTag.type === 'disqualified' ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-300 text-[10px] sm:text-[10.5px] font-bold shrink-0">
+                <span className="material-symbols-outlined text-[13px] sm:text-[14px]">cancel</span>
+                <span>{simulationTag.label || 'DISQUALIFIED'}</span>
+              </span>
+            ) : simulationTag.type === 'opportunity' ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FFF3EB] text-[#E65100] border border-[#E65100]/30 text-[10px] sm:text-[10.5px] font-bold shrink-0 shadow-2xs">
+                <span className="material-symbols-outlined text-[13px] sm:text-[14px]">auto_awesome</span>
+                <span>NEW OPPORTUNITY</span>
+              </span>
+            ) : simulationTag.type === 'capped' ? (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-[10px] sm:text-[10.5px] font-bold shrink-0">
+                <span className="material-symbols-outlined text-[13px] sm:text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  verified
+                </span>
+                <span>{simulationTag.label || `ELIGIBLE (Cap ₹${simulationTag.ceilingFormatted})`}</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EBF3FC] text-[#0D2240] border border-[#DEE8FF] text-[10px] sm:text-[10.5px] font-bold shrink-0">
+                <span className="material-symbols-outlined text-[13px] sm:text-[14px]">public</span>
+                <span>UNIVERSAL (No Cap)</span>
+              </span>
+            )
+          ) : isStrong ? (
             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#EAFBF0] text-[#138808] border border-[#16A34A]/20 text-[10px] sm:text-[10.5px] font-bold shrink-0">
               <span className="material-symbols-outlined text-[13px] sm:text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 verified
@@ -144,7 +178,9 @@ export default function SchemeCard({
             </div>
           )}
 
-          <h3 className="font-display font-bold text-[15.5px] sm:text-[17px] text-[#0D2240] group-hover:text-[#1A365D] tracking-tight transition-colors line-clamp-2 leading-snug">
+          <h3 className={`font-display font-bold text-[15.5px] sm:text-[17px] tracking-tight transition-colors line-clamp-2 leading-snug ${
+            isDisqualified ? 'text-slate-800' : 'text-[#0D2240] group-hover:text-[#1A365D]'
+          }`}>
             {scheme.name}
           </h3>
           <p className="text-[10.5px] sm:text-[11px] text-[#44474E] font-mono truncate">
@@ -154,12 +190,14 @@ export default function SchemeCard({
 
         {horizonBadge && (
           <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${
-            isOpportunity
+            isDisqualified
+              ? 'bg-rose-50 border-rose-200 text-rose-800'
+              : isOpportunity
               ? 'bg-[#FFF3EB] border-[#E65100]/30 text-[#E65100] shadow-2xs'
               : 'bg-[#F0F3FF] border-[#DEE8FF] text-[#0D2240]'
           }`}>
             <span className="material-symbols-outlined text-[16px]">
-              {isOpportunity ? 'auto_awesome' : 'visibility'}
+              {isDisqualified ? 'block' : isOpportunity ? 'auto_awesome' : 'visibility'}
             </span>
             <span className="font-semibold">{horizonBadge}</span>
             {isOpportunity && (
@@ -167,39 +205,80 @@ export default function SchemeCard({
                 Horizon Match
               </span>
             )}
+            {isDisqualified && (
+              <span className="ml-auto bg-rose-600 text-white text-[9px] px-1.5 py-0.5 rounded uppercase font-black tracking-wider">
+                Exceeded
+              </span>
+            )}
           </div>
         )}
 
         {/* Value Metric Banner */}
-        <div className="p-3 sm:p-3.5 rounded-lg bg-[#EAFBF0] border border-[#16A34A]/20 flex items-start sm:items-center justify-between gap-2.5">
+        <div className={`p-3 sm:p-3.5 rounded-lg border flex items-start sm:items-center justify-between gap-2.5 ${
+          isDisqualified
+            ? 'bg-rose-50/70 border-rose-200'
+            : 'bg-[#EAFBF0] border-[#16A34A]/20'
+        }`}>
           <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#138808] text-white flex items-center justify-center font-bold text-sm sm:text-lg shrink-0 shadow-xs">
-              ₹
+            <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-sm sm:text-lg shrink-0 shadow-xs ${
+              isDisqualified ? 'bg-rose-600 text-white' : 'bg-[#138808] text-white'
+            }`}>
+              {isDisqualified ? '✕' : '₹'}
             </div>
             <div className="min-w-0">
-              <div className="font-display font-bold text-sm sm:text-base text-[#138808] line-clamp-2 sm:line-clamp-1 leading-snug">
-                {benefitValue}
+              <div className={`font-display font-bold text-sm sm:text-base line-clamp-2 sm:line-clamp-1 leading-snug ${
+                isDisqualified ? 'text-rose-800' : 'text-[#138808]'
+              }`}>
+                {isDisqualified
+                  ? (simulationTag?.ceiling
+                      ? `Statutory Ceiling: ₹${Number(simulationTag.ceiling).toLocaleString('en-IN')}`
+                      : 'Income Ceiling Exceeded')
+                  : benefitValue}
               </div>
-              <div className="text-[11px] sm:text-[11.5px] text-[#44474E] line-clamp-2 sm:line-clamp-1 mt-0.5 sm:mt-0">
-                {benefitSubtext}
+              <div className={`text-[11px] sm:text-[11.5px] line-clamp-2 sm:line-clamp-1 mt-0.5 sm:mt-0 ${
+                isDisqualified ? 'text-rose-700 font-medium' : 'text-[#44474E]'
+              }`}>
+                {isDisqualified
+                  ? (simulationTag?.excess
+                      ? `Exceeded by +₹${Number(simulationTag.excess).toLocaleString('en-IN')} under this simulation`
+                      : 'Ineligible at this simulated income bracket')
+                  : benefitSubtext}
               </div>
             </div>
           </div>
-          <span className="material-symbols-outlined text-[#138808] text-[18px] sm:text-[22px] shrink-0 mt-0.5 sm:mt-0">
-            payments
+          <span className={`material-symbols-outlined text-[18px] sm:text-[22px] shrink-0 mt-0.5 sm:mt-0 ${
+            isDisqualified ? 'text-rose-600' : 'text-[#138808]'
+          }`}>
+            {isDisqualified ? 'block' : 'payments'}
           </span>
         </div>
 
-        {/* Why You Qualify */}
-        <div className="p-2.5 sm:p-3 rounded-lg bg-[#F0F3FF] border border-[#DEE8FF] space-y-1">
-          <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-bold text-[#0D2240]">
-            <span className="material-symbols-outlined text-[14px] sm:text-[15px] text-[#138808]">
-              verified_user
+        {/* Why You Qualify or Disqualification Context */}
+        <div className={`p-2.5 sm:p-3 rounded-lg border space-y-1 ${
+          isDisqualified
+            ? 'bg-rose-50/80 border-rose-200'
+            : 'bg-[#F0F3FF] border-[#DEE8FF]'
+        }`}>
+          <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-bold">
+            <span className={`material-symbols-outlined text-[14px] sm:text-[15px] ${
+              isDisqualified ? 'text-rose-600' : 'text-[#138808]'
+            }`}>
+              {isDisqualified ? 'cancel' : 'verified_user'}
             </span>
-            <span>Why You Qualify:</span>
+            <span className={isDisqualified ? 'text-rose-800' : 'text-[#0D2240]'}>
+              {isDisqualified ? 'Disqualification Context:' : 'Eligibility Context:'}
+            </span>
           </div>
-          <p className="text-[11.5px] sm:text-xs text-[#44474E] line-clamp-2 leading-relaxed">
-            {reasonText}
+          <p className={`text-[11.5px] sm:text-xs line-clamp-2 leading-relaxed ${
+            isDisqualified ? 'text-rose-700' : 'text-[#44474E]'
+          }`}>
+            {isDisqualified
+              ? (simulationTag?.reason || reasonText)
+              : simulationTag?.type === 'universal'
+              ? 'Universal Welfare: Accessible to all eligible citizens without an annual household income ceiling.'
+              : simulationTag?.type === 'capped'
+              ? `Income Within Cap: Simulated ₹${Number(profile?.annualIncome || 0).toLocaleString('en-IN')} is within statutory limit of ₹${Number(simulationTag.ceiling || 0).toLocaleString('en-IN')}.`
+              : reasonText}
           </p>
         </div>
 
@@ -318,10 +397,16 @@ export default function SchemeCard({
               e.stopPropagation()
               navigate(`/schemes/${scheme.schemeId}`)
             }}
-            className="flex-1 sm:flex-none px-3 sm:px-3.5 py-1.5 rounded-lg text-[11.5px] sm:text-xs font-bold text-white bg-[#E65100] hover:bg-[#FF7722] transition-colors shadow-xs flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap"
+            className={`flex-1 sm:flex-none px-3 sm:px-3.5 py-1.5 rounded-lg text-[11.5px] sm:text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+              isDisqualified
+                ? 'text-white bg-slate-700 hover:bg-slate-800'
+                : 'text-white bg-[#E65100] hover:bg-[#FF7722]'
+            }`}
           >
-            <span>Apply on Portal</span>
-            <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+            <span>{isDisqualified ? 'View Guidelines' : 'Apply on Portal'}</span>
+            <span className="material-symbols-outlined text-[14px]">
+              {isDisqualified ? 'arrow_forward' : 'open_in_new'}
+            </span>
           </button>
         </div>
       </div>
