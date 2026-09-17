@@ -113,7 +113,7 @@ function SchemeMiniCard({ scheme }) {
   const isNotMatched = scheme.eligibilityVerdict === 'NOT_MATCHED'
 
   return (
-    <div className="p-3.5 rounded-xl bg-slate-surface border border-slate-border flex flex-col gap-2 hover:border-chakra-blue/40 transition-colors min-w-0">
+    <div className="p-3.5 rounded-2xl bg-slate-surface border border-slate-border flex flex-col gap-2 hover:border-chakra-blue/40 transition-colors min-w-0">
       <div className="flex items-start justify-between gap-2 min-w-0">
         <div className="flex flex-col min-w-0">
           <span className="font-label-sm text-label-sm font-semibold text-on-surface-variant truncate">
@@ -125,7 +125,7 @@ function SchemeMiniCard({ scheme }) {
         </div>
         {scheme.eligibilityVerdict && (
           <span
-            className={`shrink-0 px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold flex items-center gap-1 whitespace-nowrap ${
+            className={`shrink-0 px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-bold flex items-center gap-1 whitespace-nowrap ${
               isStrong
                 ? 'bg-harita-green-soft text-harita-green'
                 : isNotMatched
@@ -144,7 +144,7 @@ function SchemeMiniCard({ scheme }) {
       {(scheme.benefitAmount || scheme.deadline) && (
         <div className="flex flex-col gap-1.5">
           {scheme.benefitAmount && (
-            <div className="p-2 rounded-lg bg-surface-container-low flex items-center justify-between gap-2 min-w-0">
+            <div className="p-2 rounded-xl bg-surface-container-low flex items-center justify-between gap-2 min-w-0">
               <span className="font-label-sm text-label-sm text-on-surface-variant shrink-0">Benefit</span>
               <span className="font-headline-sm text-headline-sm font-bold text-chakra-blue text-right truncate">
                 {scheme.benefitAmount}
@@ -163,14 +163,14 @@ function SchemeMiniCard({ scheme }) {
       <div className="flex items-center justify-between pt-1 gap-2 flex-wrap">
         <Link
           to={`/schemes/${scheme.schemeId}`}
-          className="font-label-sm text-label-sm font-bold text-chakra-blue hover:text-kesari-saffron flex items-center gap-1 transition-colors"
+          className="px-3 py-1 rounded-full bg-[#0D2240]/5 hover:bg-[#0D2240] hover:text-white font-label-sm text-label-sm font-bold text-chakra-blue flex items-center gap-1 transition-all"
         >
           <span>View Details</span>
           <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
         </Link>
         <Link
           to="/checklist"
-          className="font-label-sm text-label-sm font-semibold text-harita-green hover:underline flex items-center gap-1"
+          className="px-3 py-1 rounded-full bg-harita-green/10 hover:bg-harita-green hover:text-white font-label-sm text-label-sm font-semibold text-harita-green transition-all flex items-center gap-1"
         >
           <span className="material-symbols-outlined text-[14px]">fact_check</span>
           <span>Checklist</span>
@@ -211,15 +211,14 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
   }
 
   return (
-    <div className="flex items-start gap-2.5 pr-2 min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-200">
-      <div
-        className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs ${
-          msg.isError
-            ? 'bg-rose-600 text-white'
-            : 'bg-gradient-to-br from-[#0D2240] to-[#1E3A8A] text-[#E65100] border border-white/10'
-        }`}
-      >
-        <span className="material-symbols-outlined text-[17px]" style={msg.isError ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+    <div className="flex items-start gap-2 pr-2 min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-200">
+      <div className="flex items-center justify-center shrink-0 mt-1">
+        <span
+          className={`material-symbols-outlined text-[22px] ${
+            msg.isError ? 'text-rose-600' : 'text-[#0D2240]'
+          }`}
+          style={msg.isError ? { fontVariationSettings: "'FILL' 1" } : undefined}
+        >
           {msg.isError ? 'error' : 'smart_toy'}
         </span>
       </div>
@@ -239,7 +238,7 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
             <button
               onClick={onRetry}
               type="button"
-              className="self-start flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-bold hover:bg-rose-700 active:scale-95 transition-all cursor-pointer shadow-xs"
+              className="self-start flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-600 text-white text-xs font-bold hover:bg-rose-700 active:scale-95 transition-all cursor-pointer shadow-xs"
             >
               <span className="material-symbols-outlined text-[14px]">refresh</span>
               Retry Question
@@ -298,7 +297,7 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
               <span className="text-slate-400 text-[10.5px]">Was this helpful?</span>
               <button
                 onClick={() => setFeedback('yes')}
-                className={`flex items-center gap-1 transition-all cursor-pointer px-1.5 py-0.5 rounded ${
+                className={`flex items-center gap-1 transition-all cursor-pointer px-2 py-0.5 rounded-full ${
                   feedback === 'yes' ? 'text-emerald-600 font-bold bg-emerald-50' : 'text-slate-400 hover:text-emerald-600'
                 }`}
                 type="button"
@@ -308,7 +307,7 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
               </button>
               <button
                 onClick={() => setFeedback('no')}
-                className={`flex items-center gap-1 transition-all cursor-pointer px-1.5 py-0.5 rounded ${
+                className={`flex items-center gap-1 transition-all cursor-pointer px-2 py-0.5 rounded-full ${
                   feedback === 'no' ? 'text-rose-600 font-bold bg-rose-50' : 'text-slate-400 hover:text-rose-600'
                 }`}
                 type="button"
@@ -505,17 +504,17 @@ export default function ChatWidget() {
           onClick={() => setOpen((v) => !v)}
           type="button"
           aria-label={open ? 'Close SAARTHI AI Assistant' : 'Open SAARTHI AI Assistant'}
-          className="group relative flex items-center gap-3 px-4 py-2.5 sm:py-3 rounded-full bg-white/95 backdrop-blur-md text-[#0D2240] shadow-[0_12px_36px_-4px_rgba(13,34,64,0.18)] hover:shadow-[0_20px_44px_-4px_rgba(13,34,64,0.28)] hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-slate-200/90 hover:border-blue-300 cursor-pointer"
+          className="group relative flex items-center gap-2.5 px-4 py-2.5 sm:py-3 rounded-full bg-white/95 backdrop-blur-md text-[#0D2240] shadow-[0_12px_36px_-4px_rgba(13,34,64,0.18)] hover:shadow-[0_20px_44px_-4px_rgba(13,34,64,0.28)] hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-slate-200/90 hover:border-blue-300 cursor-pointer"
         >
           {/* Subtle Tricolor Top Glow */}
           <div className="absolute top-0 left-4 right-4 h-[2px] bg-gradient-to-r from-[#E65100] via-slate-300 to-[#138808] rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
 
-          {/* AI Avatar Icon with pulsing dot */}
-          <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-[#0D2240] to-[#1A365D] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-            <span className="material-symbols-outlined text-[#FF9E80] text-[20px]">
+          {/* AI Avatar Icon without heavy circular box */}
+          <div className="relative flex items-center justify-center shrink-0">
+            <span className="material-symbols-outlined text-[#0D2240] group-hover:text-[#E65100] text-[24px] transition-colors">
               smart_toy
             </span>
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white animate-pulse" />
+            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white animate-pulse" />
           </div>
 
           <div className="flex flex-col text-left">
@@ -530,9 +529,9 @@ export default function ChatWidget() {
             </span>
           </div>
 
-          <div className="w-7 h-7 rounded-full bg-[#F0F3FF] text-[#0D2240] flex items-center justify-center group-hover:bg-[#0D2240] group-hover:text-white transition-all shadow-2xs ml-0.5">
-            <span className="material-symbols-outlined text-[16px]">{open ? 'expand_more' : 'chat'}</span>
-          </div>
+          <span className="material-symbols-outlined text-[18px] text-slate-500 group-hover:text-[#0D2240] transition-colors ml-0.5">
+            {open ? 'expand_more' : 'chat'}
+          </span>
 
           {!open && unreadCount > 0 && (
             <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#E65100] text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white shadow-xs animate-bounce">
@@ -545,7 +544,7 @@ export default function ChatWidget() {
       {/* Modern Sleek Drawer Panel */}
       {open && (
         <div
-          className={`fixed z-50 bg-white/95 backdrop-blur-xl shadow-[0_25px_60px_-15px_rgba(13,34,64,0.35)] border border-slate-200/80 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-6 zoom-in-95 duration-300 ease-out
+          className={`fixed z-50 bg-[#0D2240] backdrop-blur-xl shadow-[0_25px_60px_-15px_rgba(13,34,64,0.35)] border border-slate-700/50 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-6 zoom-in-95 duration-300 ease-out
             inset-0 rounded-none
             sm:inset-auto sm:rounded-3xl
             ${
@@ -559,12 +558,12 @@ export default function ChatWidget() {
             {/* Top Tricolor Strip */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E65100] via-white to-[#138808]" />
 
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center relative shrink-0 ring-1 ring-white/20 shadow-inner">
-                <span className="material-symbols-outlined text-[#E65100] text-[22px]">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="relative flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[#FF9E80] text-[26px]">
                   smart_toy
                 </span>
-                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-[#0D2240] ${isOffline ? 'bg-rose-500' : 'bg-emerald-400 animate-pulse'}`} />
+                <span className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full ring-2 ring-[#0D2240] ${isOffline ? 'bg-rose-500' : 'bg-emerald-400 animate-pulse'}`} />
               </div>
 
               <div className="flex flex-col min-w-0">
@@ -583,15 +582,15 @@ export default function ChatWidget() {
               </div>
             </div>
 
-            {/* Header Control Buttons */}
-            <div className="flex items-center gap-1.5 shrink-0">
+            {/* Header Control Buttons (Clean without permanent circular backgrounds) */}
+            <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={() => setExpanded((v) => !v)}
-                className="hidden sm:flex w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer"
+                className="hidden sm:flex w-8 h-8 rounded-full hover:bg-white/15 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer"
                 title={expanded ? 'Collapse' : 'Expand'}
                 type="button"
               >
-                <span className="material-symbols-outlined text-[17px]">
+                <span className="material-symbols-outlined text-[19px]">
                   {expanded ? 'close_fullscreen' : 'open_in_full'}
                 </span>
               </button>
@@ -599,20 +598,20 @@ export default function ChatWidget() {
               <button
                 onClick={() => setConfirmingClear(true)}
                 disabled={messages.length === 0}
-                className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                className="w-8 h-8 rounded-full hover:bg-white/15 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                 title="Clear Conversation"
                 type="button"
               >
-                <span className="material-symbols-outlined text-[17px]">delete_sweep</span>
+                <span className="material-symbols-outlined text-[19px]">delete_sweep</span>
               </button>
 
               <button
                 onClick={() => setOpen(false)}
-                className="w-8 h-8 rounded-xl bg-white/10 hover:bg-rose-500/80 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer"
+                className="w-8 h-8 rounded-full hover:bg-rose-500/80 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer"
                 title="Close"
                 type="button"
               >
-                <span className="material-symbols-outlined text-[17px]">close</span>
+                <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
           </div>
@@ -628,14 +627,14 @@ export default function ChatWidget() {
                 <button
                   onClick={handleClearConfirmed}
                   type="button"
-                  className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold cursor-pointer transition-colors"
+                  className="px-3 py-1 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold cursor-pointer transition-colors"
                 >
                   Clear
                 </button>
                 <button
                   onClick={() => setConfirmingClear(false)}
                   type="button"
-                  className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-bold cursor-pointer hover:bg-slate-50 transition-colors"
+                  className="px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-bold cursor-pointer hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -651,19 +650,17 @@ export default function ChatWidget() {
           )}
 
           {/* White Chat Area with Curvy Rounded Top Border */}
-          <div className="relative flex-1 min-h-0 bg-white rounded-t-[28px] sm:rounded-t-[32px] shadow-[0_-8px_24px_-6px_rgba(13,34,64,0.18)] z-20 flex flex-col overflow-hidden border-t border-slate-100">
+          <div className="relative flex-1 min-h-0 bg-[#F8FAFC] rounded-t-[28px] sm:rounded-t-[32px] shadow-[0_-8px_24px_-6px_rgba(13,34,64,0.18)] z-20 flex flex-col overflow-hidden border-t border-slate-100">
             <div
               ref={scrollRef}
               onScroll={handleScroll}
-              className="no-scrollbar absolute inset-0 p-4 pt-4.5 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden bg-[#F8FAFC]"
+              className="no-scrollbar absolute inset-0 p-4 pt-4.5 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden"
             >
               {/* Empty State Welcome Card */}
               {messages.length === 0 && (
                 <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-white to-orange-50/40 border border-blue-100/80 shadow-xs space-y-2.5 animate-in fade-in duration-300">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-[#0D2240] text-white flex items-center justify-center shadow-2xs">
-                      <span className="material-symbols-outlined text-[18px]">waving_hand</span>
-                    </div>
+                    <span className="material-symbols-outlined text-[24px] text-[#E65100]">waving_hand</span>
                     <div>
                       <h4 className="text-sm font-extrabold text-[#0D2240]">
                         Namaste {userFirstName}!
@@ -687,7 +684,7 @@ export default function ChatWidget() {
               ))}
 
               {sending && (
-                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs text-xs font-semibold text-[#0D2240] self-start animate-pulse">
+                <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white border border-slate-200/80 shadow-xs text-xs font-semibold text-[#0D2240] self-start animate-pulse">
                   <span className="flex gap-1">
                     <span className="w-2 h-2 rounded-full bg-[#0D2240] animate-bounce [animation-delay:-0.3s]" />
                     <span className="w-2 h-2 rounded-full bg-[#E65100] animate-bounce [animation-delay:-0.15s]" />
@@ -712,7 +709,7 @@ export default function ChatWidget() {
 
           {/* Suggested Questions Section */}
           {!lastMessageLimitReached && (showSuggestions ? (
-            <div className="px-3.5 py-2.5 bg-white border-t border-slate-200/80 flex flex-col gap-2 shrink-0">
+            <div className="px-3.5 py-2.5 bg-white border-t border-slate-200/80 flex flex-col gap-2 shrink-0 z-20">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[15px] text-[#E65100]">lightbulb</span>
@@ -720,7 +717,7 @@ export default function ChatWidget() {
                 </span>
                 <button
                   onClick={() => setShowSuggestions(false)}
-                  className="text-[11px] text-slate-400 hover:text-slate-700 flex items-center gap-1 font-semibold px-2 py-0.5 rounded-md hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="text-[11px] text-slate-400 hover:text-slate-700 flex items-center gap-1 font-semibold px-2.5 py-0.5 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
                   title="Hide Suggested Questions"
                   type="button"
                 >
@@ -735,10 +732,10 @@ export default function ChatWidget() {
                     key={item.text}
                     onClick={() => handleSend(item.text)}
                     disabled={disabledInput}
-                    className="group px-3 py-1.5 rounded-full bg-slate-50 hover:bg-blue-50/80 text-slate-700 hover:text-[#0D2240] text-xs font-semibold transition-all text-left flex items-center gap-1.5 border border-slate-200/90 hover:border-blue-300 hover:shadow-2xs active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="group px-3.5 py-1.5 rounded-full bg-slate-50 hover:bg-blue-50/80 text-slate-700 hover:text-[#0D2240] text-xs font-semibold transition-all text-left flex items-center gap-1.5 border border-slate-200/90 hover:border-blue-300 hover:shadow-2xs active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     type="button"
                   >
-                    <span className="material-symbols-outlined text-[13px] text-[#E65100] group-hover:scale-110 transition-transform shrink-0">
+                    <span className="material-symbols-outlined text-[14px] text-[#E65100] group-hover:scale-110 transition-transform shrink-0">
                       {item.icon}
                     </span>
                     <span className="truncate max-w-[240px] sm:max-w-[340px]">{item.text}</span>
@@ -747,10 +744,10 @@ export default function ChatWidget() {
               </div>
             </div>
           ) : (
-            <div className="px-3.5 py-1.5 bg-white border-t border-slate-200/80 flex items-center justify-between shrink-0">
+            <div className="px-3.5 py-1.5 bg-white border-t border-slate-200/80 flex items-center justify-between shrink-0 z-20">
               <button
                 onClick={() => setShowSuggestions(true)}
-                className="text-[11px] font-bold text-[#0D2240] hover:text-[#E65100] flex items-center gap-1 py-0.5 transition-colors cursor-pointer"
+                className="text-[11px] font-bold text-[#0D2240] hover:text-[#E65100] flex items-center gap-1 px-2.5 py-1 rounded-full hover:bg-slate-50 transition-colors cursor-pointer"
                 type="button"
               >
                 <span className="material-symbols-outlined text-[14px] text-[#E65100]">lightbulb</span>
@@ -761,14 +758,14 @@ export default function ChatWidget() {
 
           {/* Limit-reached CTA */}
           {lastMessageLimitReached && (
-            <div className="px-3.5 py-2.5 bg-amber-50 border-t border-amber-200 flex items-center justify-between gap-2 shrink-0">
+            <div className="px-3.5 py-2.5 bg-amber-50 border-t border-amber-200 flex items-center justify-between gap-2 shrink-0 z-20">
               <span className="text-xs font-bold text-amber-900 flex items-center gap-1.5 min-w-0">
                 <span className="material-symbols-outlined text-[16px] text-amber-600 shrink-0">schedule</span>
                 <span className="truncate">Daily message quota reached.</span>
               </span>
               <Link
                 to="/explorer"
-                className="shrink-0 px-3 py-1 rounded-xl bg-[#0D2240] text-white text-xs font-bold hover:bg-[#14325C] transition-colors"
+                className="shrink-0 px-3.5 py-1 rounded-full bg-[#0D2240] text-white text-xs font-bold hover:bg-[#14325C] transition-colors"
               >
                 Explore Schemes
               </Link>
@@ -776,13 +773,13 @@ export default function ChatWidget() {
           )}
 
           {/* Sleek Floating Input Bar */}
-          <div className="p-3 bg-white border-t border-slate-200/80 shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <div className="flex items-center gap-2 bg-slate-50/80 focus-within:bg-white rounded-2xl px-3 py-1.5 shadow-2xs focus-within:shadow-md focus-within:border-blue-400 transition-all border border-slate-200/90">
+          <div className="p-3 bg-white border-t border-slate-200/80 shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))] z-20">
+            <div className="flex items-center gap-2 bg-slate-50/80 focus-within:bg-white rounded-full px-3.5 py-1.5 shadow-2xs focus-within:shadow-md focus-within:border-blue-400 transition-all border border-slate-200/90">
               {/* Mic / Voice Button */}
               <button
                 onClick={handleVoiceInput}
                 disabled={disabledInput}
-                className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed ${
                   listening
                     ? 'bg-[#E65100] text-white animate-pulse shadow-xs scale-105'
                     : 'text-slate-500 hover:text-[#0D2240] hover:bg-slate-200/60'
@@ -805,11 +802,11 @@ export default function ChatWidget() {
                 className="w-full bg-transparent border-none text-xs sm:text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none py-1.5 font-medium"
               />
 
-              {/* Send Button */}
+              {/* Send Button (Pill Rounded) */}
               <button
                 onClick={() => handleSend(input)}
                 disabled={disabledInput || !trimmedInput || lastMessageLimitReached}
-                className="h-8 px-3.5 rounded-xl bg-gradient-to-r from-[#E65100] to-[#F97316] hover:from-[#D84315] hover:to-[#EA580C] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs hover:shadow-md hover:scale-[1.02] active:scale-95 disabled:opacity-40 disabled:scale-100 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer shrink-0"
+                className="h-8 px-4 rounded-full bg-gradient-to-r from-[#E65100] to-[#F97316] hover:from-[#D84315] hover:to-[#EA580C] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs hover:shadow-md hover:scale-[1.02] active:scale-95 disabled:opacity-40 disabled:scale-100 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer shrink-0"
                 type="button"
               >
                 <span className="hidden xs:inline">Send</span>
