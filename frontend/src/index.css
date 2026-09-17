@@ -195,5 +195,38 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Custom Civic Dropdown Animations & Scrollbar */
+@keyframes dropdown-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.97) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.custom-dropdown-menu {
+  animation: dropdown-pop 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.custom-dropdown-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-dropdown-scrollbar::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+
+.custom-dropdown-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.custom-dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
 
 

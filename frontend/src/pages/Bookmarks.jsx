@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getBookmarks } from '../api/bookmarks'
 import SchemeCard from '../components/SchemeCard'
 import Pagination from '../components/Pagination'
+import CustomDropdown from '../components/CustomDropdown'
 import { BookmarksSkeleton } from '../components/Skeletons'
 
 const CATEGORIES = [
@@ -12,6 +13,12 @@ const CATEGORIES = [
   { id: 'Women Empowerment', label: 'Women & Child' },
   { id: 'Skills & Employment', label: 'Skill & Employment' },
   { id: 'Healthcare', label: 'Health' },
+]
+
+const SORT_OPTIONS = [
+  { value: 'deadline', label: 'Deadline Approaching' },
+  { value: 'confidence', label: 'Confidence (Strong First)' },
+  { value: 'name', label: 'Scheme Name' },
 ]
 
 export default function Bookmarks() {
@@ -205,18 +212,15 @@ export default function Bookmarks() {
 
           {/* Filter Controls & Action Link */}
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg">
-              <span className="material-symbols-outlined text-[18px] text-on-surface-variant">sort</span>
-              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Sort:</span>
-              <select
+            <div className="flex items-center gap-2">
+              <CustomDropdown
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent font-label-lg text-label-lg font-semibold text-chakra-blue focus:outline-none cursor-pointer"
-              >
-                <option value="deadline">Deadline Approaching</option>
-                <option value="confidence">Confidence (Strong First)</option>
-                <option value="name">Scheme Name</option>
-              </select>
+                onChange={setSortBy}
+                options={SORT_OPTIONS}
+                icon="sort"
+                variant="compact"
+                className="w-56"
+              />
             </div>
 
             <button

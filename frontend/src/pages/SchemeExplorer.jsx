@@ -10,7 +10,33 @@ import SchemeCompareModal from '../components/SchemeCompareModal'
 import Pagination from '../components/Pagination'
 import { SchemeCardSkeleton } from '../components/Skeletons'
 import TrendingSeasonalBanner from '../components/TrendingSeasonalBanner'
+import CustomDropdown from '../components/CustomDropdown'
 import { isSchemeTrending, isSchemeSeasonal } from '../data/curatedSchemes'
+
+const CATEGORY_OPTIONS = [
+  { value: 'all', label: 'All Categories' },
+  { value: 'Agriculture', label: 'Agriculture & Farmers' },
+  { value: 'Education', label: 'Education & Scholarships' },
+  { value: 'Healthcare', label: 'Healthcare & Ayushman' },
+  { value: 'Housing', label: 'Housing & Urban' },
+  { value: 'Financial Aid', label: 'Financial Aid & Credit' },
+  { value: 'Employment', label: 'Skill & Employment' },
+]
+
+const MINISTRY_OPTIONS = [
+  { value: 'all', label: 'All Issuing Ministries / Depts' },
+  { value: 'Agriculture', label: 'Ministry of Agriculture' },
+  { value: 'Higher', label: 'Higher & Technical Education (MH)' },
+  { value: 'Health', label: 'Ministry of Health & Family Welfare' },
+  { value: 'Housing', label: 'Ministry of Housing & Urban Affairs' },
+  { value: 'Skill', label: 'Ministry of Skill Development' },
+]
+
+const SORT_OPTIONS = [
+  { value: 'verified', label: 'Sort by: Latest Verified' },
+  { value: 'name', label: 'Name (A-Z)' },
+  { value: 'benefit', label: 'Max Financial Benefit' },
+]
 
 const ITEMS_PER_PAGE = 6 // Strict 2-row layout (2 rows of 3 schemes on desktop)
 
@@ -272,53 +298,31 @@ export default function SchemeExplorer() {
               </div>
 
               {/* Category Dropdown */}
-              <div className="relative bg-white rounded-lg border border-[#E2E8F0] shadow-2xs flex items-center px-3">
-                <span className="material-symbols-outlined text-[#44474E] text-[18px] mr-2">category</span>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full py-2.5 bg-transparent border-none text-[#111C2D] focus:outline-none cursor-pointer text-xs font-bold"
-                >
-                  <option value="all">All Categories</option>
-                  <option value="Agriculture">Agriculture &amp; Farmers</option>
-                  <option value="Education">Education &amp; Scholarships</option>
-                  <option value="Healthcare">Healthcare &amp; Ayushman</option>
-                  <option value="Housing">Housing &amp; Urban</option>
-                  <option value="Financial Aid">Financial Aid &amp; Credit</option>
-                  <option value="Employment">Skill &amp; Employment</option>
-                </select>
-              </div>
+              <CustomDropdown
+                value={category}
+                onChange={setCategory}
+                options={CATEGORY_OPTIONS}
+                icon="category"
+                variant="compact"
+              />
 
               {/* Ministry Dropdown */}
-              <div className="relative bg-white rounded-lg border border-[#E2E8F0] shadow-2xs flex items-center px-3">
-                <span className="material-symbols-outlined text-[#44474E] text-[18px] mr-2">account_balance</span>
-                <select
-                  value={ministry}
-                  onChange={(e) => setMinistry(e.target.value)}
-                  className="w-full py-2.5 bg-transparent border-none text-[#111C2D] focus:outline-none cursor-pointer text-xs font-bold truncate"
-                >
-                  <option value="all">All Issuing Ministries / Depts</option>
-                  <option value="Agriculture">Ministry of Agriculture</option>
-                  <option value="Higher">Higher &amp; Technical Education (MH)</option>
-                  <option value="Health">Ministry of Health &amp; Family Welfare</option>
-                  <option value="Housing">Ministry of Housing &amp; Urban Affairs</option>
-                  <option value="Skill">Ministry of Skill Development</option>
-                </select>
-              </div>
+              <CustomDropdown
+                value={ministry}
+                onChange={setMinistry}
+                options={MINISTRY_OPTIONS}
+                icon="account_balance"
+                variant="compact"
+              />
 
               {/* Sort Dropdown */}
-              <div className="relative bg-white rounded-lg border border-[#E2E8F0] shadow-2xs flex items-center px-3">
-                <span className="material-symbols-outlined text-[#44474E] text-[18px] mr-2">swap_vert</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full py-2.5 bg-transparent border-none text-[#111C2D] focus:outline-none cursor-pointer text-xs font-bold"
-                >
-                  <option value="verified">Sort by: Latest Verified</option>
-                  <option value="name">Name (A-Z)</option>
-                  <option value="benefit">Max Financial Benefit</option>
-                </select>
-              </div>
+              <CustomDropdown
+                value={sortBy}
+                onChange={setSortBy}
+                options={SORT_OPTIONS}
+                icon="swap_vert"
+                variant="compact"
+              />
             </div>
           </div>
         </div>

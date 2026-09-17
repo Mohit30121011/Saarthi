@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getProfile, updateProfile } from '../api/profile'
 import { useAuth } from '../context/AuthContext'
 import { ProfileSkeleton } from '../components/Skeletons'
+import CustomDropdown from '../components/CustomDropdown'
 import headshotImg from '../assets/indian-citizen-headshot.png'
 
 const GENDERS = [
@@ -303,24 +304,16 @@ export default function Profile() {
                     <label className="block text-xs font-bold text-[#0D2240]" htmlFor="gender">
                       Gender (लिंग)
                     </label>
-                    <div className="relative flex items-center">
-                      <span className="material-symbols-outlined absolute left-3.5 text-[18px] text-slate-400 pointer-events-none">
-                        person
-                      </span>
-                      <select
-                        id="gender"
-                        value={form.gender}
-                        onChange={(e) => setField('gender', e.target.value)}
-                        className="w-full h-11 pl-10 pr-3.5 bg-[#F0F3FF] border border-[#DEE8FF] rounded-xl text-xs sm:text-sm font-medium text-[#111C2D] focus:bg-white focus:border-[#0D2240] focus:ring-2 focus:ring-[#0D2240]/10 focus:outline-none transition-all cursor-pointer"
-                      >
-                        <option value="">Select Gender</option>
-                        {GENDERS.map((g) => (
-                          <option key={g.value} value={g.value}>
-                            {g.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <CustomDropdown
+                      id="gender"
+                      value={form.gender}
+                      onChange={(val) => setField('gender', val)}
+                      options={GENDERS}
+                      placeholder="Select Gender"
+                      icon="person"
+                      variant="form"
+                      clearable
+                    />
                   </div>
 
                   {/* State of Domicile */}
@@ -402,24 +395,16 @@ export default function Profile() {
                     <label className="block text-xs font-bold text-[#0D2240]" htmlFor="occupation">
                       Occupation (व्यवसाय)
                     </label>
-                    <div className="relative flex items-center">
-                      <span className="material-symbols-outlined absolute left-3.5 text-[18px] text-slate-400 pointer-events-none">
-                        work
-                      </span>
-                      <select
-                        id="occupation"
-                        value={form.occupation}
-                        onChange={(e) => setField('occupation', e.target.value)}
-                        className="w-full h-11 pl-10 pr-3.5 bg-[#F0F3FF] border border-[#DEE8FF] rounded-xl text-xs sm:text-sm font-medium text-[#111C2D] focus:bg-white focus:border-[#0D2240] focus:ring-2 focus:ring-[#0D2240]/10 focus:outline-none transition-all cursor-pointer"
-                      >
-                        <option value="">Select Occupation</option>
-                        {OCCUPATIONS.map((o) => (
-                          <option key={o} value={o}>
-                            {o}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <CustomDropdown
+                      id="occupation"
+                      value={form.occupation}
+                      onChange={(val) => setField('occupation', val)}
+                      options={OCCUPATIONS}
+                      placeholder="Select Occupation"
+                      icon="work"
+                      variant="form"
+                      clearable
+                    />
                   </div>
 
                   {/* Social Category */}
@@ -427,24 +412,16 @@ export default function Profile() {
                     <label className="block text-xs font-bold text-[#0D2240]" htmlFor="category">
                       Social Category / Caste Group (प्रवर्ग)
                     </label>
-                    <div className="relative flex items-center">
-                      <span className="material-symbols-outlined absolute left-3.5 text-[18px] text-slate-400 pointer-events-none">
-                        groups
-                      </span>
-                      <select
-                        id="category"
-                        value={form.category}
-                        onChange={(e) => setField('category', e.target.value)}
-                        className="w-full h-11 pl-10 pr-3.5 bg-[#F0F3FF] border border-[#DEE8FF] rounded-xl text-xs sm:text-sm font-medium text-[#111C2D] focus:bg-white focus:border-[#0D2240] focus:ring-2 focus:ring-[#0D2240]/10 focus:outline-none transition-all cursor-pointer"
-                      >
-                        <option value="">Select Category</option>
-                        {CATEGORIES.map((c) => (
-                          <option key={c.value} value={c.value}>
-                            {c.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <CustomDropdown
+                      id="category"
+                      value={form.category}
+                      onChange={(val) => setField('category', val)}
+                      options={CATEGORIES}
+                      placeholder="Select Category"
+                      icon="groups"
+                      variant="form"
+                      clearable
+                    />
                   </div>
 
                   {/* Education Level */}
@@ -452,24 +429,16 @@ export default function Profile() {
                     <label className="block text-xs font-bold text-[#0D2240]" htmlFor="education">
                       Highest Education Level (शिक्षण पातळी)
                     </label>
-                    <div className="relative flex items-center">
-                      <span className="material-symbols-outlined absolute left-3.5 text-[18px] text-slate-400 pointer-events-none">
-                        school
-                      </span>
-                      <select
-                        id="education"
-                        value={form.educationLevel}
-                        onChange={(e) => setField('educationLevel', e.target.value)}
-                        className="w-full h-11 pl-10 pr-3.5 bg-[#F0F3FF] border border-[#DEE8FF] rounded-xl text-xs sm:text-sm font-medium text-[#111C2D] focus:bg-white focus:border-[#0D2240] focus:ring-2 focus:ring-[#0D2240]/10 focus:outline-none transition-all cursor-pointer"
-                      >
-                        <option value="">Select Education Level</option>
-                        {EDUCATION_LEVELS.map((lvl) => (
-                          <option key={lvl} value={lvl}>
-                            {lvl}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <CustomDropdown
+                      id="education"
+                      value={form.educationLevel}
+                      onChange={(val) => setField('educationLevel', val)}
+                      options={EDUCATION_LEVELS}
+                      placeholder="Select Education Level"
+                      icon="school"
+                      variant="form"
+                      clearable
+                    />
                   </div>
                 </div>
               </div>
