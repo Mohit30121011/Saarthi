@@ -18,8 +18,6 @@ public class GroqClient implements LlmClient {
     private static final String ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
     private final HttpClient http = HttpClient.newHttpClient();
-    private final String apiKey = ChatbotConfig.groqApiKey();
-    private final String model = ChatbotConfig.groqModel();
 
     @Override
     public boolean isConfigured() {
@@ -33,6 +31,9 @@ public class GroqClient implements LlmClient {
 
     @Override
     public String complete(String systemPrompt, String userPrompt) throws IOException, InterruptedException {
+        String apiKey = ChatbotConfig.groqApiKey();
+        String model = ChatbotConfig.groqModel();
+
         JsonObject body = new JsonObject();
         body.addProperty("model", model);
         body.addProperty("temperature", 0.3);

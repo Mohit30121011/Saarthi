@@ -19,8 +19,6 @@ public class GeminiClient implements LlmClient {
             "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent";
 
     private final HttpClient http = HttpClient.newHttpClient();
-    private final String apiKey = ChatbotConfig.geminiApiKey();
-    private final String model = ChatbotConfig.geminiModel();
 
     @Override
     public boolean isConfigured() {
@@ -34,6 +32,9 @@ public class GeminiClient implements LlmClient {
 
     @Override
     public String complete(String systemPrompt, String userPrompt) throws IOException, InterruptedException {
+        String apiKey = ChatbotConfig.geminiApiKey();
+        String model = ChatbotConfig.geminiModel();
+
         JsonObject body = new JsonObject();
 
         JsonObject systemInstruction = new JsonObject();

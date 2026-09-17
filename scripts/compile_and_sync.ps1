@@ -31,7 +31,13 @@ javac -encoding UTF-8 -d "$webContent\WEB-INF\classes" -cp $cp $javaSources
 Write-Host "Compilation to $webContent\WEB-INF\classes completed successfully!"
 
 Write-Host "4. Copying resources (.properties)..."
-Copy-Item -Path "$projectRoot\backend\src\*.properties" -Destination "$webContent\WEB-INF\classes" -Force
+if (Test-Path "$projectRoot\src\main\webapp\WEB-INF\classes\chatbot.properties") {
+    Copy-Item -Path "$projectRoot\src\main\webapp\WEB-INF\classes\chatbot.properties" -Destination "$projectRoot\backend\src\chatbot.properties" -Force
+    Copy-Item -Path "$projectRoot\src\main\webapp\WEB-INF\classes\chatbot.properties" -Destination "$webContent\WEB-INF\classes\chatbot.properties" -Force
+}
+if (Test-Path "$projectRoot\backend\src\*.properties") {
+    Copy-Item -Path "$projectRoot\backend\src\*.properties" -Destination "$webContent\WEB-INF\classes" -Force
+}
 
 Write-Host "5. Syncing classes to build/classes, src/main/webapp, and wtpwebapps..."
 if (Test-Path $buildClasses) {
