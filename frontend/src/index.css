@@ -157,7 +157,6 @@ body {
 
 /* Google Translate Silent Seamless Integration */
 .goog-te-banner-frame,
-.skiptranslate,
 #goog-gt-tt,
 .goog-te-balloon-frame {
   display: none !important;
@@ -166,6 +165,7 @@ body {
 
 body {
   top: 0px !important;
+  position: static !important;
 }
 
 .goog-tooltip,
