@@ -258,7 +258,7 @@ export default function AppShell() {
           <div className="bg-[#138808] h-full" />
         </div>
 
-        {/* Sub-Header: Government Provenance & Language */}
+        {/* Sub-Header: Government Provenance */}
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
           <div className="h-9 sm:h-10 flex items-center justify-between border-b border-[#E2E8F0] text-[#44474E] text-[11px] sm:text-xs font-semibold gap-2">
             <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
@@ -270,7 +270,10 @@ export default function AppShell() {
               <span className="hidden md:inline text-[#C4C6CE]">|</span>
               <span className="hidden md:inline text-[#111C2D]">{t('service_gateway', 'Official Citizen Service Gateway')}</span>
             </div>
-            <LanguageSwitcher />
+            <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-bold text-[#138808] bg-[#EAFBF0] px-2 py-0.5 rounded-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#138808] animate-pulse" />
+              <span>Official Citizen Portal</span>
+            </div>
           </div>
 
           {/* Main Header Bar */}
@@ -565,6 +568,23 @@ export default function AppShell() {
                   {mobileMenuOpen ? 'close' : 'menu'}
                 </span>
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Sub-Navbar Utility Bar: Below the Navigation Bar */}
+        <div className="w-full bg-[#F8FAFC]/95 border-t border-[#E2E8F0] py-1.5 px-4 sm:px-6 lg:px-8 xl:px-12 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <div className="flex items-center justify-between gap-3">
+            <div className="hidden sm:flex items-center gap-2 text-[11.5px] font-semibold text-[#555E6D]">
+              <span className="inline-flex items-center gap-1.5 text-[#138808]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#138808] animate-pulse" />
+                <span className="font-bold">{t('portal_active', 'National Scheme Portal Live')}</span>
+              </span>
+              <span className="text-[#CBD5E1]">|</span>
+              <span className="text-[#44474E]">{t('multilingual_support', 'Multi-lingual Citizen Support (16 Languages)')}</span>
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <LanguageSwitcher />
             </div>
           </div>
         </div>
