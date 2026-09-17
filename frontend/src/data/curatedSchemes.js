@@ -1,12 +1,13 @@
 // frontend/src/data/curatedSchemes.js
-// Curation data and helper utilities for Trending and Seasonal Government Welfare Schemes
+// Curation data and helper utilities for Trending and Seasonal Government Welfare Schemes (No emojis; pure high-level icons)
 
 export const TRENDING_METADATA = {
   // Flagship Central Schemes
   'Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)': {
     isTrending: true,
     trendingRank: 1,
-    badgeText: '🔥 Flagship DBT',
+    badgeText: 'Flagship DBT',
+    iconName: 'trending_up',
     metric: '110M+ Farmers Enrolled',
     highlight: '₹6,000/year directly to Aadhaar-linked bank account in 3 installments.',
     accentColor: '#E65100', // Saffron
@@ -14,7 +15,8 @@ export const TRENDING_METADATA = {
   'Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (PM-JAY)': {
     isTrending: true,
     trendingRank: 2,
-    badgeText: '🔥 550M+ Covered',
+    badgeText: '550M+ Beneficiaries',
+    iconName: 'health_and_safety',
     metric: 'Cashless Hospitalization',
     highlight: 'Up to ₹5 Lakh cashless treatment per family/year across empaneled hospitals.',
     accentColor: '#138808', // Harita Green
@@ -22,7 +24,8 @@ export const TRENDING_METADATA = {
   'Pradhan Mantri Awas Yojana - Urban (PMAY-U 2.0)': {
     isTrending: true,
     trendingRank: 3,
-    badgeText: '🔥 High Application Volume',
+    badgeText: 'High Demand Housing',
+    iconName: 'home',
     metric: 'Housing Subsidy',
     highlight: 'Interest subsidy & central assistance for pucca house construction.',
     accentColor: '#0D2240', // Navy
@@ -30,7 +33,8 @@ export const TRENDING_METADATA = {
   'Prime Minister\'s Employment Generation Programme (PMEGP)': {
     isTrending: true,
     trendingRank: 4,
-    badgeText: '⚡ Top Entrepreneurship Pick',
+    badgeText: 'Top Entrepreneurship Subsidy',
+    iconName: 'rocket_launch',
     metric: 'Up to 35% Capital Subsidy',
     highlight: 'Credit-linked subsidy for new micro-enterprises up to ₹50 Lakh.',
     accentColor: '#7C3AED',
@@ -38,7 +42,8 @@ export const TRENDING_METADATA = {
   'PM Vishwakarma Yojana': {
     isTrending: true,
     trendingRank: 5,
-    badgeText: '🔥 Artisans Priority',
+    badgeText: 'Traditional Artisans Priority',
+    iconName: 'construction',
     metric: '18 Traditional Trades',
     highlight: '₹15,000 toolkit grant + up to ₹3 Lakh collateral-free loan at 5% interest.',
     accentColor: '#D97706',
@@ -46,7 +51,8 @@ export const TRENDING_METADATA = {
   'Sukanya Samriddhi Yojana': {
     isTrending: true,
     trendingRank: 6,
-    badgeText: '🌟 Highest Interest Small Savings',
+    badgeText: 'High-Yield Small Savings',
+    iconName: 'savings',
     metric: '8.2% Sovereign Yield',
     highlight: 'Tax-free small savings scheme for girl child with 8.2% annual compounded interest.',
     accentColor: '#BE185D',
@@ -54,7 +60,8 @@ export const TRENDING_METADATA = {
   'Pradhan Mantri MUDRA Yojana (PMMY)': {
     isTrending: true,
     trendingRank: 7,
-    badgeText: '⚡ Micro-Credit Surge',
+    badgeText: 'Micro-Credit Surge',
+    iconName: 'account_balance',
     metric: 'Loans Up to ₹20 Lakh',
     highlight: 'Collateral-free micro-credit across Shishu, Kishor, and Tarun categories.',
     accentColor: '#0284C7',
@@ -64,7 +71,8 @@ export const TRENDING_METADATA = {
   'Mukhyamantri Majhi Ladki Bahin Yojana': {
     isTrending: true,
     trendingRank: 1,
-    badgeText: '🔥 Maharashtra Flagship',
+    badgeText: 'Maharashtra Flagship',
+    iconName: 'star',
     metric: '20M+ Women Registered',
     highlight: 'Monthly financial assistance of ₹1,500 directly transferred to eligible women.',
     accentColor: '#E65100',
@@ -72,7 +80,8 @@ export const TRENDING_METADATA = {
   'Namo Shetkari Mahasanman Nidhi Yojana': {
     isTrending: true,
     trendingRank: 2,
-    badgeText: '🔥 Maharashtra Double Benefit',
+    badgeText: 'Maharashtra Farmer Top-Up',
+    iconName: 'agriculture',
     metric: '₹6,000/yr State Top-Up',
     highlight: 'Additional ₹6,000/year to PM-KISAN registered landholding farmers in Maharashtra.',
     accentColor: '#138808',
@@ -80,7 +89,8 @@ export const TRENDING_METADATA = {
   'Mahatma Jyotiba Phule Jan Arogya Yojana (MJPJAY)': {
     isTrending: true,
     trendingRank: 3,
-    badgeText: '🔥 Universal State Cover',
+    badgeText: 'Universal State Cover',
+    iconName: 'local_hospital',
     metric: '₹1.5L - ₹5L Coverage',
     highlight: 'Cashless healthcare cover across government and empanelled private hospitals in MH.',
     accentColor: '#0284C7',
@@ -88,7 +98,8 @@ export const TRENDING_METADATA = {
   'Lek Ladki Yojana': {
     isTrending: true,
     trendingRank: 4,
-    badgeText: '🌟 Girl Child Welfare',
+    badgeText: 'Girl Child Welfare',
+    iconName: 'family_restroom',
     metric: 'Total ₹1,01,000 Benefit',
     highlight: 'Direct financial assistance in 5 phases from birth until the girl child turns 18.',
     accentColor: '#BE185D',
@@ -101,7 +112,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'agriculture',
     seasonName: 'Kharif Agricultural Season',
-    statusTag: '🌾 Crop Insurance Window Active',
+    statusTag: 'Crop Insurance Window Active',
+    iconName: 'agriculture',
     urgencyText: 'Farmer premium capped at 2% for Kharif crops.',
     windowLabel: 'Sowing Window Open',
     themeBg: 'from-emerald-950 via-teal-900 to-[#0D2240]',
@@ -111,7 +123,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'agriculture',
     seasonName: 'Kharif Irrigation Window',
-    statusTag: '💧 Micro-Irrigation Subsidy Open',
+    statusTag: 'Micro-Irrigation Subsidy Open',
+    iconName: 'water_drop',
     urgencyText: '55% capital subsidy for small & marginal farmers on drip/sprinkler systems.',
     windowLabel: 'Sanctions Underway',
     themeBg: 'from-cyan-950 via-blue-900 to-[#0D2240]',
@@ -121,7 +134,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'agriculture',
     seasonName: 'Seasonal Crop Loan Cycle',
-    statusTag: '🌾 Kharif Credit Disbursement',
+    statusTag: 'Kharif Credit Disbursement',
+    iconName: 'credit_card',
     urgencyText: 'Interest subvention at effective 4% for timely loan repayment.',
     windowLabel: 'Bank Sanctions Active',
     themeBg: 'from-amber-950 via-emerald-900 to-[#0D2240]',
@@ -133,7 +147,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'education',
     seasonName: 'Academic Year 2026-27',
-    statusTag: '🎓 MahaDBT Portal Open',
+    statusTag: 'MahaDBT Admissions Open',
+    iconName: 'school',
     urgencyText: '100% Tuition fee reimbursement for professional/technical courses.',
     windowLabel: 'Fresh & Renewal Open',
     themeBg: 'from-indigo-950 via-blue-900 to-[#0D2240]',
@@ -143,7 +158,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'education',
     seasonName: 'National Scholarship Portal',
-    statusTag: '🎓 NSP Admissions Cycle Active',
+    statusTag: 'NSP Admissions Cycle Active',
+    iconName: 'school',
     urgencyText: 'Maintenance allowance and institutional fee waiver for Class 11 & above.',
     windowLabel: 'NSP Window Open',
     themeBg: 'from-purple-950 via-indigo-900 to-[#0D2240]',
@@ -153,7 +169,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'education',
     seasonName: 'Secondary School Intake',
-    statusTag: '🎓 Class 9-12 Admission Cycle',
+    statusTag: 'Class 9-12 Admission Cycle',
+    iconName: 'school',
     urgencyText: '₹12,000 per annum (₹1,000/month) to meritorious students.',
     windowLabel: 'Fresh Applications Open',
     themeBg: 'from-sky-950 via-indigo-900 to-[#0D2240]',
@@ -163,7 +180,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'education',
     seasonName: 'Premier Institute Intake',
-    statusTag: '🎓 IIT / IIM / NIT Admission Cycle',
+    statusTag: 'IIT / IIM / NIT Admission Cycle',
+    iconName: 'school',
     urgencyText: 'Full tuition reimbursement + ₹86,000 first year academic allowance.',
     windowLabel: 'NSP Admission Window',
     themeBg: 'from-blue-950 via-indigo-900 to-[#0D2240]',
@@ -173,7 +191,8 @@ export const SEASONAL_METADATA = {
     isSeasonal: true,
     seasonType: 'education',
     seasonName: 'Technical Admissions 2026-27',
-    statusTag: '🎓 AICTE Diploma/Degree Window',
+    statusTag: 'AICTE Technical Window',
+    iconName: 'school',
     urgencyText: '₹50,000 per annum for girl students in approved technical courses.',
     windowLabel: 'Portal Active',
     themeBg: 'from-pink-950 via-purple-900 to-[#0D2240]',

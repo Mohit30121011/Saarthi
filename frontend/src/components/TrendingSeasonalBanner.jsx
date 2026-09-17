@@ -74,16 +74,19 @@ export default function TrendingSeasonalBanner({
               <span>Smart Citizen Curation</span>
             </div>
             <h2 className="font-display text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight flex items-center gap-2">
-              <span>{activeTab === 'trending' ? '🔥 Trending Welfare Schemes' : '🌾 Seasonal & Time-Sensitive Windows'}</span>
+              <span className="material-symbols-outlined text-[24px] text-[#FF7722]">
+                {activeTab === 'trending' ? 'trending_up' : 'calendar_month'}
+              </span>
+              <span>{activeTab === 'trending' ? 'Trending Welfare Schemes' : 'Seasonal & Time-Sensitive Windows'}</span>
             </h2>
             <p className="text-xs text-white/75">
               {activeTab === 'trending'
-                ? 'High-demand citizen programs with massive DBT disbursements across Central & Maharashtra registries.'
-                : 'Active deadlines for Kharif agriculture, crop insurance, and academic scholarship intake cycles.'}
+                ? 'High-demand citizen programs with massive direct benefit transfer disbursements across Central & Maharashtra registries.'
+                : 'Active statutory deadlines for Kharif agriculture, crop insurance, and academic scholarship intake cycles.'}
             </p>
           </div>
 
-          {/* Interactive Mode Switcher Tabs */}
+          {/* Interactive Mode Switcher Tabs (Zero emojis; high-level icons) */}
           <div className="flex items-center bg-black/25 p-1 rounded-xl border border-white/10 shrink-0 self-start md:self-auto">
             <button
               type="button"
@@ -94,7 +97,7 @@ export default function TrendingSeasonalBanner({
                   : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
-              <span className="material-symbols-outlined text-[16px]">local_fire_department</span>
+              <span className="material-symbols-outlined text-[16px]">trending_up</span>
               <span>Trending ({trendingList.length})</span>
             </button>
             <button
@@ -106,7 +109,7 @@ export default function TrendingSeasonalBanner({
                   : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
-              <span className="material-symbols-outlined text-[16px]">calendar_month</span>
+              <span className="material-symbols-outlined text-[16px]">event_available</span>
               <span>Seasonal Windows ({seasonalList.length})</span>
             </button>
           </div>
@@ -122,13 +125,15 @@ export default function TrendingSeasonalBanner({
               Showing {currentIndex + 1} - {Math.min(currentIndex + itemsPerPage, activeItems.length)} of {activeItems.length} Featured
             </span>
             {activeTab === 'trending' && (
-              <span className="px-2 py-0.5 rounded bg-orange-100 text-orange-800 text-[10px] font-bold">
-                ⚡ Most Applied This Month
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-orange-100 text-orange-900 text-[10.5px] font-bold">
+                <span className="material-symbols-outlined text-[13px] text-[#E65100]">bolt</span>
+                <span>High Citizen Uptake</span>
               </span>
             )}
             {activeTab === 'seasonal' && (
-              <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                ⏳ Application Window Active
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-900 text-[10.5px] font-bold">
+                <span className="material-symbols-outlined text-[13px] text-[#138808]">schedule</span>
+                <span>Application Window Active</span>
               </span>
             )}
           </div>
@@ -189,15 +194,15 @@ export default function TrendingSeasonalBanner({
                       </span>
                     </div>
 
-                    {/* Trending or Seasonal Callout Badge */}
+                    {/* Trending or Seasonal Callout Badge (No emojis) */}
                     {activeTab === 'trending' && trendingMeta ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-50 text-[#E65100] border border-orange-200 text-[10px] font-bold shrink-0">
-                        <span className="material-symbols-outlined text-[12px]">local_fire_department</span>
+                        <span className="material-symbols-outlined text-[13px]">{trendingMeta.iconName || 'trending_up'}</span>
                         <span>{trendingMeta.badgeText}</span>
                       </span>
                     ) : seasonalMeta ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-[#138808] border border-emerald-200 text-[10px] font-bold shrink-0">
-                        <span className="material-symbols-outlined text-[12px]">verified</span>
+                        <span className="material-symbols-outlined text-[13px]">{seasonalMeta.iconName || 'event_available'}</span>
                         <span>{seasonalMeta.windowLabel}</span>
                       </span>
                     ) : null}

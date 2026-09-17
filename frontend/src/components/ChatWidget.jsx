@@ -646,7 +646,7 @@ export default function ChatWidget() {
               {messages.length === 0 && (
                 <div className="bg-slate-surface-elevated p-3.5 rounded-xl border border-slate-border text-center space-y-1.5 shadow-2xs">
                   <p className="font-headline-sm font-bold text-chakra-blue text-sm">
-                    Namaste {userFirstName}! 🙏
+                    Namaste {userFirstName}!
                   </p>
                   <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
                     I am your citizen welfare assistant. Ask any question regarding Central &amp; Maharashtra scheme eligibility, documents, or application processes.

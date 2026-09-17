@@ -10,6 +10,7 @@ import SchemeCard from '../components/SchemeCard'
 import Pagination from '../components/Pagination'
 import { DashboardSkeleton, SchemeCardSkeleton } from '../components/Skeletons'
 import { exportSummaryPdf, generateSummaryDossierHtml } from '../utils/exportSummaryPdf'
+import TrendingSeasonalBanner from '../components/TrendingSeasonalBanner'
 
 const CATEGORIES = [
   { id: 'all', label: 'All Schemes', icon: 'tune' },
@@ -37,6 +38,7 @@ export default function Dashboard() {
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [totalCatalogCount, setTotalCatalogCount] = useState(52)
+  const [catalogSchemes, setCatalogSchemes] = useState([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState('Just now')
@@ -69,6 +71,7 @@ export default function Dashboard() {
         setChecklist(checklistRes.value || {})
       }
       if (catalogRes.status === 'fulfilled' && Array.isArray(catalogRes.value)) {
+        setCatalogSchemes(catalogRes.value)
         setTotalCatalogCount(catalogRes.value.length)
       }
       setLastUpdated(`${formatCurrentDateTime()} IST`)
@@ -499,42 +502,11 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Trending & Seasonal Citizen Highlights Strip */}
-        <div className="rounded-2xl p-4 sm:p-5 bg-gradient-to-r from-[#0D2240] via-[#1A365D] to-[#0D2240] text-white border border-[#CBD5E1] shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0 backdrop-blur-md border border-white/15">
-              <span className="material-symbols-outlined text-[24px] text-[#E65100]">local_fire_department</span>
-            </div>
-            <div>
-              <div className="inline-flex items-center gap-2 text-[11px] font-bold text-white/80 uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-                <span>Live Welfare Highlights • Central &amp; Maharashtra</span>
-              </div>
-              <h3 className="font-display text-sm sm:text-base font-extrabold text-white">
-                Discover Trending Flagship &amp; Seasonal Application Windows
-              </h3>
-              <p className="text-xs text-white/70 mt-0.5">
-                Kharif sowing insurance, PM-KISAN 17th installment, and 2026-27 scholarship admissions are now accepting applications.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2.5 shrink-0">
-            <Link
-              to="/explorer?curation=trending"
-              className="px-3.5 py-2 rounded-xl bg-[#E65100] hover:bg-[#FF7722] text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5"
-            >
-              <span className="material-symbols-outlined text-[16px]">local_fire_department</span>
-              <span>Trending Schemes</span>
-            </Link>
-            <Link
-              to="/explorer?curation=seasonal"
-              className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition-all flex items-center gap-1.5"
-            >
-              <span className="material-symbols-outlined text-[16px]">calendar_month</span>
-              <span>Seasonal Windows</span>
-            </Link>
-          </div>
-        </div>
+        {/* Featured Trending & Seasonal Showcase Carousel Banner */}
+        <TrendingSeasonalBanner
+          catalogSchemes={catalogSchemes.length > 0 ? catalogSchemes : allMatches.map((m) => m.scheme || m)}
+          onSelectQuickFilter={(mode) => navigate(`/explorer?curation=${mode}`)}
+        />
 
         {/* Category Filter Bar */}
         <section className="space-y-3">
