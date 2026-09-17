@@ -554,8 +554,8 @@ export default function ChatWidget() {
                 : 'sm:bottom-22 sm:right-6 sm:w-[410px] md:w-[440px] sm:h-[620px] sm:max-h-[85vh]'
             }`}
         >
-          {/* Sleek Gradient Header with Curvy Bottom Edge */}
-          <div className="relative bg-gradient-to-r from-[#0D2240] via-[#14325C] to-[#0A1A30] text-white px-4 pt-3.5 pb-4.5 rounded-b-[26px] sm:rounded-b-[30px] flex items-center justify-between shrink-0 shadow-[0_12px_24px_-6px_rgba(13,34,64,0.35)] z-20">
+          {/* Sleek Gradient Header */}
+          <div className="relative bg-gradient-to-r from-[#0D2240] via-[#14325C] to-[#0A1A30] text-white px-4 pt-3.5 pb-4 flex items-center justify-between shrink-0 z-10">
             {/* Top Tricolor Strip */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E65100] via-white to-[#138808]" />
 
@@ -650,12 +650,12 @@ export default function ChatWidget() {
             </div>
           )}
 
-          {/* Chat Stream Body with Curvy Top Under Header */}
-          <div className="relative flex-1 min-h-0 bg-slate-50/80 -mt-3.5 pt-5 z-10">
+          {/* White Chat Area with Curvy Rounded Top Border */}
+          <div className="relative flex-1 min-h-0 bg-white rounded-t-[28px] sm:rounded-t-[32px] shadow-[0_-8px_24px_-6px_rgba(13,34,64,0.18)] z-20 flex flex-col overflow-hidden border-t border-slate-100">
             <div
               ref={scrollRef}
               onScroll={handleScroll}
-              className="no-scrollbar absolute inset-0 p-4 pt-5 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden"
+              className="no-scrollbar absolute inset-0 p-4 pt-4.5 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden bg-[#F8FAFC]"
             >
               {/* Empty State Welcome Card */}
               {messages.length === 0 && (
