@@ -7,7 +7,6 @@ import { getBookmarks } from '../api/bookmarks'
 import { getChecklist } from '../api/checklist'
 import { searchSchemes } from '../api/schemes'
 import SchemeCard from '../components/SchemeCard'
-import Pagination from '../components/Pagination'
 import WhatIfSimulator from '../components/WhatIfSimulator'
 import { DashboardSkeleton, SchemeCardSkeleton } from '../components/Skeletons'
 import { exportSummaryPdf, generateSummaryDossierHtml } from '../utils/exportSummaryPdf'
@@ -750,21 +749,6 @@ export default function Dashboard() {
               )}
             </div>
           </>
-        )}
-
-        {/* Custom Civic Modern Pagination */}
-        {!refreshing && filteredSchemes.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={filteredSchemes.length}
-            itemsPerPage={SCHEMES_PER_PAGE}
-            onPageChange={(page) => {
-              setCurrentPage(page)
-              document.getElementById('dashboard-schemes-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }}
-            itemLabel="eligible schemes"
-          />
         )}
       </div>
 
