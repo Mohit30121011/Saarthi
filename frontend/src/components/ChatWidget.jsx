@@ -499,39 +499,43 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating Pill Launcher (when closed) */}
+      {/* Floating Pill Launcher (Crisp White Modern Design) */}
       <div className="fixed bottom-6 right-6 z-40">
         <button
           onClick={() => setOpen((v) => !v)}
           type="button"
           aria-label={open ? 'Close SAARTHI AI Assistant' : 'Open SAARTHI AI Assistant'}
-          className="group relative flex items-center gap-3 px-4 py-3 rounded-full bg-gradient-to-r from-[#0D2240] via-[#153460] to-[#0A1A30] text-white shadow-[0_10px_30px_-5px_rgba(13,34,64,0.35)] hover:shadow-[0_15px_40px_-5px_rgba(13,34,64,0.45)] hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-white/15 cursor-pointer backdrop-blur-md"
+          className="group relative flex items-center gap-3 px-4 py-2.5 sm:py-3 rounded-full bg-white/95 backdrop-blur-md text-[#0D2240] shadow-[0_12px_36px_-4px_rgba(13,34,64,0.18)] hover:shadow-[0_20px_44px_-4px_rgba(13,34,64,0.28)] hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-slate-200/90 hover:border-blue-300 cursor-pointer"
         >
-          {/* Glowing tricolor edge highlight */}
-          <div className="absolute -inset-[1px] bg-gradient-to-r from-[#E65100] via-white to-[#138808] rounded-full opacity-30 group-hover:opacity-70 blur-xs transition-opacity duration-500 pointer-events-none" />
+          {/* Subtle Tricolor Top Glow */}
+          <div className="absolute top-0 left-4 right-4 h-[2px] bg-gradient-to-r from-[#E65100] via-slate-300 to-[#138808] rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
 
           {/* AI Avatar Icon with pulsing dot */}
-          <div className="relative w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <span className="material-symbols-outlined text-[#E65100] text-[20px]">
+          <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-[#0D2240] to-[#1A365D] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+            <span className="material-symbols-outlined text-[#FF9E80] text-[20px]">
               smart_toy
             </span>
-            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0D2240] animate-pulse" />
+            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white animate-pulse" />
           </div>
 
           <div className="flex flex-col text-left">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-black text-white tracking-wide">SAARTHI AI</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-[#FFF3EB] text-[#E65100] text-[9.5px] font-extrabold">सारथी</span>
+              <span className="text-xs font-black text-[#0D2240] tracking-wide">SAARTHI AI</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-[#FFF3EB] text-[#E65100] border border-[#E65100]/20 text-[9.5px] font-extrabold">
+                सारथी
+              </span>
             </div>
-            <span className="text-[10.5px] text-white/70 font-medium">Civic Welfare Assistant</span>
+            <span className="text-[11px] text-[#44474E] font-medium leading-tight">
+              Civic Welfare Assistant
+            </span>
           </div>
 
-          <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white group-hover:bg-white/20 transition-all ml-1">
-            <span className="material-symbols-outlined text-[15px]">{open ? 'expand_more' : 'chat'}</span>
+          <div className="w-7 h-7 rounded-full bg-[#F0F3FF] text-[#0D2240] flex items-center justify-center group-hover:bg-[#0D2240] group-hover:text-white transition-all shadow-2xs ml-0.5">
+            <span className="material-symbols-outlined text-[16px]">{open ? 'expand_more' : 'chat'}</span>
           </div>
 
           {!open && unreadCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white shadow-xs animate-bounce">
+            <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#E65100] text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white shadow-xs animate-bounce">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
