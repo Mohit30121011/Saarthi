@@ -4,6 +4,8 @@ import { getSchemeDetail } from '../api/schemes'
 import { addBookmark, removeBookmark, getBookmarks } from '../api/bookmarks'
 import { useAuth } from '../context/AuthContext'
 import { SchemeDetailSkeleton } from '../components/Skeletons'
+import SchemeTrustBadge from '../components/SchemeTrustBadge'
+import SchemeReviewSection from '../components/SchemeReviewSection'
 
 const ATTRIBUTE_LABELS = {
   age: 'Age Requirement',
@@ -23,6 +25,7 @@ export default function SchemeDetail() {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   const [detail, setDetail] = useState(null)
+  const [dynamicVerifiedAt, setDynamicVerifiedAt] = useState(null)
   const [bookmarked, setBookmarked] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -32,7 +35,10 @@ export default function SchemeDetail() {
     setLoading(true)
     setError('')
     getSchemeDetail(schemeId)
-      .then(setDetail)
+      .then((data) => {
+        setDetail(data)
+        if (data?.verifiedAt) setDynamicVerifiedAt(data.verifiedAt)
+      })
       .catch((err) => setError(err.response?.data?.error || 'Could not load this scheme.'))
       .finally(() => setLoading(false))
 
@@ -147,8 +153,8 @@ export default function SchemeDetail() {
                 {detail.nameHindi || 'राजर्षी छत्रपती शाहू महाराज शिक्षण शुल्क शिष्यवृत्ती योजना (Statutory DBT Benefit)'}
               </p>
 
-              {/* Categorical Tags */}
-              <div className="flex flex-wrap items-center gap-2">
+              {/* Categorical Tags & Trust Freshness */}
+              <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span className="px-3 py-1 rounded-lg bg-[#F0F3FF] text-[#0D2240] text-xs font-bold">
                   {isState ? 'State Scheme (Maharashtra)' : 'Central Scheme'}
                 </span>
@@ -163,6 +169,16 @@ export default function SchemeDetail() {
                   {detail.benefitAmount || 'Up to 100% Fee Waiver'}
                 </span>
               </div>
+
+              {/* Scheme Trust & Freshness Indicator (Dynamically updated from latest citizen review) */}
+              <SchemeTrustBadge
+                verifiedAt={dynamicVerifiedAt || detail.verifiedAt}
+                officialPortal={detail.officialPortal}
+                sourceUrl={detail.sourceUrl}
+                deadline={detail.deadline}
+                state={detail.state}
+                variant="hero"
+              />
             </div>
 
             {/* Action Panel */}
@@ -451,6 +467,17 @@ export default function SchemeDetail() {
             </div>
           </div>
         </div>
+
+        {/* Citizen Real-World Reviews & Ratings Section */}
+        <SchemeReviewSection
+          schemeId={detail.schemeId}
+          schemeName={detail.name}
+          onSummaryChange={(s) => {
+            if (s?.lastVerifiedAt) {
+              setDynamicVerifiedAt(s.lastVerifiedAt)
+            }
+          }}
+        />
       </div>
     </div>
   )

@@ -7,6 +7,7 @@ import { getProfile } from '../api/profile'
 import { getBookmarks } from '../api/bookmarks'
 import { getChecklist } from '../api/checklist'
 import { searchSchemes } from '../api/schemes'
+import { getRatingSummaries } from '../api/reviews'
 import SchemeCard from '../components/SchemeCard'
 import WhatIfSimulator from '../components/WhatIfSimulator'
 import { DashboardSkeleton, SchemeCardSkeleton } from '../components/Skeletons'
@@ -46,16 +47,18 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState('Just now')
   const [exportingPdf, setExportingPdf] = useState(false)
   const [showDossierModal, setShowDossierModal] = useState(false)
+  const [ratingSummaries, setRatingSummaries] = useState({})
 
   async function loadDashboardData() {
     setLoading(true)
     try {
-      const [matchesRes, profileRes, bookmarksRes, checklistRes, catalogRes] = await Promise.allSettled([
+      const [matchesRes, profileRes, bookmarksRes, checklistRes, catalogRes, reviewsRes] = await Promise.allSettled([
         getMyMatches(),
         getProfile(),
         getBookmarks(),
         getChecklist(),
         searchSchemes(),
+        getRatingSummaries(),
       ])
 
       if (matchesRes.status === 'fulfilled') {
@@ -75,6 +78,9 @@ export default function Dashboard() {
       if (catalogRes.status === 'fulfilled' && Array.isArray(catalogRes.value)) {
         setCatalogSchemes(catalogRes.value)
         setTotalCatalogCount(catalogRes.value.length)
+      }
+      if (reviewsRes.status === 'fulfilled' && reviewsRes.value) {
+        setRatingSummaries(reviewsRes.value)
       }
       setLastUpdated(`${formatCurrentDateTime()} IST`)
     } catch {
@@ -376,91 +382,154 @@ export default function Dashboard() {
             </span>
           </div>
 
-          {/* Metric Stat Tiles Bento (4 Tiles) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Metric Stat Tiles Bento (4 Tiles with Big High-Contrast Numbers & Subtle Hover Animations) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {/* Tile 1: Schemes Matched */}
-            <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
-              <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">{t('eligible_entitlements', 'Eligible Entitlements')}</span>
-                <div className="w-8 h-8 rounded-lg bg-[#EBF3FC] text-[#0D2240] flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[20px]">fact_check</span>
+            <div className="group relative p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-blue-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-blue-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+              
+              <div className="flex items-start justify-between gap-3 relative z-10">
+                <div className="space-y-0.5">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                    {t('eligible_entitlements', 'Eligible Entitlements')}
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#0D2240] border border-blue-100 flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-[#0D2240] group-hover:text-white group-hover:scale-110 transition-all duration-300">
+                  <span className="material-symbols-outlined text-[22px]">fact_check</span>
                 </div>
               </div>
-              <div className="mt-3">
+
+              <div className="my-3.5 relative z-10">
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display text-3xl font-extrabold text-[#0D2240]">{totalSchemesCount}</span>
-                  <span className="text-xs font-semibold text-[#44474E]">{t('schemes', 'Schemes')}</span>
-                </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-[#EAFBF0] text-[#138808]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#138808]" /> {strongCount} {t('strong_match', 'Strong')}
+                  <span className="font-display text-4xl sm:text-5xl font-black text-[#0D2240] tracking-tight group-hover:text-blue-950 transition-colors">
+                    {totalSchemesCount}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-[#FEF3C7] text-[#D97706]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#D97706]" /> {partialCount} {t('partial_match', 'Partial')}
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                    {t('schemes', 'Schemes')}
                   </span>
                 </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 flex items-center gap-2 flex-wrap relative z-10">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>{strongCount} {t('strong_match', 'Strong')}</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200/70 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span>{partialCount} {t('partial_match', 'Partial')}</span>
+                </span>
               </div>
             </div>
 
             {/* Tile 2: Total Value */}
-            <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
-              <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">{t('est_annual_value', 'Est. Annual Value')}</span>
-                <div className="w-8 h-8 rounded-lg bg-[#EAFBF0] text-[#138808] flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[20px]">currency_rupee</span>
+            <div className="group relative p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-emerald-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+
+              <div className="flex items-start justify-between gap-3 relative z-10">
+                <div className="space-y-0.5">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    {t('est_annual_value', 'Est. Annual Value')}
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-emerald-600 group-hover:text-white group-hover:scale-110 transition-all duration-300">
+                  <span className="material-symbols-outlined text-[22px]">currency_rupee</span>
                 </div>
               </div>
-              <div className="mt-3">
-                <div className="flex items-baseline gap-1">
-                  <span className="font-display text-3xl font-extrabold text-[#138808]">{annualValueFormatted}</span>
+
+              <div className="my-3.5 relative z-10">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-display text-3xl sm:text-4xl lg:text-[38px] font-black text-emerald-700 tracking-tight leading-none truncate group-hover:text-emerald-800 transition-colors">
+                    {annualValueFormatted}
+                  </span>
                 </div>
-                <p className="text-[11px] text-[#44474E] mt-2 line-clamp-2">
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 relative z-10">
+                <p className="text-[11.5px] text-slate-600 font-medium line-clamp-2 leading-relaxed">
                   {annualValueDescription}
                 </p>
               </div>
             </div>
 
             {/* Tile 3: Upcoming Deadlines */}
-            <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
-              <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">{t('expiring_applications', 'Expiring Applications')}</span>
-                <div className="w-8 h-8 rounded-lg bg-[#FFF3EB] text-[#E65100] flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[20px]">alarm</span>
-                </div>
-              </div>
-              <div className="mt-3">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-display text-3xl font-extrabold text-[#E65100]">{expiringCount}</span>
-                  <span className="text-xs font-bold text-[#E65100]">
-                    {expiringCount > 0 ? t('deadline_listed', 'Deadline Listed') : 'Open Enrolment'}
+            <div className="group relative p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-orange-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-orange-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+
+              <div className="flex items-start justify-between gap-3 relative z-10">
+                <div className="space-y-0.5">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#E65100]" />
+                    {t('expiring_applications', 'Expiring Applications')}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#44474E] mt-2 line-clamp-2">
+                <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#E65100] border border-orange-100 flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-[#E65100] group-hover:text-white group-hover:scale-110 transition-all duration-300">
+                  <span className="material-symbols-outlined text-[22px]">alarm</span>
+                </div>
+              </div>
+
+              <div className="my-3.5 relative z-10">
+                <div className="flex items-baseline gap-2.5">
+                  <span className="font-display text-4xl sm:text-5xl font-black text-[#E65100] tracking-tight group-hover:text-orange-700 transition-colors">
+                    {expiringCount}
+                  </span>
+                  <span className="inline-flex items-center text-[10.5px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-orange-50 text-[#E65100] border border-orange-200/70">
+                    {expiringCount > 0 ? t('deadline_listed', 'Deadlines Listed') : 'Open Enrolment'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 relative z-10">
+                <p className="text-[11.5px] text-slate-600 font-medium line-clamp-2 leading-relaxed">
                   {expiringSummary}
                 </p>
               </div>
             </div>
 
             {/* Tile 4: Profile Fidelity */}
-            <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
-              <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">{t('profile_fidelity', 'Profile Fidelity')}</span>
-                <span className="font-display text-lg font-bold text-[#0D2240]">{profileFidelity}%</span>
+            <div className="group relative p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-indigo-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+
+              <div className="flex items-start justify-between gap-3 relative z-10">
+                <div className="space-y-0.5">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
+                    {t('profile_fidelity', 'Profile Fidelity')}
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center justify-center shrink-0 shadow-2xs group-hover:bg-indigo-700 group-hover:text-white group-hover:scale-110 transition-all duration-300">
+                  <span className="material-symbols-outlined text-[22px]">speed</span>
+                </div>
               </div>
-              <div className="mt-2 space-y-2">
-                <div className="w-full h-2.5 rounded-full bg-[#DEE8FF] overflow-hidden">
+
+              <div className="my-3.5 relative z-10 space-y-2">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="font-display text-4xl sm:text-5xl font-black text-[#0D2240] tracking-tight group-hover:text-indigo-950 transition-colors">
+                    {profileFidelity}%
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-500">
+                    {profileFidelity >= 100 ? 'Optimal' : `${100 - profileFidelity}% needed`}
+                  </span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden border border-slate-200/60 p-[1px]">
                   <div
-                    className="h-full bg-[#0D2240] rounded-full transition-all duration-700"
+                    className="h-full rounded-full bg-gradient-to-r from-[#0D2240] via-indigo-600 to-emerald-500 transition-all duration-700"
                     style={{ width: `${profileFidelity}%` }}
                   />
                 </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 relative z-10">
                 {missingFieldsList.length > 0 ? (
-                  <p className="text-[11px] text-[#E65100] font-semibold leading-tight line-clamp-2">
-                    +{missingFieldsList.length} field{missingFieldsList.length === 1 ? '' : 's'} needed: {missingFieldsList.slice(0, 2).join(' & ')} unlocks {partialMatches.length} additional scheme{partialMatches.length === 1 ? '' : 's'}.
+                  <p className="text-[11.5px] text-[#E65100] font-bold leading-relaxed line-clamp-2">
+                    +{missingFieldsList.length} field{missingFieldsList.length === 1 ? '' : 's'} needed: {missingFieldsList.slice(0, 2).join(' & ')} unlocks {partialMatches.length} more schemes.
                   </p>
                 ) : (
-                  <p className="text-[11px] text-[#138808] font-semibold leading-tight">
-                    100% Profile Complete • Maximum Entitlements Unlocked.
+                  <p className="text-[11.5px] text-emerald-700 font-bold leading-relaxed flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                    100% Profile Complete • All Entitlements Unlocked
                   </p>
                 )}
               </div>
@@ -682,6 +751,7 @@ export default function Dashboard() {
                               return next
                             })
                           }}
+                          ratingSummary={ratingSummaries?.[sId]}
                         />
                       )
                     })}

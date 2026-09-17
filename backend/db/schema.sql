@@ -173,6 +173,34 @@ CREATE TABLE IF NOT EXISTS notifications (
     CONSTRAINT fk_notif_scheme FOREIGN KEY (scheme_id) REFERENCES schemes(scheme_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS scheme_reviews (
+    review_id INT PRIMARY KEY AUTO_INCREMENT,
+    scheme_id INT NOT NULL,
+    user_id INT NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    review_title VARCHAR(255) NOT NULL,
+    review_text TEXT NOT NULL,
+    process_smoothness INT NOT NULL DEFAULT 5 CHECK (process_smoothness >= 1 AND process_smoothness <= 5),
+    approval_time_weeks INT NOT NULL DEFAULT 2,
+    benefit_received BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_review_scheme FOREIGN KEY (scheme_id) REFERENCES schemes(scheme_id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_reviews_scheme (scheme_id),
+    INDEX idx_reviews_user (user_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS review_likes (
+    like_id INT PRIMARY KEY AUTO_INCREMENT,
+    review_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_like_review FOREIGN KEY (review_id) REFERENCES scheme_reviews(review_id) ON DELETE CASCADE,
+    CONSTRAINT fk_like_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY uq_review_user_like (review_id, user_id)
+) ENGINE=InnoDB;
+
 -- ============================================================
 -- 6.4 Chatbot Tables (Module 8 — schema-ready; feature deferred)
 -- ============================================================

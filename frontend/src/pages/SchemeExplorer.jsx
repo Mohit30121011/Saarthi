@@ -4,6 +4,7 @@ import { searchSchemes } from '../api/schemes'
 import { getMyMatches } from '../api/match'
 import { getBookmarks } from '../api/bookmarks'
 import { getProfile } from '../api/profile'
+import { getRatingSummaries } from '../api/reviews'
 import { useAuth } from '../context/AuthContext'
 import SchemeCard from '../components/SchemeCard'
 import SchemeCompareModal from '../components/SchemeCompareModal'
@@ -68,6 +69,7 @@ export default function SchemeExplorer() {
   const [compareSchemeA, setCompareSchemeA] = useState(null)
   const [compareSchemeB, setCompareSchemeB] = useState(null)
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false)
+  const [ratingSummaries, setRatingSummaries] = useState({})
 
   function handleToggleCompare(scheme) {
     if (!compareSchemeA) {
@@ -98,6 +100,8 @@ export default function SchemeExplorer() {
   }
 
   useEffect(() => {
+    getRatingSummaries().then(setRatingSummaries).catch(() => {})
+
     if (isAuthenticated) {
       getBookmarks().then((data) => setBookmarkedIds(new Set(data.map((b) => b.schemeId)))).catch(() => {})
       getProfile().then(setProfile).catch(() => {})
@@ -605,6 +609,7 @@ export default function SchemeExplorer() {
                     onCompare={handleToggleCompare}
                     isComparing={compareSchemeA?.schemeId === scheme.schemeId || compareSchemeB?.schemeId === scheme.schemeId}
                     showCompare={true}
+                    ratingSummary={ratingSummaries[scheme.schemeId]}
                   />
                 )
               })}

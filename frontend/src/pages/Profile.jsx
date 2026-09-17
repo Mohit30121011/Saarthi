@@ -13,31 +13,31 @@ const GENDERS = [
 ]
 
 const CATEGORIES = [
-  { value: 'GENERAL', label: 'General / Open' },
-  { value: 'OBC', label: 'OBC (Other Backward Class)' },
-  { value: 'SC', label: 'SC (Scheduled Caste)' },
-  { value: 'ST', label: 'ST (Scheduled Tribe)' },
-  { value: 'EWS', label: 'EWS (Economically Weaker Section)' },
+  { value: 'GENERAL', label: 'General / Open (खुला)' },
+  { value: 'OBC', label: 'OBC (इतर मागास वर्ग)' },
+  { value: 'SC', label: 'SC (अनुसूचित जाती)' },
+  { value: 'ST', label: 'ST (अनुसूचित जमाती)' },
+  { value: 'EWS', label: 'EWS (आर्थिक दुर्बल घटक)' },
 ]
 
 const EDUCATION_LEVELS = [
-  'Below 10th',
-  '10th Pass (SSC)',
-  '12th Pass (HSC)',
-  'Diploma / Polytechnic',
-  'Undergraduate (Bachelor Degree)',
-  'Postgraduate (Master Degree)',
-  'Doctorate / Research (Ph.D)',
+  { value: 'Below 10th', label: 'Below 10th (१०वी पेक्षा कमी)' },
+  { value: '10th Pass', label: '10th Pass / SSC (१०वी उत्तीर्ण)' },
+  { value: '12th Pass', label: '12th Pass / HSC (१२वी उत्तीर्ण)' },
+  { value: 'Diploma', label: 'Diploma / Polytechnic (डिप्लोमा)' },
+  { value: 'Graduate', label: 'Graduate / Bachelor Degree (पदवीधर)' },
+  { value: 'Postgraduate', label: 'Postgraduate / Master Degree (पदव्युत्तर)' },
+  { value: 'Doctorate', label: 'Doctorate / Research / Ph.D (विद्यावाचस्पती)' },
 ]
 
 const OCCUPATIONS = [
-  'Student',
-  'Farmer / Agricultural Worker',
-  'Self-Employed / Entrepreneur',
-  'Salaried Professional',
-  'Unemployed / Job Seeker',
-  'Homemaker',
-  'Retired / Senior Citizen',
+  { value: 'Student', label: 'Student (विद्यार्थी)' },
+  { value: 'Farmer', label: 'Farmer / Agricultural Worker (शेतकरी)' },
+  { value: 'Self-Employed', label: 'Self-Employed / Entrepreneur / Artisan (स्वयंरोजगार / व्यवसाय)' },
+  { value: 'Salaried', label: 'Salaried Professional (वेतनभोगी कर्मचारी)' },
+  { value: 'Unemployed', label: 'Unemployed / Job Seeker (बेरोजगार / नोकरी शोधणारा)' },
+  { value: 'Homemaker', label: 'Homemaker (गृहिणी)' },
+  { value: 'Retired', label: 'Retired / Senior Citizen (सेवानिवृत्त / ज्येष्ठ नागरिक)' },
 ]
 
 export default function Profile() {
