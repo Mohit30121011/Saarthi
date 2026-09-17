@@ -80,30 +80,26 @@ public final class ChatbotConfig {
         }
     }
 
-    public static String geminiApiKey() {
+    // Env vars take priority over chatbot.properties so hosted deployments can
+    // inject API keys without baking secrets into the image (see DBUtil for the
+    // same pattern).
+    private static String getConfig(String envName, String propKey, String fallback) {
+        String envValue = System.getenv(envName);
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue.trim();
+        }
         ensureFresh();
-        return PROPS.getProperty("gemini.api.key", "").trim();
+        return PROPS.getProperty(propKey, fallback).trim();
     }
 
-    public static String geminiModel() {
-        ensureFresh();
-        return PROPS.getProperty("gemini.model", "gemini-2.5-flash").trim();
-    }
-
-    public static String groqApiKey() {
-        ensureFresh();
-        return PROPS.getProperty("groq.api.key", "").trim();
-    }
-
-    public static String groqModel() {
-        ensureFresh();
-        return PROPS.getProperty("groq.model", "llama-3.3-70b-versatile").trim();
-    }
+    public static String geminiApiKey() { return getConfig("GEMINI_API_KEY", "gemini.api.key", ""); }
+    public static String geminiModel() { return getConfig("GEMINI_MODEL", "gemini.model", "gemini-2.5-flash"); }
+    public static String groqApiKey() { return getConfig("GROQ_API_KEY", "groq.api.key", ""); }
+    public static String groqModel() { return getConfig("GROQ_MODEL", "groq.model", "llama-3.3-70b-versatile"); }
 
     public static int dailyMessageLimit() {
-        ensureFresh();
         try {
-            return Integer.parseInt(PROPS.getProperty("chat.daily.message.limit", "40").trim());
+            return Integer.parseInt(getConfig("CHAT_DAILY_MESSAGE_LIMIT", "chat.daily.message.limit", "40"));
         } catch (NumberFormatException e) {
             return 40;
         }
@@ -122,6 +118,6 @@ public final class ChatbotConfig {
     }
 
     private static boolean isRealKey(String key) {
-        return LOADED && key != null && !key.isBlank() && !key.startsWith("YOUR_");
+        return key != null && !key.isBlank() && !key.startsWith("YOUR_");
     }
 }

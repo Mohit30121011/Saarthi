@@ -18,18 +18,31 @@ public final class DBUtil {
     private static final String PASSWORD;
 
     static {
-        Properties props = new Properties();
-        try (InputStream in = DBUtil.class.getClassLoader().getResourceAsStream("db.properties")) {
-            if (in == null) {
-                throw new RuntimeException("db.properties not found on classpath (expected in WEB-INF/classes)");
+        // Env vars (DB_URL/DB_USER/DB_PASSWORD) take priority so hosted deployments
+        // (Render, etc.) can inject credentials without baking a db.properties file
+        // with real secrets into the image. Falls back to db.properties for local dev.
+        String envUrl = System.getenv("DB_URL");
+        String envUser = System.getenv("DB_USER");
+        String envPassword = System.getenv("DB_PASSWORD");
+
+        if (envUrl != null && !envUrl.isBlank()) {
+            URL = envUrl;
+            USER = envUser;
+            PASSWORD = envPassword;
+        } else {
+            Properties props = new Properties();
+            try (InputStream in = DBUtil.class.getClassLoader().getResourceAsStream("db.properties")) {
+                if (in == null) {
+                    throw new RuntimeException("No DB_URL env var set and db.properties not found on classpath (expected in WEB-INF/classes)");
+                }
+                props.load(in);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to load db.properties", e);
             }
-            props.load(in);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load db.properties", e);
+            URL = props.getProperty("db.url");
+            USER = props.getProperty("db.user");
+            PASSWORD = props.getProperty("db.password");
         }
-        URL = props.getProperty("db.url");
-        USER = props.getProperty("db.user");
-        PASSWORD = props.getProperty("db.password");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

@@ -1,0 +1,11 @@
+.git
+.metadata
+.settings
+build
+data
+extras
+scripts
+frontend
+*.md
+*.png
+*.txt

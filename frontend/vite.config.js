@@ -14,7 +14,7 @@ const noKeepAliveAgent = new http.Agent({ keepAlive: false })
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {

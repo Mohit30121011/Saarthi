@@ -7,8 +7,26 @@
 
     <display-name>Saarthi</display-name>
 
-    <!-- Servlets and Filters are annotation-based (@WebServlet / @WebFilter);
-         this descriptor only needs welcome-file and error-page config. -->
+    <!-- Servlets are annotation-based (@WebServlet). Filters are also annotated,
+         but declared here explicitly too: annotation discovery order is not
+         guaranteed by the servlet spec, and CorsFilter MUST run before AuthFilter
+         so 401 responses and OPTIONS preflights still carry CORS headers. -->
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.saarthi.filter.CorsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.saarthi.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
