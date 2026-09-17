@@ -193,43 +193,45 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
 
   if (msg.sender === 'USER') {
     return (
-      <div className="flex items-end justify-end gap-2 sm:gap-2.5 pl-6 sm:pl-8 min-w-0">
-        <div className="bg-chakra-blue !text-white px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-tr-none shadow-sm max-w-[82%] sm:max-w-lg flex flex-col gap-1 min-w-0">
-          <span className="font-body-md text-body-md !text-white leading-relaxed break-words">{msg.text}</span>
-          <div className="flex items-center justify-end gap-1 font-label-sm text-label-sm !text-white/80">
-            <span className="!text-white/80">{formatTimestamp(msg.time)}</span>
-            <span className="material-symbols-outlined text-[14px] text-emerald-400">done_all</span>
+      <div className="flex items-end justify-end gap-2.5 pl-8 min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="bg-gradient-to-r from-[#0D2240] to-[#183B6B] !text-white px-4 py-3 rounded-2xl rounded-tr-xs shadow-sm max-w-[85%] sm:max-w-md flex flex-col gap-1 min-w-0">
+          <span className="text-xs sm:text-sm !text-white leading-relaxed break-words font-medium">{msg.text}</span>
+          <div className="flex items-center justify-end gap-1 text-[10.5px] !text-white/70 pt-0.5">
+            <span>{formatTimestamp(msg.time)}</span>
+            <span className="material-symbols-outlined text-[13px] text-emerald-300">done_all</span>
           </div>
         </div>
         <img
           src={userPhoto || indianCitizenHeadshot}
           alt="Citizen"
-          className="w-7 h-7 rounded-full object-cover shrink-0 ring-1 ring-chakra-blue/20"
+          className="w-7 h-7 rounded-full object-cover shrink-0 ring-2 ring-white shadow-xs"
         />
       </div>
     )
   }
 
   return (
-    <div className="flex items-start gap-2 sm:gap-2.5 pr-1 sm:pr-2 min-w-0">
+    <div className="flex items-start gap-2.5 pr-2 min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-200">
       <div
-        className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm ${
-          msg.isError ? 'bg-error text-white' : 'bg-chakra-blue text-kesari-saffron'
+        className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs ${
+          msg.isError
+            ? 'bg-rose-600 text-white'
+            : 'bg-gradient-to-br from-[#0D2240] to-[#1E3A8A] text-[#E65100] border border-white/10'
         }`}
       >
-        <span className="material-symbols-outlined text-[18px]" style={msg.isError ? { fontVariationSettings: "'FILL' 1" } : undefined}>
-          {msg.isError ? 'error' : 'robot_2'}
+        <span className="material-symbols-outlined text-[17px]" style={msg.isError ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+          {msg.isError ? 'error' : 'smart_toy'}
         </span>
       </div>
-      <div className="flex flex-col gap-2 sm:gap-3 max-w-[85%] sm:max-w-xl w-full min-w-0">
+      <div className="flex flex-col gap-2 max-w-[88%] sm:max-w-xl w-full min-w-0">
         <div
-          className={`p-3.5 sm:p-4 rounded-2xl rounded-tl-none shadow-sm border flex flex-col gap-3 min-w-0 ${
+          className={`p-4 rounded-2xl rounded-tl-xs shadow-xs border flex flex-col gap-3 min-w-0 transition-all ${
             msg.isError
-              ? 'bg-slate-surface-elevated border-error/25 text-on-surface'
-              : 'bg-slate-surface-elevated text-on-surface border-slate-border'
+              ? 'bg-rose-50/50 border-rose-200 text-rose-950'
+              : 'bg-white text-slate-800 border-slate-200/90 hover:border-slate-300'
           }`}
         >
-          <div className="font-body-md text-body-md leading-relaxed text-on-surface break-words flex flex-col">
+          <div className="text-xs sm:text-[13px] leading-relaxed text-slate-800 break-words flex flex-col space-y-1">
             <FormattedMessage text={msg.text} />
           </div>
 
@@ -237,17 +239,18 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
             <button
               onClick={onRetry}
               type="button"
-              className="self-start flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-error text-white font-label-sm text-label-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer"
+              className="self-start flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-bold hover:bg-rose-700 active:scale-95 transition-all cursor-pointer shadow-xs"
             >
-              <span className="material-symbols-outlined text-[15px]">refresh</span>
-              Retry
+              <span className="material-symbols-outlined text-[14px]">refresh</span>
+              Retry Question
             </button>
           )}
 
           {msg.schemes && msg.schemes.length > 0 && (
-            <div className="flex flex-col gap-2.5 pt-1 min-w-0">
-              <span className="font-label-md text-label-md font-bold text-chakra-blue uppercase tracking-wider">
-                Matches Found ({msg.schemes.length})
+            <div className="flex flex-col gap-2 pt-1 min-w-0">
+              <span className="text-[11px] font-extrabold text-[#0D2240] uppercase tracking-wider flex items-center gap-1">
+                <span className="material-symbols-outlined text-[14px] text-[#138808]">verified</span>
+                Matching Schemes ({msg.schemes.length})
               </span>
               {msg.schemes.map((s) => (
                 <SchemeMiniCard key={s.schemeId} scheme={s} />
@@ -256,27 +259,22 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
           )}
 
           {!msg.isError && (
-            <div className="mt-1 pt-2.5 border-t border-slate-border flex flex-col gap-1 text-on-surface-variant">
-              <div className="flex items-start gap-1.5 font-label-sm text-label-sm">
-                <span className="material-symbols-outlined text-harita-green text-[15px] mt-0.5 shrink-0">verified_user</span>
-                <span className="break-words"><strong>Statutory Provenance:</strong> Grounded in official GR gazette rules &amp; authenticated criteria.</span>
-              </div>
-              <div className="font-label-sm text-label-sm text-outline italic">
-                Official Advisory: Eligibility is provisional. Final sanction resides with issuing departments.
+            <div className="mt-0.5 pt-2.5 border-t border-slate-100 flex flex-col gap-1 text-[11px] text-slate-500">
+              <div className="flex items-start gap-1.5 font-medium">
+                <span className="material-symbols-outlined text-[#138808] text-[14px] mt-0.5 shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  verified_user
+                </span>
+                <span className="break-words">
+                  <strong className="text-[#0D2240]">Statutory Provenance:</strong> Grounded in official GR gazette rules &amp; authenticated criteria.
+                </span>
               </div>
             </div>
           )}
         </div>
 
-        {msg.isError && (
-          <div className="px-1 sm:px-2 font-label-sm text-label-sm text-on-surface-variant">
-            {formatTimestamp(msg.time)}
-          </div>
-        )}
-
         {!msg.isError && (
-          <div className="flex items-center justify-between px-1 sm:px-2 font-label-sm text-label-sm text-on-surface-variant gap-2 flex-wrap">
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between px-1 text-[11px] text-slate-500 gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
               <span>{formatTimestamp(msg.time)}</span>
               <button
                 onClick={async () => {
@@ -287,34 +285,36 @@ function MessageBubble({ msg, userPhoto, onRetry }) {
                   }
                 }}
                 type="button"
-                title="Copy reply"
-                className="flex items-center gap-0.5 hover:text-chakra-blue transition-colors cursor-pointer"
+                title="Copy response"
+                className="flex items-center gap-1 hover:text-[#0D2240] transition-colors cursor-pointer text-slate-400 hover:text-slate-700"
               >
-                <span className="material-symbols-outlined text-[14px]">
+                <span className="material-symbols-outlined text-[13px]">
                   {copied ? 'check' : 'content_copy'}
                 </span>
-                {copied && <span className="text-harita-green font-semibold">Copied</span>}
+                {copied && <span className="text-emerald-600 font-bold text-[10px]">Copied</span>}
               </button>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-on-surface-variant">Was this accurate?</span>
+            <div className="flex items-center gap-2.5">
+              <span className="text-slate-400 text-[10.5px]">Was this helpful?</span>
               <button
                 onClick={() => setFeedback('yes')}
-                className={`flex items-center gap-0.5 transition-colors cursor-pointer ${
-                  feedback === 'yes' ? 'text-harita-green font-bold' : 'hover:text-chakra-blue'
+                className={`flex items-center gap-1 transition-all cursor-pointer px-1.5 py-0.5 rounded ${
+                  feedback === 'yes' ? 'text-emerald-600 font-bold bg-emerald-50' : 'text-slate-400 hover:text-emerald-600'
                 }`}
                 type="button"
               >
-                <span className="material-symbols-outlined text-[16px]">thumb_up</span> Yes
+                <span className="material-symbols-outlined text-[14px]">thumb_up</span>
+                <span>Yes</span>
               </button>
               <button
                 onClick={() => setFeedback('no')}
-                className={`flex items-center gap-0.5 transition-colors cursor-pointer ${
-                  feedback === 'no' ? 'text-error font-bold' : 'hover:text-kesari-saffron'
+                className={`flex items-center gap-1 transition-all cursor-pointer px-1.5 py-0.5 rounded ${
+                  feedback === 'no' ? 'text-rose-600 font-bold bg-rose-50' : 'text-slate-400 hover:text-rose-600'
                 }`}
                 type="button"
               >
-                <span className="material-symbols-outlined text-[16px]">thumb_down</span> No
+                <span className="material-symbols-outlined text-[14px]">thumb_down</span>
+                <span>No</span>
               </button>
             </div>
           </div>
@@ -448,10 +448,11 @@ export default function ChatWidget() {
   function handleRetry() {
     if (lastFailedText) {
       setMessages((prev) => {
-        const idx = [...prev].reverse().findIndex((m) => m.isError)
-        if (idx === -1) return prev
-        const realIdx = prev.length - 1 - idx
-        return prev.slice(0, realIdx)
+        const next = [...prev]
+        if (next.length > 0 && next[next.length - 1].isError) {
+          next.pop()
+        }
+        return next
       })
       handleSend(lastFailedText)
     }
@@ -459,37 +460,32 @@ export default function ChatWidget() {
 
   function handleClearConfirmed() {
     setMessages([])
-    setSessionId(null)
-    setHydrated(false)
     setConfirmingClear(false)
-    setLastFailedText(null)
   }
 
   function handleVoiceInput() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Voice dictation is supported in modern Chrome, Edge, and Android browsers.')
+      alert('Speech recognition is not supported in this browser.')
       return
     }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-IN'
+    recognition.interimResults = false
+    recognition.maxAlternatives = 1
 
-    try {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-      const recognition = new SpeechRecognition()
-      recognition.lang = 'en-IN'
-      recognition.interimResults = false
+    recognition.onstart = () => setListening(true)
+    recognition.onend = () => setListening(false)
+    recognition.onerror = () => setListening(false)
 
-      recognition.onstart = () => setListening(true)
-      recognition.onend = () => setListening(false)
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript
-        if (transcript) {
-          setInput(transcript)
-          handleSend(transcript)
-        }
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript
+      if (transcript) {
+        setInput(transcript)
+        handleSend(transcript)
       }
-      recognition.start()
-    } catch {
-      setListening(false)
     }
+    recognition.start()
   }
 
   function handleInputKeyDown(e) {
@@ -499,129 +495,143 @@ export default function ChatWidget() {
     }
   }
 
-  const lastMessageLimitReached = messages.length > 0 && messages[messages.length - 1]?.limitReached
+  const lastMessageLimitReached = messages.length > 0 && messages[messages.length - 1].limitReached
 
   return (
     <>
-      {/* Floating launcher trigger */}
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
+      {/* Floating Pill Launcher (when closed) */}
+      <div className="fixed bottom-6 right-6 z-40">
         <button
           onClick={() => setOpen((v) => !v)}
-          className="relative bg-slate-surface-elevated border border-slate-border rounded-full pl-2.5 pr-3.5 sm:pr-4 py-2 shadow-xl flex items-center gap-2.5 sm:gap-3 cursor-pointer hover:shadow-2xl hover:border-chakra-blue/40 transition-all group"
+          type="button"
           aria-label={open ? 'Close SAARTHI AI Assistant' : 'Open SAARTHI AI Assistant'}
+          className="group relative flex items-center gap-3 px-4 py-3 rounded-full bg-gradient-to-r from-[#0D2240] via-[#153460] to-[#0A1A30] text-white shadow-[0_10px_30px_-5px_rgba(13,34,64,0.35)] hover:shadow-[0_15px_40px_-5px_rgba(13,34,64,0.45)] hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-white/15 cursor-pointer backdrop-blur-md"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-chakra-blue text-kesari-saffron-vibrant flex items-center justify-center shrink-0 shadow-sm relative">
-            <span className="material-symbols-outlined text-[22px] sm:text-[24px]">cognition</span>
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-harita-green ring-2 ring-slate-surface-elevated" />
+          {/* Glowing tricolor edge highlight */}
+          <div className="absolute -inset-[1px] bg-gradient-to-r from-[#E65100] via-white to-[#138808] rounded-full opacity-30 group-hover:opacity-70 blur-xs transition-opacity duration-500 pointer-events-none" />
+
+          {/* AI Avatar Icon with pulsing dot */}
+          <div className="relative w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-[#E65100] text-[20px]">
+              smart_toy
+            </span>
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0D2240] animate-pulse" />
           </div>
 
-          <div className="hidden sm:block text-left">
+          <div className="flex flex-col text-left">
             <div className="flex items-center gap-1.5">
-              <p className="font-label-lg font-bold text-chakra-blue leading-tight">SAARTHI AI</p>
-              <span className="px-1.5 py-0.2 rounded bg-kesari-saffron-soft text-kesari-saffron font-label-sm text-[10px] font-bold">सारथी</span>
+              <span className="text-xs font-black text-white tracking-wide">SAARTHI AI</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-[#FFF3EB] text-[#E65100] text-[9.5px] font-extrabold">सारथी</span>
             </div>
-            <p className="font-label-sm text-on-surface-variant leading-tight max-w-[200px] truncate">
-              Civic Welfare Assistant
-            </p>
+            <span className="text-[10.5px] text-white/70 font-medium">Civic Welfare Assistant</span>
           </div>
 
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-chakra-blue text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform shrink-0">
-            <span className="material-symbols-outlined text-[16px]">{open ? 'expand_more' : 'chat'}</span>
+          <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white group-hover:bg-white/20 transition-all ml-1">
+            <span className="material-symbols-outlined text-[15px]">{open ? 'expand_more' : 'chat'}</span>
           </div>
 
           {!open && unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-error text-white text-[11px] font-bold flex items-center justify-center ring-2 ring-slate-surface-elevated">
+            <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-white shadow-xs animate-bounce">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
         </button>
       </div>
 
-      {/* Drawer / full-screen panel */}
+      {/* Modern Sleek Drawer Panel */}
       {open && (
         <div
-          className={`fixed z-50 bg-slate-surface-elevated shadow-2xl border border-slate-border flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200
+          className={`fixed z-50 bg-white/95 backdrop-blur-xl shadow-[0_25px_60px_-15px_rgba(13,34,64,0.35)] border border-slate-200/80 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-6 zoom-in-95 duration-300 ease-out
             inset-0 rounded-none
-            sm:inset-auto sm:rounded-2xl
+            sm:inset-auto sm:rounded-3xl
             ${
               expanded
-                ? 'sm:bottom-4 sm:right-4 sm:top-4 sm:left-auto sm:w-[560px] md:w-[640px]'
-                : 'sm:bottom-24 sm:right-6 sm:w-[420px] md:w-[460px] sm:h-[640px] sm:max-h-[85vh]'
+                ? 'sm:bottom-4 sm:right-4 sm:top-4 sm:left-auto sm:w-[580px] md:w-[680px]'
+                : 'sm:bottom-22 sm:right-6 sm:w-[410px] md:w-[440px] sm:h-[620px] sm:max-h-[85vh]'
             }`}
         >
-          {/* Header */}
-          <div className="bg-chakra-blue text-white px-3.5 sm:px-4 py-2.5 sm:py-3.5 flex items-center justify-between shrink-0 shadow-sm">
-            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center relative shrink-0">
-                <span className="material-symbols-outlined text-kesari-saffron-vibrant text-[22px]">cognition</span>
-                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-chakra-blue ${isOffline ? 'bg-error' : 'bg-emerald-400'}`} />
+          {/* Sleek Gradient Header */}
+          <div className="relative bg-gradient-to-r from-[#0D2240] via-[#14325C] to-[#0A1A30] text-white px-4 py-3.5 flex items-center justify-between shrink-0 shadow-md">
+            {/* Top Tricolor Strip */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E65100] via-white to-[#138808]" />
+
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center relative shrink-0 ring-1 ring-white/20 shadow-inner">
+                <span className="material-symbols-outlined text-[#E65100] text-[22px]">
+                  smart_toy
+                </span>
+                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-[#0D2240] ${isOffline ? 'bg-rose-500' : 'bg-emerald-400 animate-pulse'}`} />
               </div>
+
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-bold text-white text-[14px] sm:text-base tracking-tight truncate">
-                    SAARTHI AI Civic Assistant
+                  <span className="font-extrabold text-white text-sm tracking-tight truncate">
+                    SAARTHI AI Assistant
                   </span>
-                  <span className="hidden xs:inline-flex bg-kesari-saffron/20 text-kesari-saffron-vibrant border border-kesari-saffron/30 text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0">
-                    सारथी एआई मित्र
+                  <span className="bg-[#FFF3EB]/20 text-[#FF9E80] border border-[#FF9E80]/30 text-[10px] font-extrabold px-2 py-0.5 rounded-full shrink-0">
+                    सारथी
                   </span>
                 </div>
-                <span className="text-[11px] text-white/70 leading-tight truncate">
-                  {isOffline ? 'Offline — reconnect to continue' : sending ? 'Typing…' : 'Online · grounded in gazette data'}
+                <span className="text-[11px] text-white/70 leading-tight truncate flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                  {isOffline ? 'Offline — reconnect to continue' : sending ? 'Consulting gazette rules…' : 'Online • Grounded in Gazette Data'}
                 </span>
               </div>
             </div>
 
-            {/* Header Controls */}
-            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            {/* Header Control Buttons */}
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 onClick={() => setExpanded((v) => !v)}
-                className="hidden sm:flex p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/90 hover:text-white transition-colors cursor-pointer"
+                className="hidden sm:flex w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer"
                 title={expanded ? 'Collapse' : 'Expand'}
                 type="button"
               >
-                <span className="material-symbols-outlined text-[18px]">
+                <span className="material-symbols-outlined text-[17px]">
                   {expanded ? 'close_fullscreen' : 'open_in_full'}
                 </span>
               </button>
+
               <button
                 onClick={() => setConfirmingClear(true)}
                 disabled={messages.length === 0}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/90 hover:text-white transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                 title="Clear Conversation"
                 type="button"
               >
-                <span className="material-symbols-outlined text-[18px]">delete_sweep</span>
+                <span className="material-symbols-outlined text-[17px]">delete_sweep</span>
               </button>
+
               <button
                 onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/90 hover:text-white transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-xl bg-white/10 hover:bg-rose-500/80 text-white/80 hover:text-white transition-all hover:scale-105 items-center justify-center cursor-pointer"
                 title="Close"
                 type="button"
               >
-                <span className="material-symbols-outlined text-[18px]">close</span>
+                <span className="material-symbols-outlined text-[17px]">close</span>
               </button>
             </div>
           </div>
 
           {/* Clear-conversation confirmation */}
           {confirmingClear && (
-            <div className="px-4 py-3 bg-partial-amber-soft border-b border-slate-border flex items-center justify-between gap-3 shrink-0">
-              <span className="font-label-sm text-label-sm text-on-surface flex items-center gap-1.5 min-w-0">
-                <span className="material-symbols-outlined text-[16px] text-partial-amber shrink-0">warning</span>
+            <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-200 flex items-center justify-between gap-3 shrink-0 animate-in fade-in duration-150">
+              <span className="text-xs font-bold text-amber-900 flex items-center gap-1.5 min-w-0">
+                <span className="material-symbols-outlined text-[16px] text-amber-600 shrink-0">warning</span>
                 <span className="truncate">Clear this entire conversation?</span>
               </span>
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={handleClearConfirmed}
                   type="button"
-                  className="px-2.5 py-1 rounded-lg bg-error text-white text-xs font-bold cursor-pointer hover:opacity-90"
+                  className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold cursor-pointer transition-colors"
                 >
                   Clear
                 </button>
                 <button
                   onClick={() => setConfirmingClear(false)}
                   type="button"
-                  className="px-2.5 py-1 rounded-lg bg-slate-surface border border-slate-border text-xs font-bold cursor-pointer hover:bg-surface-container-high"
+                  className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-bold cursor-pointer hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -630,26 +640,35 @@ export default function ChatWidget() {
           )}
 
           {isOffline && (
-            <div className="px-4 py-2 bg-error-soft border-b border-slate-border flex items-center gap-1.5 shrink-0 font-label-sm text-label-sm text-error">
+            <div className="px-4 py-2 bg-rose-50 border-b border-rose-200 flex items-center gap-1.5 shrink-0 text-xs font-bold text-rose-800">
               <span className="material-symbols-outlined text-[15px]">wifi_off</span>
-              You are offline. Messages will send once your connection is restored.
+              You are offline. Messages will send once connection is restored.
             </div>
           )}
 
           {/* Chat Stream Body */}
-          <div className="relative flex-1 min-h-0">
+          <div className="relative flex-1 min-h-0 bg-slate-50/60">
             <div
               ref={scrollRef}
               onScroll={handleScroll}
-              className="no-scrollbar absolute inset-0 p-3.5 sm:p-4 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden bg-slate-surface"
+              className="no-scrollbar absolute inset-0 p-4 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden"
             >
+              {/* Empty State Welcome Card */}
               {messages.length === 0 && (
-                <div className="bg-slate-surface-elevated p-3.5 rounded-xl border border-slate-border text-center space-y-1.5 shadow-2xs">
-                  <p className="font-headline-sm font-bold text-chakra-blue text-sm">
-                    Namaste {userFirstName}!
-                  </p>
-                  <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
-                    I am your citizen welfare assistant. Ask any question regarding Central &amp; Maharashtra scheme eligibility, documents, or application processes.
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-white to-orange-50/40 border border-blue-100/80 shadow-xs space-y-2.5 animate-in fade-in duration-300">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-[#0D2240] text-white flex items-center justify-center shadow-2xs">
+                      <span className="material-symbols-outlined text-[18px]">waving_hand</span>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-extrabold text-[#0D2240]">
+                        Namaste {userFirstName}!
+                      </h4>
+                      <p className="text-[10.5px] text-slate-500 font-medium">Your Personal Welfare Entitlement Guide</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Ask any question regarding Maharashtra &amp; Central welfare scheme rules, eligibility requirements, required documents, or application procedures.
                   </p>
                 </div>
               )}
@@ -664,13 +683,13 @@ export default function ChatWidget() {
               ))}
 
               {sending && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-chakra-blue-light text-chakra-blue font-label-sm text-xs self-start">
-                  <span className="flex gap-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-chakra-blue animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-chakra-blue animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-chakra-blue animate-bounce" />
+                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs text-xs font-semibold text-[#0D2240] self-start animate-pulse">
+                  <span className="flex gap-1">
+                    <span className="w-2 h-2 rounded-full bg-[#0D2240] animate-bounce [animation-delay:-0.3s]" />
+                    <span className="w-2 h-2 rounded-full bg-[#E65100] animate-bounce [animation-delay:-0.15s]" />
+                    <span className="w-2 h-2 rounded-full bg-[#138808] animate-bounce" />
                   </span>
-                  <span>Consulting scheme eligibility &amp; gazette rules…</span>
+                  <span>Consulting official GR rules &amp; eligibility…</span>
                 </div>
               )}
             </div>
@@ -680,24 +699,24 @@ export default function ChatWidget() {
                 onClick={scrollToBottom}
                 type="button"
                 title="Scroll to latest"
-                className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-chakra-blue text-white shadow-lg flex items-center justify-center cursor-pointer hover:bg-chakra-blue/90 transition-colors"
+                className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-[#0D2240] text-white shadow-lg hover:scale-105 flex items-center justify-center cursor-pointer transition-all"
               >
                 <span className="material-symbols-outlined text-[20px]">arrow_downward</span>
               </button>
             )}
           </div>
 
-          {/* Suggested inquiries chips */}
+          {/* Suggested Questions Section */}
           {!lastMessageLimitReached && (showSuggestions ? (
-            <div className="px-3 sm:px-3.5 py-2.5 bg-slate-surface-elevated border-t border-slate-border flex flex-col gap-2 shrink-0 animate-in fade-in duration-150">
+            <div className="px-3.5 py-2.5 bg-white border-t border-slate-200/80 flex flex-col gap-2 shrink-0">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[14px] text-kesari-saffron">lightbulb</span>
-                  Suggested Questions
+                <span className="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[15px] text-[#E65100]">lightbulb</span>
+                  Suggested Inquiries
                 </span>
                 <button
                   onClick={() => setShowSuggestions(false)}
-                  className="text-[11px] text-on-surface-variant hover:text-chakra-blue flex items-center gap-1 font-semibold px-1.5 py-0.5 rounded hover:bg-surface-container-high transition-colors cursor-pointer"
+                  className="text-[11px] text-slate-400 hover:text-slate-700 flex items-center gap-1 font-semibold px-2 py-0.5 rounded-md hover:bg-slate-100 transition-colors cursor-pointer"
                   title="Hide Suggested Questions"
                   type="button"
                 >
@@ -705,93 +724,97 @@ export default function ChatWidget() {
                   <span className="material-symbols-outlined text-[13px]">close</span>
                 </button>
               </div>
-              <div className="no-scrollbar flex flex-wrap gap-1.5 max-h-[88px] sm:max-h-[105px] overflow-y-auto pr-1">
+
+              <div className="no-scrollbar flex flex-wrap gap-1.5 max-h-[85px] sm:max-h-[100px] overflow-y-auto pr-0.5">
                 {SUGGESTED_INQUIRIES.map((item) => (
                   <button
                     key={item.text}
                     onClick={() => handleSend(item.text)}
                     disabled={disabledInput}
-                    className="px-2.5 py-1 rounded-full bg-slate-surface hover:bg-chakra-blue-light hover:text-chakra-blue text-on-surface text-xs transition-colors text-left flex items-center gap-1 border border-slate-border cursor-pointer shadow-2xs hover:border-chakra-blue/30 disabled:opacity-50 disabled:cursor-not-allowed max-w-full"
+                    className="group px-3 py-1.5 rounded-full bg-slate-50 hover:bg-blue-50/80 text-slate-700 hover:text-[#0D2240] text-xs font-semibold transition-all text-left flex items-center gap-1.5 border border-slate-200/90 hover:border-blue-300 hover:shadow-2xs active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     type="button"
                   >
-                    <span className="material-symbols-outlined text-[13px] text-kesari-saffron shrink-0">
+                    <span className="material-symbols-outlined text-[13px] text-[#E65100] group-hover:scale-110 transition-transform shrink-0">
                       {item.icon}
                     </span>
-                    <span className="truncate max-w-[220px] sm:max-w-[320px]">{item.text}</span>
+                    <span className="truncate max-w-[240px] sm:max-w-[340px]">{item.text}</span>
                   </button>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="px-3.5 py-1 bg-slate-surface-elevated/70 border-t border-slate-border/70 flex items-center justify-between shrink-0">
+            <div className="px-3.5 py-1.5 bg-white border-t border-slate-200/80 flex items-center justify-between shrink-0">
               <button
                 onClick={() => setShowSuggestions(true)}
-                className="text-[11px] font-semibold text-chakra-blue hover:text-kesari-saffron flex items-center gap-1 py-0.5 transition-colors cursor-pointer"
+                className="text-[11px] font-bold text-[#0D2240] hover:text-[#E65100] flex items-center gap-1 py-0.5 transition-colors cursor-pointer"
                 type="button"
               >
-                <span className="material-symbols-outlined text-[13px] text-kesari-saffron">lightbulb</span>
-                <span>Show Suggested Questions</span>
+                <span className="material-symbols-outlined text-[14px] text-[#E65100]">lightbulb</span>
+                <span>Show Suggested Inquiries</span>
               </button>
             </div>
           ))}
 
           {/* Limit-reached CTA */}
           {lastMessageLimitReached && (
-            <div className="px-3.5 py-3 bg-partial-amber-soft border-t border-slate-border flex items-center justify-between gap-2 shrink-0">
-              <span className="font-label-sm text-label-sm text-on-surface flex items-center gap-1.5 min-w-0">
-                <span className="material-symbols-outlined text-[16px] text-partial-amber shrink-0">schedule</span>
-                <span className="truncate">Daily message limit reached.</span>
+            <div className="px-3.5 py-2.5 bg-amber-50 border-t border-amber-200 flex items-center justify-between gap-2 shrink-0">
+              <span className="text-xs font-bold text-amber-900 flex items-center gap-1.5 min-w-0">
+                <span className="material-symbols-outlined text-[16px] text-amber-600 shrink-0">schedule</span>
+                <span className="truncate">Daily message quota reached.</span>
               </span>
               <Link
-                to="/schemes"
-                className="shrink-0 px-2.5 py-1 rounded-lg bg-chakra-blue text-white text-xs font-bold hover:bg-chakra-blue/90 transition-colors"
+                to="/explorer"
+                className="shrink-0 px-3 py-1 rounded-xl bg-[#0D2240] text-white text-xs font-bold hover:bg-[#14325C] transition-colors"
               >
-                Browse Schemes
+                Explore Schemes
               </Link>
             </div>
           )}
 
-          {/* Input Area */}
-          <div className="p-2.5 sm:p-3 bg-slate-surface-elevated border-t border-slate-border shrink-0 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
-            <div className="flex items-end gap-2 bg-slate-surface rounded-xl px-2.5 sm:px-3 py-1.5 shadow-inner focus-within:ring-2 focus-within:ring-chakra-blue transition-all border border-slate-border">
+          {/* Sleek Floating Input Bar */}
+          <div className="p-3 bg-white border-t border-slate-200/80 shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <div className="flex items-center gap-2 bg-slate-50/80 focus-within:bg-white rounded-2xl px-3 py-1.5 shadow-2xs focus-within:shadow-md focus-within:border-blue-400 transition-all border border-slate-200/90">
+              {/* Mic / Voice Button */}
               <button
                 onClick={handleVoiceInput}
                 disabled={disabledInput}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed ${
                   listening
-                    ? 'bg-kesari-saffron text-white animate-pulse'
-                    : 'hover:bg-kesari-saffron-soft text-on-surface-variant hover:text-kesari-saffron'
+                    ? 'bg-[#E65100] text-white animate-pulse shadow-xs scale-105'
+                    : 'text-slate-500 hover:text-[#0D2240] hover:bg-slate-200/60'
                 }`}
                 title="Voice Input (मराठी/Hindi/English)"
                 type="button"
               >
-                <span className="material-symbols-outlined text-[20px]">mic</span>
+                <span className="material-symbols-outlined text-[19px]">mic</span>
               </button>
 
-              <textarea
+              {/* Text Input */}
+              <input
                 ref={inputRef}
-                rows={1}
+                type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
-                placeholder="Ask about any scheme, rule, or document requirement…"
+                placeholder="Ask about any scheme, rule, or eligibility…"
                 disabled={disabledInput || lastMessageLimitReached}
                 onKeyDown={handleInputKeyDown}
-                className="w-full bg-transparent border-none resize-none text-xs sm:text-sm text-on-surface placeholder:text-outline focus:outline-none py-1.5 max-h-24 leading-relaxed"
-                style={{ minHeight: '1.75rem' }}
+                className="w-full bg-transparent border-none text-xs sm:text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none py-1.5 font-medium"
               />
 
+              {/* Send Button */}
               <button
                 onClick={() => handleSend(input)}
                 disabled={disabledInput || !trimmedInput || lastMessageLimitReached}
-                className="h-8 px-3 rounded-lg bg-kesari-saffron hover:bg-kesari-saffron-vibrant text-white font-medium text-xs sm:text-sm flex items-center gap-1 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
+                className="h-8 px-3.5 rounded-xl bg-gradient-to-r from-[#E65100] to-[#F97316] hover:from-[#D84315] hover:to-[#EA580C] text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs hover:shadow-md hover:scale-[1.02] active:scale-95 disabled:opacity-40 disabled:scale-100 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer shrink-0"
                 type="button"
               >
                 <span className="hidden xs:inline">Send</span>
-                <span className="material-symbols-outlined text-[15px]">send</span>
+                <span className="material-symbols-outlined text-[14px]">send</span>
               </button>
             </div>
+
             {remainingChars <= MAX_MESSAGE_LENGTH - WARN_MESSAGE_LENGTH && (
-              <div className={`mt-1 text-right text-[10px] font-medium ${remainingChars <= 0 ? 'text-error' : 'text-on-surface-variant'}`}>
+              <div className={`mt-1 text-right text-[10px] font-bold ${remainingChars <= 0 ? 'text-rose-600' : 'text-slate-400'}`}>
                 {remainingChars} characters left
               </div>
             )}
