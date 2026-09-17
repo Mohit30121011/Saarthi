@@ -45,6 +45,29 @@ public class AuthFilter implements Filter {
             return;
         }
 
+        // What-If Simulator: accessible to both logged-in citizens and guests exploring potential eligibility
+        if (path.equals("/api/match/simulate")) {
+            String authHeader = req.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring("Bearer ".length());
+                Claims claims = JwtUtil.parseToken(token);
+                if (claims != null && claims.getSubject() != null) {
+                    try {
+                        req.setAttribute("userId", Integer.parseInt(claims.getSubject()));
+                        req.setAttribute("role", claims.get("role"));
+                    } catch (Exception e) {
+                        req.setAttribute("userId", 0);
+                    }
+                } else {
+                    req.setAttribute("userId", 0);
+                }
+            } else {
+                req.setAttribute("userId", 0);
+            }
+            chain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = req.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             JsonUtil.writeError(resp, 401, "Missing or invalid Authorization header.");

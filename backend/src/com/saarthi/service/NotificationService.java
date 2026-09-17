@@ -89,10 +89,54 @@ public class NotificationService {
     }
 
     public List<Notification> getNotifications(int userId) throws SQLException {
-        return notificationDAO.findByUserId(userId);
+        List<Notification> list = notificationDAO.findByUserId(userId);
+        if (list.isEmpty()) {
+            populateRecentNotifications(userId);
+            list = notificationDAO.findByUserId(userId);
+        }
+        return list;
+    }
+
+    private void populateRecentNotifications(int userId) throws SQLException {
+        EligibilityService eligibilityService = new EligibilityService();
+        List<SchemeMatch> matches = eligibilityService.getPersonalizedMatches(userId);
+
+        // 1. Check statutory deadlines on all matched & bookmarked schemes
+        checkDeadlineProximity(userId, matches);
+
+        // 2. Generate new match alerts for top strong matched schemes (up to 4)
+        List<SchemeMatch> strongMatches = matches.stream()
+                .filter(m -> m.getConfidence() == SchemeMatch.Confidence.STRONG)
+                .limit(4)
+                .collect(Collectors.toList());
+
+        for (SchemeMatch m : strongMatches) {
+            int schemeId = m.getScheme().getSchemeId();
+            if (!notificationDAO.existsForUserSchemeType(userId, schemeId, "NEW_MATCH")) {
+                Notification n = new Notification();
+                n.setUserId(userId);
+                n.setSchemeId(schemeId);
+                n.setType("NEW_MATCH");
+                n.setTitle("New scheme unlocked");
+                n.setMessage("You are now a Strong match for \"" + m.getScheme().getName() + "\".");
+                notificationDAO.insert(n);
+            }
+        }
+
+        // 3. Generate a statutory gazette update linked to Maharashtra scholarship
+        if (!notificationDAO.existsForUserSchemeType(userId, 18, "STATUTORY_UPDATE")) {
+            Notification n = new Notification();
+            n.setUserId(userId);
+            n.setSchemeId(18);
+            n.setType("STATUTORY_UPDATE");
+            n.setTitle("Gazette Notification: FY 2026-27 DBT Cycle");
+            n.setMessage("Government of Maharashtra gazette notice for higher education scholarship disbursement and verification window.");
+            notificationDAO.insert(n);
+        }
     }
 
     public int countUnread(int userId) throws SQLException {
+        getNotifications(userId);
         return notificationDAO.countUnread(userId);
     }
 

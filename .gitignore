@@ -28,3 +28,5 @@ original_*.txt
 *.tmp
 image-Picsart-*.png
 /src/
+bin/
+frontend/*.png

@@ -34,6 +34,8 @@ export default function SchemeCard({
   onCompare,
   isComparing = false,
   showCompare = true,
+  horizonBadge = null,
+  isOpportunity = false,
 }) {
   const navigate = useNavigate()
   const [isSaved, setIsSaved] = useState(!!initialBookmarked)
@@ -149,6 +151,24 @@ export default function SchemeCard({
             SCH-{isState ? 'MH' : 'CENTRAL'}-{scheme.schemeId.toString().padStart(3, '0')} • Direct Benefit Transfer
           </p>
         </div>
+
+        {horizonBadge && (
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${
+            isOpportunity
+              ? 'bg-[#FFF3EB] border-[#E65100]/30 text-[#E65100] shadow-2xs'
+              : 'bg-[#F0F3FF] border-[#DEE8FF] text-[#0D2240]'
+          }`}>
+            <span className="material-symbols-outlined text-[16px]">
+              {isOpportunity ? 'auto_awesome' : 'visibility'}
+            </span>
+            <span className="font-semibold">{horizonBadge}</span>
+            {isOpportunity && (
+              <span className="ml-auto bg-[#E65100] text-white text-[9px] px-1.5 py-0.5 rounded uppercase font-black tracking-wider">
+                Horizon Match
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Value Metric Banner */}
         <div className="p-3 sm:p-3.5 rounded-lg bg-[#EAFBF0] border border-[#16A34A]/20 flex items-start sm:items-center justify-between gap-2.5">

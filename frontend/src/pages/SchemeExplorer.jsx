@@ -12,6 +12,15 @@ import { SchemeCardSkeleton } from '../components/Skeletons'
 import TrendingSeasonalBanner from '../components/TrendingSeasonalBanner'
 import { isSchemeTrending, isSchemeSeasonal } from '../data/curatedSchemes'
 
+const ITEMS_PER_PAGE = 6 // Strict 2-row layout (2 rows of 3 schemes on desktop)
+
+function getPageNumbers(current, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+  if (current <= 4) return [1, 2, 3, 4, 5, '...', total]
+  if (current >= total - 3) return [1, '...', total - 4, total - 3, total - 2, total - 1, total]
+  return [1, '...', current - 1, current, current + 1, '...', total]
+}
+
 export default function SchemeExplorer() {
   const { isAuthenticated } = useAuth()
   const [searchParams] = useSearchParams()
@@ -26,6 +35,7 @@ export default function SchemeExplorer() {
   const [curationFilter, setCurationFilter] = useState(initialCuration)
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
   const [profile, setProfile] = useState(null)
   const [catalogSchemes, setCatalogSchemes] = useState([])
   const [matchedItems, setMatchedItems] = useState([])
@@ -124,20 +134,6 @@ export default function SchemeExplorer() {
     return list
   }, [catalogSchemes, curationFilter, level, ministry, sortBy])
 
-  // Pagination: 3 rows x 3 columns = 9 cards per page
-  const [currentPage, setCurrentPage] = useState(1)
-  const SCHEMES_PER_PAGE = 9
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [query, level, category, ministry, sortBy, curationFilter])
-
-  const totalPages = Math.ceil(displayedSchemes.length / SCHEMES_PER_PAGE)
-  const paginatedSchemes = useMemo(() => {
-    const start = (currentPage - 1) * SCHEMES_PER_PAGE
-    return displayedSchemes.slice(start, start + SCHEMES_PER_PAGE)
-  }, [displayedSchemes, currentPage])
-
   function clearFilters() {
     setQuery('')
     setLevel('all')
@@ -145,7 +141,31 @@ export default function SchemeExplorer() {
     setMinistry('all')
     setSortBy('verified')
     setCurationFilter('all')
+    setCurrentPage(1)
   }
+
+  // Reset to page 1 whenever filters or query change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [query, category, level, ministry, sortBy, curationFilter])
+
+  const totalPages = Math.ceil(displayedSchemes.length / ITEMS_PER_PAGE) || 1
+
+  // Clamp current page if scheme count shrinks
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1)
+    }
+  }, [currentPage, totalPages])
+
+  const paginatedSchemes = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE
+    return displayedSchemes.slice(start, start + ITEMS_PER_PAGE)
+  }, [displayedSchemes, currentPage])
+
+  const pageNumbers = useMemo(() => {
+    return getPageNumbers(currentPage, totalPages)
+  }, [currentPage, totalPages])
 
   const centralCount = useMemo(() => catalogSchemes.filter((s) => !s.state).length, [catalogSchemes])
   const stateCount = useMemo(() => catalogSchemes.filter((s) => s.state).length, [catalogSchemes])
@@ -309,7 +329,7 @@ export default function SchemeExplorer() {
           onSelectQuickFilter={(mode) => {
             setCurationFilter(mode)
             setCategory('all')
-            const anchor = document.getElementById('explorer-results-anchor')
+            const anchor = document.getElementById('schemes-section') || document.getElementById('explorer-results-anchor')
             if (anchor) anchor.scrollIntoView({ behavior: 'smooth' })
           }}
         />
@@ -426,8 +446,8 @@ export default function SchemeExplorer() {
           </button>
         </div>
 
-        {/* Active Filter Chips & View Mode Toggle */}
-        <div id="explorer-results-anchor" className="flex flex-wrap items-center justify-between gap-4 bg-white px-4 py-3 rounded-xl border border-[#E2E8F0] shadow-xs scroll-mt-24">
+        {/* Active Filter Chips, Direct Search & View Mode Toggle */}
+        <div id="schemes-section" className="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 bg-white px-4 py-3 rounded-xl border border-[#E2E8F0] shadow-xs scroll-mt-24">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[11px] uppercase tracking-wider text-[#44474E] font-bold mr-1">
               Active Filters:
@@ -467,16 +487,42 @@ export default function SchemeExplorer() {
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EAFBF0] text-[#138808] text-xs font-bold">
               <span>Active Schemes Only</span>
             </span>
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="text-xs text-[#E65100] hover:underline font-bold ml-2 cursor-pointer"
-            >
-              Clear All
-            </button>
+            {(level !== 'all' || category !== 'all' || query) && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="text-xs text-[#E65100] hover:underline font-bold ml-2 cursor-pointer"
+              >
+                Clear All
+              </button>
+            )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Direct Quick Search Input right at filter toolbar */}
+            <div className="relative flex items-center min-w-[190px] sm:min-w-[220px]">
+              <span className="material-symbols-outlined text-[#0D2240] text-[18px] absolute left-2.5 pointer-events-none">
+                search
+              </span>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search schemes..."
+                className="w-full bg-[#F8FAFC] hover:bg-[#F0F3FF] focus:bg-white text-xs text-[#0D2240] font-semibold pl-8 pr-7 py-1.5 rounded-lg border border-[#E2E8F0] focus:border-[#0D2240] focus:outline-none focus:ring-2 focus:ring-[#0D2240]/15 transition-all placeholder-slate-400"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery('')}
+                  className="absolute right-2 text-slate-400 hover:text-[#0D2240] cursor-pointer"
+                  title="Clear search"
+                >
+                  <span className="material-symbols-outlined text-[15px]">close</span>
+                </button>
+              )}
+            </div>
+
             <div className="hidden sm:flex items-center gap-1 bg-[#F0F3FF] p-1 rounded-lg">
               <button
                 type="button"
@@ -500,8 +546,15 @@ export default function SchemeExplorer() {
               </button>
             </div>
             <div className="h-4 w-px bg-[#E2E8F0] hidden sm:block" />
-            <span className="text-xs text-[#44474E] font-medium">
-              Showing <strong className="text-[#0D2240] font-bold">{displayedSchemes.length}</strong> schemes
+            <span className="text-xs text-[#44474E] font-medium whitespace-nowrap">
+              Showing <strong className="text-[#0D2240] font-bold">
+                {displayedSchemes.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–{Math.min(currentPage * ITEMS_PER_PAGE, displayedSchemes.length)}
+              </strong> of <strong className="text-[#0D2240] font-bold">{displayedSchemes.length}</strong>
+              {totalPages > 1 && (
+                <span className="ml-1 text-slate-500 font-medium hidden md:inline">
+                  (Page {currentPage} of {totalPages})
+                </span>
+              )}
             </span>
           </div>
         </div>
@@ -522,113 +575,225 @@ export default function SchemeExplorer() {
             </button>
           </div>
         ) : viewMode === 'cards' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {paginatedSchemes.map((scheme) => {
-              const isMatched = matchedItems.find((m) => m.scheme?.schemeId === scheme.schemeId)
-              return (
-                <SchemeCard
-                  key={scheme.schemeId}
-                  scheme={scheme}
-                  confidence={isMatched ? isMatched.confidence : undefined}
-                  missingFields={isMatched?.missingFields}
-                  reasons={isMatched?.reasons}
-                  profile={profile}
-                  bookmarked={bookmarkedIds.has(scheme.schemeId)}
-                  onBookmarkChange={(id, saved) => {
-                    setBookmarkedIds((prev) => {
-                      const next = new Set(prev)
-                      if (saved) next.add(id)
-                      else next.delete(id)
-                      return next
-                    })
-                  }}
-                  onCompare={handleToggleCompare}
-                  isComparing={compareSchemeA?.schemeId === scheme.schemeId || compareSchemeB?.schemeId === scheme.schemeId}
-                  showCompare={true}
-                />
-              )
-            })}
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {paginatedSchemes.map((scheme) => {
+                const isMatched = matchedItems.find((m) => m.scheme?.schemeId === scheme.schemeId)
+                return (
+                  <SchemeCard
+                    key={scheme.schemeId}
+                    scheme={scheme}
+                    confidence={isMatched ? isMatched.confidence : undefined}
+                    missingFields={isMatched?.missingFields}
+                    reasons={isMatched?.reasons}
+                    profile={profile}
+                    bookmarked={bookmarkedIds.has(scheme.schemeId)}
+                    onBookmarkChange={(id, saved) => {
+                      setBookmarkedIds((prev) => {
+                        const next = new Set(prev)
+                        if (saved) next.add(id)
+                        else next.delete(id)
+                        return next
+                      })
+                    }}
+                    onCompare={handleToggleCompare}
+                    isComparing={compareSchemeA?.schemeId === scheme.schemeId || compareSchemeB?.schemeId === scheme.schemeId}
+                    showCompare={true}
+                  />
+                )
+              })}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-2 border-t border-[#E2E8F0]">
+                <div className="text-xs text-[#44474E]">
+                  Showing <strong className="text-[#0D2240]">{(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, displayedSchemes.length)}</strong> of{' '}
+                  <strong className="text-[#0D2240]">{displayedSchemes.length}</strong> schemes (2 rows per page)
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap justify-center sm:mr-52 md:mr-64">
+                  <button
+                    type="button"
+                    disabled={currentPage === 1}
+                    onClick={() => {
+                      setCurrentPage((p) => Math.max(1, p - 1))
+                      document.getElementById('schemes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                      currentPage === 1
+                        ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border border-transparent'
+                        : 'bg-white border border-[#E2E8F0] text-[#0D2240] hover:bg-[#F0F3FF] shadow-xs'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                    <span>Previous</span>
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {pageNumbers.map((pageNum, idx) =>
+                      pageNum === '...' ? (
+                        <span key={`ellipsis-${idx}`} className="w-7 text-center text-xs font-bold text-slate-400">...</span>
+                      ) : (
+                        <button
+                          key={pageNum}
+                          type="button"
+                          onClick={() => {
+                            setCurrentPage(pageNum)
+                            document.getElementById('schemes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          }}
+                          className={`w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
+                            currentPage === pageNum
+                              ? 'bg-[#0D2240] text-white shadow-xs scale-105'
+                              : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      )
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={currentPage === totalPages}
+                    onClick={() => {
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      document.getElementById('schemes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                      currentPage === totalPages
+                        ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border border-transparent'
+                        : 'bg-[#E65100] hover:bg-[#D84315] text-white font-bold shadow-xs'
+                    }`}
+                  >
+                    <span>Next</span>
+                    <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           /* Table View */
-          <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0] text-xs font-bold text-[#0D2240]">
-                  <th className="p-4">Scheme Name &amp; Code</th>
-                  <th className="p-4">Authority &amp; Level</th>
-                  <th className="p-4">Benefit</th>
-                  <th className="p-4">Deadline</th>
-                  <th className="p-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E2E8F0] text-xs">
-                {paginatedSchemes.map((s) => (
-                  <tr key={s.schemeId} className="hover:bg-[#F0F3FF]/50 transition-colors">
-                    <td className="p-4">
-                      <Link to={`/schemes/${s.schemeId}`} className="font-bold text-[#0D2240] hover:underline">
-                        {s.name}
-                      </Link>
-                      <p className="text-[11px] text-slate-400 font-mono mt-0.5">SCH-{s.schemeId.toString().padStart(3, '0')}</p>
-                    </td>
-                    <td className="p-4">
-                      <span className="font-medium text-[#44474E]">{s.ministry || 'Govt of India'}</span>
-                      <p className="text-[10px] text-slate-400">{s.state || 'Central'}</p>
-                    </td>
-                    <td className="p-4 font-bold text-[#138808]">
-                      {s.benefitAmount || 'Direct Benefit Transfer'}
-                    </td>
-                    <td className="p-4 text-[#44474E] text-xs font-medium">
-                      {s.deadline || 'Ongoing / Open'}
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleCompare(s)}
-                          className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-                            compareSchemeA?.schemeId === s.schemeId || compareSchemeB?.schemeId === s.schemeId
-                              ? 'bg-[#0D2240] text-white'
-                              : 'bg-[#F0F3FF] hover:bg-[#DEE8FF] text-[#0D2240] border border-[#DEE8FF]'
-                          }`}
-                          title="Compare scheme"
-                        >
-                          <span className="material-symbols-outlined text-[15px]">compare_arrows</span>
-                          <span>
-                            {compareSchemeA?.schemeId === s.schemeId || compareSchemeB?.schemeId === s.schemeId
-                              ? 'Comparing'
-                              : 'Compare'}
-                          </span>
-                        </button>
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0] text-xs font-bold text-[#0D2240]">
+                    <th className="p-4">Scheme Name &amp; Code</th>
+                    <th className="p-4">Authority &amp; Level</th>
+                    <th className="p-4">Benefit</th>
+                    <th className="p-4">Deadline</th>
+                    <th className="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E2E8F0] text-xs">
+                  {paginatedSchemes.map((s) => (
+                    <tr key={s.schemeId} className="hover:bg-[#F0F3FF]/50 transition-colors">
+                      <td className="p-4">
+                        <Link to={`/schemes/${s.schemeId}`} className="font-bold text-[#0D2240] hover:underline">
+                          {s.name}
+                        </Link>
+                        <p className="text-[11px] text-slate-400 font-mono mt-0.5">SCH-{s.schemeId.toString().padStart(3, '0')}</p>
+                      </td>
+                      <td className="p-4">
+                        <span className="font-medium text-[#44474E]">{s.ministry || 'Govt of India'}</span>
+                        <p className="text-[10px] text-slate-400">{s.state || 'Central'}</p>
+                      </td>
+                      <td className="p-4 font-bold text-[#138808]">
+                        {s.benefitAmount || 'Direct Benefit Transfer'}
+                      </td>
+                      <td className="p-4 text-[#44474E]">
+                        {s.deadline || '30 Apr 2025'}
+                      </td>
+                      <td className="p-4 text-right">
                         <Link
                           to={`/schemes/${s.schemeId}`}
                           className="px-3 py-1.5 bg-[#0D2240] text-white font-bold rounded-lg hover:bg-[#1A365D] transition-colors"
                         >
                           View
                         </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 pb-2 border-t border-[#E2E8F0]">
+                <div className="text-xs text-[#44474E]">
+                  Showing <strong className="text-[#0D2240]">{(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, displayedSchemes.length)}</strong> of{' '}
+                  <strong className="text-[#0D2240]">{displayedSchemes.length}</strong> schemes (2 rows per page)
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap justify-center sm:mr-52 md:mr-64">
+                  <button
+                    type="button"
+                    disabled={currentPage === 1}
+                    onClick={() => {
+                      setCurrentPage((p) => Math.max(1, p - 1))
+                      document.getElementById('schemes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                      currentPage === 1
+                        ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border border-transparent'
+                        : 'bg-white border border-[#E2E8F0] text-[#0D2240] hover:bg-[#F0F3FF] shadow-xs'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                    <span>Previous</span>
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {pageNumbers.map((pageNum, idx) =>
+                      pageNum === '...' ? (
+                        <span key={`ellipsis-${idx}`} className="w-7 text-center text-xs font-bold text-slate-400">...</span>
+                      ) : (
+                        <button
+                          key={pageNum}
+                          type="button"
+                          onClick={() => {
+                            setCurrentPage(pageNum)
+                            document.getElementById('schemes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          }}
+                          className={`w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
+                            currentPage === pageNum
+                              ? 'bg-[#0D2240] text-white shadow-xs scale-105'
+                              : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      )
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={currentPage === totalPages}
+                    onClick={() => {
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      document.getElementById('schemes-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                      currentPage === totalPages
+                        ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border border-transparent'
+                        : 'bg-[#E65100] hover:bg-[#D84315] text-white font-bold shadow-xs'
+                    }`}
+                  >
+                    <span>Next</span>
+                    <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Custom Civic Modern Pagination */}
-        {!loading && displayedSchemes.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={displayedSchemes.length}
-            itemsPerPage={SCHEMES_PER_PAGE}
-            onPageChange={(page) => {
-              setCurrentPage(page)
-              document.getElementById('explorer-results-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }}
-            itemLabel="schemes"
-          />
-        )}
+
 
         {/* Floating Compare Schemes Dock */}
         {compareSchemeA && (

@@ -81,6 +81,143 @@ public class EligibilityService {
         return rank(matches);
     }
 
+    public SimulationResult simulateProfile(int userId, BigDecimal simulatedIncome) throws SQLException {
+        UserProfile baseProfile = userId > 0
+                ? profileDAO.findByUserId(userId).orElseGet(UserProfile::new)
+                : new UserProfile();
+        List<Scheme> activeSchemes = schemeDAO.findAllActive();
+        Map<Integer, List<EligibilityRule>> rulesBySchemeId = ruleDAO.findAllGroupedBySchemeId();
+
+        // Baseline matches
+        List<SchemeMatch> baselineMatches = new ArrayList<>();
+        Set<Integer> baselineMatchedIds = new java.util.HashSet<>();
+        for (Scheme scheme : activeSchemes) {
+            List<EligibilityRule> rules = rulesBySchemeId.getOrDefault(scheme.getSchemeId(), List.of());
+            SchemeMatch match = evaluateScheme(scheme, baseProfile, rules);
+            if (match != null) {
+                baselineMatches.add(match);
+                baselineMatchedIds.add(scheme.getSchemeId());
+            }
+        }
+
+        // Clone profile in-memory for simulation
+        UserProfile simProfile = cloneProfile(baseProfile);
+        if (simulatedIncome != null) {
+            simProfile.setAnnualIncome(simulatedIncome);
+        }
+
+        // Simulated matches
+        List<SchemeMatch> simMatches = new ArrayList<>();
+        List<SimulatedOpportunity> newlyUnlocked = new ArrayList<>();
+        List<SchemeMatch> retained = new ArrayList<>();
+        List<SchemeMatch> lost = new ArrayList<>();
+
+        for (Scheme scheme : activeSchemes) {
+            List<EligibilityRule> rules = rulesBySchemeId.getOrDefault(scheme.getSchemeId(), List.of());
+            SchemeMatch simMatch = evaluateScheme(scheme, simProfile, rules);
+            boolean wasMatchedInBase = baselineMatchedIds.contains(scheme.getSchemeId());
+
+            if (simMatch != null) {
+                simMatches.add(simMatch);
+                if (!wasMatchedInBase) {
+                    String ceilingStr = null;
+                    BigDecimal ceilingVal = null;
+                    for (EligibilityRule r : rules) {
+                        if ("annual_income".equalsIgnoreCase(r.getAttributeName()) && "<=".equals(r.getOperator())) {
+                            ceilingStr = r.getValue();
+                            try { ceilingVal = new BigDecimal(r.getValue().trim()); } catch (Exception ignored) {}
+                            break;
+                        }
+                    }
+                    newlyUnlocked.add(new SimulatedOpportunity(simMatch, ceilingStr, ceilingVal));
+                } else {
+                    retained.add(simMatch);
+                }
+            } else if (wasMatchedInBase) {
+                lost.add(new SchemeMatch(scheme, SchemeMatch.Confidence.PARTIAL, List.of()));
+            }
+        }
+
+        return new SimulationResult(
+                baseProfile.getAnnualIncome(),
+                simulatedIncome,
+                baselineMatches.size(),
+                simMatches.size(),
+                rank(simMatches),
+                newlyUnlocked,
+                retained,
+                lost
+        );
+    }
+
+    private UserProfile cloneProfile(UserProfile src) {
+        UserProfile copy = new UserProfile();
+        copy.setProfileId(src.getProfileId());
+        copy.setUserId(src.getUserId());
+        copy.setDateOfBirth(src.getDateOfBirth());
+        copy.setGender(src.getGender());
+        copy.setState(src.getState());
+        copy.setDistrict(src.getDistrict());
+        copy.setAnnualIncome(src.getAnnualIncome());
+        copy.setOccupation(src.getOccupation());
+        copy.setCategory(src.getCategory());
+        copy.setEducationLevel(src.getEducationLevel());
+        copy.setDisabilityStatus(src.getDisabilityStatus());
+        copy.setIsBpl(src.getIsBpl());
+        copy.setIsMinority(src.getIsMinority());
+        return copy;
+    }
+
+    public static class SimulatedOpportunity {
+        private final SchemeMatch match;
+        private final String ceilingRule;
+        private final BigDecimal ceilingValue;
+
+        public SimulatedOpportunity(SchemeMatch match, String ceilingRule, BigDecimal ceilingValue) {
+            this.match = match;
+            this.ceilingRule = ceilingRule;
+            this.ceilingValue = ceilingValue;
+        }
+
+        public SchemeMatch getMatch() { return match; }
+        public String getCeilingRule() { return ceilingRule; }
+        public BigDecimal getCeilingValue() { return ceilingValue; }
+    }
+
+    public static class SimulationResult {
+        private final BigDecimal baselineIncome;
+        private final BigDecimal simulatedIncome;
+        private final int baselineCount;
+        private final int simulatedCount;
+        private final List<SchemeMatch> simulatedMatches;
+        private final List<SimulatedOpportunity> newlyUnlocked;
+        private final List<SchemeMatch> retained;
+        private final List<SchemeMatch> lost;
+
+        public SimulationResult(BigDecimal baselineIncome, BigDecimal simulatedIncome, int baselineCount,
+                                int simulatedCount, List<SchemeMatch> simulatedMatches,
+                                List<SimulatedOpportunity> newlyUnlocked, List<SchemeMatch> retained,
+                                List<SchemeMatch> lost) {
+            this.baselineIncome = baselineIncome;
+            this.simulatedIncome = simulatedIncome;
+            this.baselineCount = baselineCount;
+            this.simulatedCount = simulatedCount;
+            this.simulatedMatches = simulatedMatches;
+            this.newlyUnlocked = newlyUnlocked;
+            this.retained = retained;
+            this.lost = lost;
+        }
+
+        public BigDecimal getBaselineIncome() { return baselineIncome; }
+        public BigDecimal getSimulatedIncome() { return simulatedIncome; }
+        public int getBaselineCount() { return baselineCount; }
+        public int getSimulatedCount() { return simulatedCount; }
+        public List<SchemeMatch> getSimulatedMatches() { return simulatedMatches; }
+        public List<SimulatedOpportunity> getNewlyUnlocked() { return newlyUnlocked; }
+        public List<SchemeMatch> getRetained() { return retained; }
+        public List<SchemeMatch> getLost() { return lost; }
+    }
+
     /** Section 5.1/5.2 — evaluates one scheme's rules against one profile. Returns null for NOT_MATCHED (dashboard excludes it entirely). Delegates to the tri-state evaluate() below so there is exactly one place this logic lives. */
     private SchemeMatch evaluateScheme(Scheme scheme, UserProfile profile, List<EligibilityRule> rules) {
         EligibilityResult result = evaluate(scheme, profile, rules);

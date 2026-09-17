@@ -8,6 +8,7 @@ import { getChecklist } from '../api/checklist'
 import { searchSchemes } from '../api/schemes'
 import SchemeCard from '../components/SchemeCard'
 import Pagination from '../components/Pagination'
+import WhatIfSimulator from '../components/WhatIfSimulator'
 import { DashboardSkeleton, SchemeCardSkeleton } from '../components/Skeletons'
 import { exportSummaryPdf, generateSummaryDossierHtml } from '../utils/exportSummaryPdf'
 
@@ -35,10 +36,10 @@ export default function Dashboard() {
   const [bookmarks, setBookmarks] = useState([])
   const [checklist, setChecklist] = useState({})
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
+  const [dashboardMode, setDashboardMode] = useState('dossier') // 'dossier' | 'whatif'
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [totalCatalogCount, setTotalCatalogCount] = useState(52)
   const [loading, setLoading] = useState(true)
-  const [refreshing, setRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState('Just now')
   const [exportingPdf, setExportingPdf] = useState(false)
   const [showDossierModal, setShowDossierModal] = useState(false)
@@ -81,20 +82,22 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadDashboardData()
-  }, [])
 
-  async function handleRefresh() {
-    setRefreshing(true)
-    try {
-      const updatedMatches = await refreshMatches()
-      setData(updatedMatches)
-      setLastUpdated(`${formatCurrentDateTime()} IST`)
-    } catch {
-      // keep current data
-    } finally {
-      setRefreshing(false)
+    // Automatic background synchronization when citizen switches back to this tab
+    function handleWindowFocus() {
+      refreshMatches()
+        .then((updatedMatches) => {
+          if (updatedMatches) {
+            setData(updatedMatches)
+            setLastUpdated(`${formatCurrentDateTime()} IST`)
+          }
+        })
+        .catch(() => {})
     }
-  }
+
+    window.addEventListener('focus', handleWindowFocus)
+    return () => window.removeEventListener('focus', handleWindowFocus)
+  }, [])
 
   // Parse matches from backend response (either grouped byCategory or flat array)
   const allMatches = useMemo(() => {
@@ -208,19 +211,19 @@ export default function Dashboard() {
     })
   }, [allMatches, selectedCategory])
 
-  // Pagination: 3 rows x 3 columns = 9 cards per page
-  const [currentPage, setCurrentPage] = useState(1)
-  const SCHEMES_PER_PAGE = 9
+  // Pagination for official dossier: 2 rows of 3 columns = 6 schemes per page
+  const DOSSIER_PER_PAGE = 6
+  const [dossierPage, setDossierPage] = useState(1)
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [selectedCategory])
+    setDossierPage(1)
+  }, [selectedCategory, dashboardMode])
 
-  const totalPages = Math.ceil(filteredSchemes.length / SCHEMES_PER_PAGE)
-  const paginatedSchemes = useMemo(() => {
-    const start = (currentPage - 1) * SCHEMES_PER_PAGE
-    return filteredSchemes.slice(start, start + SCHEMES_PER_PAGE)
-  }, [filteredSchemes, currentPage])
+  const totalDossierPages = Math.ceil(filteredSchemes.length / DOSSIER_PER_PAGE) || 1
+  const paginatedDossierSchemes = useMemo(() => {
+    const start = (dossierPage - 1) * DOSSIER_PER_PAGE
+    return filteredSchemes.slice(start, start + DOSSIER_PER_PAGE)
+  }, [filteredSchemes, dossierPage])
 
   const displayName = user?.fullName || profile?.fullName || 'Mohit Gupta'
   const citizenState = profile?.state || user?.state || 'Maharashtra'
@@ -330,17 +333,10 @@ export default function Dashboard() {
 
             {/* Action Cluster */}
             <div className="flex flex-wrap items-center gap-3 shrink-0">
-              <button
-                type="button"
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0D2240] text-white font-bold text-xs sm:text-sm shadow-sm hover:bg-[#1A365D] transition-all active:scale-95 cursor-pointer disabled:opacity-60"
-              >
-                <span className={`material-symbols-outlined text-[18px] ${refreshing ? 'animate-spin' : ''}`}>
-                  sync
-                </span>
-                <span>{refreshing ? 'Evaluating Criteria...' : 'Re-run Matching Engine'}</span>
-              </button>
+              <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EAFBF0] border border-[#16A34A]/20 text-[#138808] text-xs font-bold shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-[#138808] animate-pulse" />
+                <span>Auto-Sync Active</span>
+              </div>
 
               <div className="inline-flex items-center rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] shadow-xs overflow-hidden">
                 <button
@@ -536,75 +532,252 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Category Filter Bar */}
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-base font-bold text-[#0D2240] flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#0D2240]">tune</span>
-              <span>Filter by Benefit Domain</span>
-            </h2>
-            <span className="text-xs text-[#44474E]">Sorted by: Highest Match Confidence &amp; Urgency</span>
-          </div>
-
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            {CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat.id
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all shadow-xs cursor-pointer ${
-                    isActive
-                      ? 'bg-[#0D2240] text-white shadow-sm'
-                      : 'bg-white text-[#44474E] border border-[#E2E8F0] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[16px]">{cat.icon}</span>
-                  <span>{cat.label}</span>
-                </button>
-              )
-            })}
-          </div>
-        </section>
-
-        {/* Scheme Discovery Grid */}
-        {refreshing ? (
-          <SchemeCardSkeleton count={6} />
-        ) : filteredSchemes.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-[#E2E8F0] p-12 text-center space-y-3">
-            <span className="material-symbols-outlined text-4xl text-slate-400">search_off</span>
-            <h3 className="font-display font-bold text-lg text-[#0D2240]">No schemes found in this domain</h3>
-            <p className="text-xs text-[#44474E]">Try selecting another filter or view all schemes in the catalog.</p>
+        {/* View Mode Switcher: Official Dossier vs What-If Simulator */}
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-2 rounded-2xl border border-[#E2E8F0] shadow-xs">
+          <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={() => setSelectedCategory('all')}
-              className="mt-2 px-4 py-2 bg-[#0D2240] text-white text-xs font-bold rounded-xl cursor-pointer"
+              type="button"
+              onClick={() => setDashboardMode('dossier')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                dashboardMode === 'dossier'
+                  ? 'bg-[#0D2240] text-white shadow-sm'
+                  : 'text-[#44474E] hover:bg-[#F0F3FF]'
+              }`}
             >
-              Reset Filters
+              <span className="material-symbols-outlined text-[18px]">verified</span>
+              <span>Official Matched Dossier ({totalSchemesCount})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setDashboardMode('whatif')}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                dashboardMode === 'whatif'
+                  ? 'bg-[#E65100] text-white shadow-sm'
+                  : 'text-[#0D2240] hover:bg-[#FFF3EB] border border-[#E65100]/30'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
+              <span>"What-If" Entitlement Horizon (क्या अगर...?)</span>
+              <span className={`px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
+                dashboardMode === 'whatif' ? 'bg-white/20 text-white' : 'bg-[#E65100] text-white'
+              }`}>
+                Try ₹5L Horizon
+              </span>
             </button>
           </div>
-        ) : (
-          <div id="dashboard-schemes-grid" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 scroll-mt-24">
-            {paginatedSchemes.map((item) => (
-              <SchemeCard
-                key={item.scheme.schemeId}
-                scheme={item.scheme}
-                confidence={item.confidence}
-                missingFields={item.missingFields}
-                reasons={item.reasons}
-                profile={profile}
-                bookmarked={bookmarkedIds.has(item.scheme.schemeId)}
-                onBookmarkChange={(id, saved) => {
-                  setBookmarkedIds((prev) => {
-                    const next = new Set(prev)
-                    if (saved) next.add(id)
-                    else next.delete(id)
-                    return next
-                  })
-                }}
-              />
-            ))}
+
+          <div className="text-xs text-[#44474E] pr-2 hidden md:block">
+            {dashboardMode === 'dossier' ? (
+              <span>Grounded in your official verified profile</span>
+            ) : (
+              <span className="text-[#E65100] font-semibold">Simulating alternative scenarios without changing profile</span>
+            )}
           </div>
+        </div>
+
+        {dashboardMode === 'whatif' ? (
+          <WhatIfSimulator
+            profile={profile}
+            bookmarkedIds={bookmarkedIds}
+            onBookmarkChange={(id, saved) => {
+              setBookmarkedIds((prev) => {
+                const next = new Set(prev)
+                if (saved) next.add(id)
+                else next.delete(id)
+                return next
+              })
+            }}
+          />
+        ) : (
+          <>
+            {/* What-If Teaser Banner */}
+            <div className="relative overflow-hidden p-5 rounded-2xl bg-gradient-to-r from-[#FFF8F1] via-[#FFF3E8] to-[#FFFBF5] border border-[#FED7AA] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              {/* Tricolor Micro-Accent on Top */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E65100] via-[#FDBA74] to-[#138808]" />
+
+              <div className="flex items-start sm:items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#E65100] to-[#FF7722] text-white flex items-center justify-center shrink-0 shadow-sm ring-4 ring-[#E65100]/10">
+                  <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm sm:text-base font-bold text-[#0D2240]">
+                      Curious what unlocks with a different income?
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#E65100] text-white text-[10px] font-extrabold uppercase tracking-wider shadow-2xs">
+                      "What-If" Horizon
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#475569] mt-1 leading-relaxed max-w-2xl">
+                    What if your family income was ₹5,00,000 or ₹2,50,000 instead? Test alternative ceilings and discover newly unlocked central &amp; state schemes in real time.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setDashboardMode('whatif')}
+                className="shrink-0 px-5 py-2.5 rounded-xl bg-[#E65100] hover:bg-[#D84315] text-white text-xs font-bold shadow-sm hover:shadow-md transition-all flex items-center gap-2 cursor-pointer self-start sm:self-auto group"
+              >
+                <span>Explore What-If Horizon</span>
+                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </button>
+            </div>
+
+            {/* Category Filter Bar */}
+            <section className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="font-display text-base font-bold text-[#0D2240] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#0D2240]">tune</span>
+                  <span>Filter by Benefit Domain</span>
+                </h2>
+                <span className="text-xs text-[#44474E]">Sorted by: Highest Match Confidence &amp; Urgency</span>
+              </div>
+
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                {CATEGORIES.map((cat) => {
+                  const isActive = selectedCategory === cat.id
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.id)}
+                      className={`flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all shadow-xs cursor-pointer ${
+                        isActive
+                          ? 'bg-[#0D2240] text-white shadow-sm'
+                          : 'bg-white text-[#44474E] border border-[#E2E8F0] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[16px]">{cat.icon}</span>
+                      <span>{cat.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </section>
+
+            {/* Scheme Discovery Grid */}
+            <div id="dossier-schemes-list" className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-[#E2E8F0]">
+                <div className="text-xs text-[#44474E]">
+                  Showing <strong className="text-[#0D2240]">
+                    {filteredSchemes.length > 0 ? (dossierPage - 1) * DOSSIER_PER_PAGE + 1 : 0}–{Math.min(dossierPage * DOSSIER_PER_PAGE, filteredSchemes.length)}
+                  </strong> of{' '}
+                  <strong className="text-[#0D2240]">{filteredSchemes.length}</strong> matched schemes (2 rows per page)
+                </div>
+                {totalDossierPages > 1 && (
+                  <div className="text-xs text-[#44474E]">
+                    Page <strong className="text-[#0D2240]">{dossierPage}</strong> of{' '}
+                    <strong className="text-[#0D2240]">{totalDossierPages}</strong>
+                  </div>
+                )}
+              </div>
+
+              {filteredSchemes.length === 0 ? (
+                <div className="bg-white rounded-2xl border border-[#E2E8F0] p-12 text-center space-y-3">
+                  <span className="material-symbols-outlined text-4xl text-slate-400">search_off</span>
+                  <h3 className="font-display font-bold text-lg text-[#0D2240]">No schemes found in this domain</h3>
+                  <p className="text-xs text-[#44474E]">Try selecting another filter or view all schemes in the catalog.</p>
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className="mt-2 px-4 py-2 bg-[#0D2240] text-white text-xs font-bold rounded-xl cursor-pointer"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {paginatedDossierSchemes.map((item) => (
+                      <SchemeCard
+                        key={item.scheme.schemeId}
+                        scheme={item.scheme}
+                        confidence={item.confidence}
+                        missingFields={item.missingFields}
+                        reasons={item.reasons}
+                        profile={profile}
+                        bookmarked={bookmarkedIds.has(item.scheme.schemeId)}
+                        onBookmarkChange={(id, saved) => {
+                          setBookmarkedIds((prev) => {
+                            const next = new Set(prev)
+                            if (saved) next.add(id)
+                            else next.delete(id)
+                            return next
+                          })
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Dossier Pagination Controls */}
+                  {totalDossierPages > 1 && (
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[#E2E8F0]">
+                      <div className="text-xs text-[#44474E]">
+                        Showing page <strong className="text-[#0D2240]">{dossierPage}</strong> of{' '}
+                        <strong className="text-[#0D2240]">{totalDossierPages}</strong> (up to 2 rows of 3 schemes)
+                      </div>
+
+                      <div className="flex items-center gap-1.5 sm:mr-52 md:mr-64">
+                        <button
+                          type="button"
+                          disabled={dossierPage === 1}
+                          onClick={() => {
+                            setDossierPage((p) => Math.max(1, p - 1))
+                            document.getElementById('dossier-schemes-list')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+                          }}
+                          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                            dossierPage === 1
+                              ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border border-transparent'
+                              : 'bg-white border border-[#E2E8F0] text-[#0D2240] hover:bg-[#F0F3FF] shadow-xs'
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                          <span>Previous</span>
+                        </button>
+
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: totalDossierPages }, (_, i) => i + 1).map((pageNum) => (
+                            <button
+                              key={pageNum}
+                              type="button"
+                              onClick={() => {
+                                setDossierPage(pageNum)
+                                document.getElementById('dossier-schemes-list')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+                              }}
+                              className={`w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
+                                dossierPage === pageNum
+                                  ? 'bg-[#0D2240] text-white shadow-xs scale-105'
+                                  : 'bg-white border border-[#E2E8F0] text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          type="button"
+                          disabled={dossierPage === totalDossierPages}
+                          onClick={() => {
+                            setDossierPage((p) => Math.min(totalDossierPages, p + 1))
+                            document.getElementById('dossier-schemes-list')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+                          }}
+                          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                            dossierPage === totalDossierPages
+                              ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border border-transparent'
+                              : 'bg-[#E65100] hover:bg-[#D84315] text-white font-bold shadow-xs'
+                          }`}
+                        >
+                          <span>Next</span>
+                          <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </>
         )}
 
         {/* Custom Civic Modern Pagination */}

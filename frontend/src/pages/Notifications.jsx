@@ -11,7 +11,14 @@ export default function Notifications() {
   function load() {
     setLoading(true)
     getNotifications()
-      .then(setData)
+      .then((res) => {
+        setData(res)
+        // Mark all as read since citizen has opened the Notification Center
+        if (res?.unreadCount > 0) {
+          markAllNotificationsRead().catch(() => {})
+          window.dispatchEvent(new CustomEvent('notifications-read'))
+        }
+      })
       .finally(() => setLoading(false))
   }
 
@@ -22,9 +29,11 @@ export default function Notifications() {
       await markNotificationRead(n.notificationId)
       setData((prev) => {
         if (!prev) return prev
+        const nextCount = Math.max(0, (prev.unreadCount || 1) - 1)
+        window.dispatchEvent(new CustomEvent('notifications-updated', { detail: { unreadCount: nextCount } }))
         return {
           ...prev,
-          unreadCount: Math.max(0, (prev.unreadCount || 1) - 1),
+          unreadCount: nextCount,
           notifications: prev.notifications.map((item) =>
             item.notificationId === n.notificationId ? { ...item, read: true } : item
           ),
@@ -43,6 +52,7 @@ export default function Notifications() {
         notifications: prev.notifications.map((item) => ({ ...item, read: true })),
       }
     })
+    window.dispatchEvent(new CustomEvent('notifications-read'))
   }
 
   function downloadCalendarIcs() {
@@ -75,7 +85,29 @@ export default function Notifications() {
     document.body.removeChild(link)
   }
 
-  const notifications = data?.notifications || []
+  function formatNotificationDate(dateStr) {
+    if (!dateStr) return 'Recent Update'
+    try {
+      const d = new Date(dateStr)
+      if (isNaN(d.getTime())) return dateStr
+      return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    } catch {
+      return dateStr
+    }
+  }
+
+  const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000
+
+  const notifications = useMemo(() => {
+    const raw = data?.notifications || []
+    const now = Date.now()
+    return raw.filter((n) => {
+      if (!n.createdAt) return true
+      const createdTime = new Date(n.createdAt).getTime()
+      if (isNaN(createdTime)) return true
+      return (now - createdTime) <= TWO_DAYS_MS
+    })
+  }, [data])
 
   // Metrics calculation
   const urgentCount = useMemo(() => {
@@ -91,7 +123,7 @@ export default function Notifications() {
   }, [notifications])
 
   const statutoryCount = useMemo(() => {
-    return Math.max(1, notifications.length - urgentCount - newMatchCount)
+    return Math.max(0, notifications.length - urgentCount - newMatchCount)
   }, [notifications, urgentCount, newMatchCount])
 
   // Filtered notifications
@@ -113,7 +145,7 @@ export default function Notifications() {
       )
     }
     return notifications
-  }, [notifications, activeFilter])
+  }, [activeFilter, notifications])
 
   if (loading) {
     return <NotificationSkeleton />
@@ -124,13 +156,17 @@ export default function Notifications() {
       {/* 1. TOP ACTION BAR & PAGE IDENTITY (Module 10) */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2">
         <div className="space-y-2 min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full bg-kesari-saffron text-on-primary font-label-sm text-label-sm tracking-wide uppercase font-bold">
               Official Advisory Gateway
             </span>
             <span className="flex items-center gap-1 font-label-sm text-label-sm text-harita-green bg-harita-green-soft px-2.5 py-0.5 rounded-full font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-harita-green animate-pulse" />
               Real-Time Engine Active
+            </span>
+            <span className="flex items-center gap-1 font-label-sm text-label-sm text-[#0D2240] bg-[#EBF3FC] px-2.5 py-0.5 rounded-full font-semibold border border-[#0D2240]/10">
+              <span className="material-symbols-outlined text-[13px]">auto_delete</span>
+              Auto-expires after 2 days
             </span>
           </div>
 
@@ -183,7 +219,7 @@ export default function Notifications() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-headline-lg text-headline-lg text-chakra-blue font-bold tracking-tight">
-                {String(urgentCount || 3).padStart(2, '0')}
+                {String(urgentCount).padStart(2, '0')}
               </span>
               <span className="px-2 py-0.5 rounded-full bg-kesari-saffron text-on-primary font-label-sm text-label-sm font-bold">
                 Urgent
@@ -204,14 +240,14 @@ export default function Notifications() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-headline-lg text-headline-lg text-chakra-blue font-bold tracking-tight">
-                ₹18,000
+                {String(newMatchCount).padStart(2, '0')}
               </span>
               <span className="px-2 py-0.5 rounded-full bg-harita-green-soft text-harita-green font-label-sm text-label-sm font-bold">
-                New Match
+                New Matches
               </span>
             </div>
             <p className="font-label-md text-label-md text-on-surface-variant truncate">
-              Newly detected benefit entitlement
+              Newly detected benefit schemes
             </p>
           </div>
         </div>
@@ -225,7 +261,7 @@ export default function Notifications() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-headline-lg text-headline-lg text-chakra-blue font-bold tracking-tight">
-                {String(statutoryCount || 2).padStart(2, '0')}
+                {String(statutoryCount).padStart(2, '0')}
               </span>
               <span className="px-2 py-0.5 rounded-full bg-chakra-blue-light text-chakra-blue font-label-sm text-label-sm font-bold">
                 Gazettes
@@ -244,12 +280,16 @@ export default function Notifications() {
           onClick={() => setActiveFilter('all')}
           className={`px-4 py-2 rounded-lg font-label-lg text-label-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeFilter === 'all'
-              ? 'bg-chakra-blue text-on-primary shadow-sm'
+              ? 'bg-chakra-blue text-white shadow-sm'
               : 'text-chakra-blue hover:bg-surface-container-highest'
           }`}
         >
           <span>All Notifications</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-slate-surface-elevated/20 text-on-primary font-label-sm text-label-sm">
+          <span className={`px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold ${
+            activeFilter === 'all'
+              ? 'bg-white/20 text-white'
+              : 'bg-slate-surface-elevated text-chakra-blue border border-slate-200'
+          }`}>
             {notifications.length}
           </span>
         </button>
@@ -258,12 +298,16 @@ export default function Notifications() {
           onClick={() => setActiveFilter('matches')}
           className={`px-4 py-2 rounded-lg font-label-lg text-label-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeFilter === 'matches'
-              ? 'bg-chakra-blue text-on-primary shadow-sm'
+              ? 'bg-chakra-blue text-white shadow-sm'
               : 'text-chakra-blue hover:bg-surface-container-highest'
           }`}
         >
           <span>Newly Unlocked Matches</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-harita-green-soft text-harita-green font-label-sm text-label-sm font-bold">
+          <span className={`px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold ${
+            activeFilter === 'matches'
+              ? 'bg-harita-green text-white'
+              : 'bg-harita-green-soft text-harita-green'
+          }`}>
             {newMatchCount}
           </span>
         </button>
@@ -272,12 +316,16 @@ export default function Notifications() {
           onClick={() => setActiveFilter('urgent')}
           className={`px-4 py-2 rounded-lg font-label-lg text-label-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeFilter === 'urgent'
-              ? 'bg-chakra-blue text-on-primary shadow-sm'
+              ? 'bg-chakra-blue text-white shadow-sm'
               : 'text-chakra-blue hover:bg-surface-container-highest'
           }`}
         >
           <span>Urgent Deadlines (&lt;15 Days)</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-kesari-saffron text-on-primary font-label-sm text-label-sm font-bold">
+          <span className={`px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold ${
+            activeFilter === 'urgent'
+              ? 'bg-kesari-saffron text-white'
+              : 'bg-kesari-saffron-soft text-kesari-saffron'
+          }`}>
             {urgentCount}
           </span>
         </button>
@@ -286,12 +334,16 @@ export default function Notifications() {
           onClick={() => setActiveFilter('statutory')}
           className={`px-4 py-2 rounded-lg font-label-lg text-label-lg font-semibold transition-all flex items-center gap-2 cursor-pointer ${
             activeFilter === 'statutory'
-              ? 'bg-chakra-blue text-on-primary shadow-sm'
+              ? 'bg-chakra-blue text-white shadow-sm'
               : 'text-chakra-blue hover:bg-surface-container-highest'
           }`}
         >
           <span>Statutory Updates</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-surface-container-lowest text-chakra-blue font-label-sm text-label-sm font-semibold">
+          <span className={`px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold ${
+            activeFilter === 'statutory'
+              ? 'bg-white/20 text-white'
+              : 'bg-surface-container-lowest text-chakra-blue'
+          }`}>
             {statutoryCount}
           </span>
         </button>
@@ -311,7 +363,7 @@ export default function Notifications() {
             </div>
             <h3 className="font-headline-md font-bold text-chakra-blue mb-1">All Caught Up!</h3>
             <p className="font-body-sm text-on-surface-variant max-w-sm mx-auto">
-              No pending notifications in this category. You will be notified automatically when new gazette circulars or deadlines trigger.
+              No active notifications in this view. Notifications automatically expire 2 days after broadcast. You will be alerted when new statutory triggers or deadlines arise.
             </p>
           </div>
         ) : (
@@ -386,7 +438,7 @@ export default function Notifications() {
                     <div className="flex flex-wrap items-center gap-4 text-on-surface-variant font-label-sm text-label-sm pt-1">
                       <span className="flex items-center gap-1">
                         <span className="material-symbols-outlined text-[16px]">schedule</span>
-                        {n.createdAt || 'Recent Update'}
+                        {formatNotificationDate(n.createdAt)}
                       </span>
                       <span>•</span>
                       <span className="flex items-center gap-1 font-semibold text-chakra-blue">
@@ -396,24 +448,24 @@ export default function Notifications() {
                   </div>
 
                   {/* Quick Action Buttons */}
-                  <div className="flex flex-col sm:flex-row lg:flex-col shrink-0 gap-2.5 lg:w-56 pt-2 lg:pt-0">
-                    {n.schemeId && (
-                      <Link
-                        to={`/schemes/${n.schemeId}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-chakra-blue text-on-primary hover:bg-chakra-blue-subtle transition-all shadow-sm font-label-lg text-label-lg font-bold"
-                      >
-                        <span>View Scheme Details</span>
-                        <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                      </Link>
-                    )}
+                  <div className="flex flex-col sm:flex-row lg:flex-col shrink-0 gap-2 sm:self-center lg:self-start pt-2 lg:pt-0 min-w-[200px]">
+                    <Link
+                      to={n.schemeId ? `/schemes/${n.schemeId}` : '/explorer'}
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center justify-between gap-2.5 px-4 py-2.5 rounded-xl bg-[#0D2240] text-white hover:bg-[#1A365D] active:scale-[0.98] transition-all shadow-xs text-xs font-bold whitespace-nowrap group/btn cursor-pointer"
+                    >
+                      <span>{n.schemeId ? 'View Scheme Details' : 'Explore Schemes'}</span>
+                      <span className="material-symbols-outlined text-[16px] group-hover/btn:translate-x-0.5 transition-transform">
+                        arrow_forward
+                      </span>
+                    </Link>
 
                     <Link
                       to="/checklist"
                       onClick={(e) => e.stopPropagation()}
-                      className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-chakra-blue-light text-chakra-blue hover:bg-surface-container-high transition-colors font-label-md text-label-md font-semibold"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#EBF3FC] text-[#0D2240] hover:bg-[#DCEBFB] active:scale-[0.98] transition-all text-xs font-bold whitespace-nowrap border border-[#0D2240]/10 cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-[16px]">fact_check</span>
+                      <span className="material-symbols-outlined text-[16px] text-[#0D2240]">fact_check</span>
                       <span>View Checklist</span>
                     </Link>
                   </div>

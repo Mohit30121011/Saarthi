@@ -19,7 +19,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080/Saarthi',
+        target: 'http://localhost:8081/saarthi',
         changeOrigin: true,
         agent: noKeepAliveAgent,
       },

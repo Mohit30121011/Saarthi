@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import java.math.BigDecimal;
+
 /**
  * Controller layer per SRS Section 2.4 — no SQL, no business logic. Only:
  * parse request -> call Service -> write JSON. AuthFilter has already
  * populated the "userId" request attribute (FR3.1, FR3.4).
  */
-@WebServlet({"/api/match/my-schemes", "/api/match/refresh"})
+@WebServlet({"/api/match/my-schemes", "/api/match/refresh", "/api/match/simulate"})
 public class MatchController extends HttpServlet {
 
     private final EligibilityService eligibilityService = new EligibilityService();
@@ -30,13 +32,21 @@ public class MatchController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handle(req, resp);
+        if (req.getServletPath().endsWith("/simulate")) {
+            handleSimulate(req, resp);
+        } else {
+            handle(req, resp);
+        }
     }
 
     /** FR3.4 — "refresh matches" is the same computation as the initial load; nothing is cached. */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handle(req, resp);
+        if (req.getServletPath().endsWith("/simulate")) {
+            handleSimulate(req, resp);
+        } else {
+            handle(req, resp);
+        }
     }
 
     private void handle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -50,6 +60,68 @@ public class MatchController extends HttpServlet {
         } catch (SQLException e) {
             JsonUtil.writeError(resp, 500, "A server error occurred. Please try again.");
         }
+    }
+
+    private void handleSimulate(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Object uidAttr = req.getAttribute("userId");
+        int userId = (uidAttr instanceof Integer) ? (Integer) uidAttr : 0;
+        BigDecimal simulatedIncome = null;
+
+        String incomeParam = req.getParameter("annualIncome");
+        if (incomeParam != null && !incomeParam.trim().isEmpty()) {
+            try {
+                simulatedIncome = new BigDecimal(incomeParam.trim());
+            } catch (Exception ignored) {}
+        } else {
+            try {
+                SimulateRequest body = JsonUtil.gson().fromJson(req.getReader(), SimulateRequest.class);
+                if (body != null && body.annualIncome != null) {
+                    simulatedIncome = body.annualIncome;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        if (simulatedIncome == null) {
+            simulatedIncome = new BigDecimal("500000"); // default to ₹5 Lakh scenario
+        }
+
+        try {
+            EligibilityService.SimulationResult result = eligibilityService.simulateProfile(userId, simulatedIncome);
+            JsonUtil.writeJson(resp, 200, toSimulationResponse(result));
+        } catch (SQLException e) {
+            JsonUtil.writeError(resp, 500, "A server error occurred during simulation. Please try again.");
+        }
+    }
+
+    private SimulationResponse toSimulationResponse(EligibilityService.SimulationResult res) {
+        List<MatchResponse> allSimulated = res.getSimulatedMatches().stream().map(this::toMatchResponse).collect(Collectors.toList());
+        List<OpportunityResponse> unlocked = res.getNewlyUnlocked().stream()
+                .map(o -> new OpportunityResponse(
+                        toMatchResponse(o.getMatch()),
+                        o.getCeilingRule(),
+                        o.getCeilingValue() == null ? null : o.getCeilingValue().toString()
+                ))
+                .collect(Collectors.toList());
+        List<MatchResponse> retained = res.getRetained().stream().map(this::toMatchResponse).collect(Collectors.toList());
+        List<MatchResponse> lost = res.getLost().stream().map(this::toMatchResponse).collect(Collectors.toList());
+
+        Map<String, List<MatchResponse>> byCategory = new LinkedHashMap<>();
+        for (MatchResponse m : allSimulated) {
+            byCategory.computeIfAbsent(m.scheme.categoryName, k -> new java.util.ArrayList<>()).add(m);
+        }
+
+        return new SimulationResponse(
+                res.getBaselineIncome() == null ? null : res.getBaselineIncome().toString(),
+                res.getSimulatedIncome() == null ? null : res.getSimulatedIncome().toString(),
+                res.getBaselineCount(),
+                res.getSimulatedCount(),
+                unlocked.size(),
+                allSimulated,
+                byCategory,
+                unlocked,
+                retained,
+                lost
+        );
     }
 
     /** FR3.2 — total match count + schemes grouped by category. */
@@ -121,5 +193,50 @@ public class MatchController extends HttpServlet {
             this.deadline = deadline;
             this.verifiedAt = verifiedAt;
         }
+    }
+
+    private static final class SimulationResponse {
+        public final String baselineIncome;
+        public final String simulatedIncome;
+        public final int baselineMatchesCount;
+        public final int simulatedMatchesCount;
+        public final int newlyUnlockedCount;
+        public final List<MatchResponse> matches;
+        public final Map<String, List<MatchResponse>> byCategory;
+        public final List<OpportunityResponse> newlyUnlocked;
+        public final List<MatchResponse> retained;
+        public final List<MatchResponse> lost;
+
+        SimulationResponse(String baselineIncome, String simulatedIncome, int baselineMatchesCount,
+                           int simulatedMatchesCount, int newlyUnlockedCount, List<MatchResponse> matches,
+                           Map<String, List<MatchResponse>> byCategory, List<OpportunityResponse> newlyUnlocked,
+                           List<MatchResponse> retained, List<MatchResponse> lost) {
+            this.baselineIncome = baselineIncome;
+            this.simulatedIncome = simulatedIncome;
+            this.baselineMatchesCount = baselineMatchesCount;
+            this.simulatedMatchesCount = simulatedMatchesCount;
+            this.newlyUnlockedCount = newlyUnlockedCount;
+            this.matches = matches;
+            this.byCategory = byCategory;
+            this.newlyUnlocked = newlyUnlocked;
+            this.retained = retained;
+            this.lost = lost;
+        }
+    }
+
+    private static final class OpportunityResponse {
+        public final MatchResponse match;
+        public final String ceilingRule;
+        public final String ceilingValue;
+
+        OpportunityResponse(MatchResponse match, String ceilingRule, String ceilingValue) {
+            this.match = match;
+            this.ceilingRule = ceilingRule;
+            this.ceilingValue = ceilingValue;
+        }
+    }
+
+    private static final class SimulateRequest {
+        public BigDecimal annualIncome;
     }
 }

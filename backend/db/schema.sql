@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS schemes (
     category_id INT NULL,
     state VARCHAR(50) NULL,          -- NULL = Central/nationwide
     benefit_summary TEXT NULL,
-    benefit_amount VARCHAR(100) NULL,
+    benefit_amount VARCHAR(255) NULL,
     application_url VARCHAR(500) NULL,
     official_portal VARCHAR(500) NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,

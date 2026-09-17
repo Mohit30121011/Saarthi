@@ -19,10 +19,12 @@
   --color-slate-surface: #F8FAFC;
   --color-slate-surface-elevated: #FFFFFF;
   --color-slate-border: #E2E8F0;
+  --color-on-primary: #FFFFFF;
+  --color-on-primary-container: #778AAD;
+  --color-on-secondary: #FFFFFF;
+  --color-on-tertiary: #FFFFFF;
   --color-on-surface: #111C2D;
   --color-on-surface-variant: #44474E;
-  --color-on-primary: #FFFFFF;
-  --color-on-primary-container: #DEE8FF;
   --color-surface-container: #E7EEFF;
   --color-surface-container-low: #F0F3FF;
   --color-surface-container-high: #DEE8FF;
@@ -33,7 +35,9 @@
   --color-outline: #79747E;
   --color-error: #BA1A1A;
   --color-error-soft: #FEE2E2;
-  --color-error-container: #FEE2E2;
+  --color-error-container: #FFDAD6;
+  --color-on-error: #FFFFFF;
+  --color-secondary: #E65100;
 
   /* Legacy Saarthi Tokens (Kept for compatibility) */
   --color-saarthi-green: #138808;
@@ -86,6 +90,14 @@ body {
 
 .font-caveat {
   font-family: var(--font-caveat);
+}
+
+.text-on-primary {
+  color: #FFFFFF !important;
+}
+
+.text-on-secondary {
+  color: #FFFFFF !important;
 }
 
 .saarthi-input-focus:focus {

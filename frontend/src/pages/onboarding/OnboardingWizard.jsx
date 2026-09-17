@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { updateProfile } from '../../api/profile'
 import { STATE_DISTRICTS, getDistrictsForState } from '../../data/indianDistricts'
@@ -22,10 +22,35 @@ const EDUCATION_LEVELS = ['Below 10th', '10th', '12th', 'Diploma', 'Graduate', '
 const OCCUPATIONS = ['Student', 'Farmer', 'Self-Employed', 'Salaried', 'Unemployed', 'Homemaker', 'Retired']
 const INDIAN_STATES = Object.keys(STATE_DISTRICTS)
 
-function CustomSelect({ options = [], value, onChange, placeholder = 'Select an option', disabled = false }) {
+function CustomSelect({
+  options = [],
+  value,
+  onChange,
+  placeholder = 'Select an option',
+  disabled = false,
+  direction = 'auto',
+}) {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const [openUpwards, setOpenUpwards] = useState(false)
   const dropdownRef = useRef(null)
+
+  const checkPlacement = useCallback(() => {
+    if (direction === 'up') {
+      setOpenUpwards(true)
+      return
+    }
+    if (direction === 'down') {
+      setOpenUpwards(false)
+      return
+    }
+    if (!dropdownRef.current) return
+    const rect = dropdownRef.current.getBoundingClientRect()
+    const spaceBelow = window.innerHeight - rect.bottom
+    const spaceAbove = rect.top
+    // If space below is less than 280px and space above is greater, open upwards
+    setOpenUpwards(spaceBelow < 280 && spaceAbove > spaceBelow)
+  }, [direction])
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -37,6 +62,18 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  useEffect(() => {
+    if (open) {
+      checkPlacement()
+      window.addEventListener('resize', checkPlacement)
+      window.addEventListener('scroll', checkPlacement, true)
+      return () => {
+        window.removeEventListener('resize', checkPlacement)
+        window.removeEventListener('scroll', checkPlacement, true)
+      }
+    }
+  }, [open, checkPlacement])
+
   const filtered = options.filter((opt) => opt.toLowerCase().includes(search.toLowerCase()))
 
   return (
@@ -46,6 +83,9 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
         disabled={disabled}
         onClick={() => {
           if (disabled) return
+          if (!open) {
+            checkPlacement()
+          }
           setOpen(!open)
           setSearch('')
         }}
@@ -62,15 +102,21 @@ function CustomSelect({ options = [], value, onChange, placeholder = 'Select an 
         </span>
         <span
           className={`material-symbols-outlined text-[18px] text-[#44474E] transition-transform duration-200 ${
-            open ? 'rotate-180 text-[#0D2240]' : ''
+            open ? (openUpwards ? 'text-[#0D2240]' : 'rotate-180 text-[#0D2240]') : ''
           }`}
         >
-          expand_more
+          {open && openUpwards ? 'expand_less' : 'expand_more'}
         </span>
       </button>
 
       {open && !disabled && (
-        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 bg-white rounded-xl shadow-xl border border-[#E2E8F0] p-2">
+        <div
+          className={`absolute left-0 right-0 z-50 bg-white rounded-xl border border-[#E2E8F0] p-2 ${
+            openUpwards
+              ? 'bottom-[calc(100%+6px)] shadow-[0_-10px_25px_-5px_rgba(13,34,64,0.15),0_8px_10px_-6px_rgba(13,34,64,0.05)]'
+              : 'top-[calc(100%+6px)] shadow-xl'
+          }`}
+        >
           {options.length > 6 && (
             <div className="px-1 pb-2 border-b border-[#E2E8F0] mb-1">
               <div className="relative flex items-center bg-[#F8FAFC] rounded-lg px-2.5 h-9 border border-[#E2E8F0]">

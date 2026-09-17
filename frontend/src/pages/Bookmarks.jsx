@@ -192,7 +192,7 @@ export default function Bookmarks() {
                   onClick={() => setActiveCategory(cat.id)}
                   className={`px-4 py-2 rounded-lg font-label-lg text-label-lg whitespace-nowrap transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-chakra-blue text-on-primary font-bold shadow-sm'
+                      ? 'bg-chakra-blue text-white font-bold shadow-sm'
                       : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                   }`}
                 >

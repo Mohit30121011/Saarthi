@@ -32,8 +32,19 @@ public class NotificationDAO {
         }
     }
 
+    /** Automatically purges notifications older than retention period (2 days) */
+    public void deleteOlderThanDays(int days) throws SQLException {
+        String sql = "DELETE FROM notifications WHERE created_at < (NOW() - INTERVAL ? DAY)";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, days);
+            ps.executeUpdate();
+        }
+    }
+
     public List<Notification> findByUserId(int userId) throws SQLException {
-        String sql = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC";
+        deleteOlderThanDays(2);
+        String sql = "SELECT * FROM notifications WHERE user_id = ? AND created_at >= (NOW() - INTERVAL 2 DAY) ORDER BY created_at DESC";
         List<Notification> notifications = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -49,7 +60,7 @@ public class NotificationDAO {
 
     /** Prevents re-notifying for the same scheme+type combination (used by both trigger algorithms). */
     public boolean existsForUserSchemeType(int userId, int schemeId, String type) throws SQLException {
-        String sql = "SELECT 1 FROM notifications WHERE user_id = ? AND scheme_id = ? AND type = ?";
+        String sql = "SELECT 1 FROM notifications WHERE user_id = ? AND scheme_id = ? AND type = ? AND created_at >= (NOW() - INTERVAL 2 DAY)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -83,7 +94,8 @@ public class NotificationDAO {
     }
 
     public int countUnread(int userId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE";
+        deleteOlderThanDays(2);
+        String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE AND created_at >= (NOW() - INTERVAL 2 DAY)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);

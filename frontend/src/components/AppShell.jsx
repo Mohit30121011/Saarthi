@@ -6,17 +6,25 @@ import ChatWidget from './ChatWidget'
 import saarthiLogoSvg from '../assets/saarthi-portal-logo.svg'
 import headshotImg from '../assets/indian-citizen-headshot.png'
 
-function NotificationBell() {
+function NotificationBell({ unreadCount = 0, setUnreadCount }) {
   const [open, setOpen] = useState(false)
-  const [unreadCount, setUnreadCount] = useState(3)
   const [notifications, setNotifications] = useState([])
   const ref = useRef(null)
 
   async function load() {
     try {
       const data = await getNotifications()
-      setUnreadCount(data.unreadCount ?? 3)
-      setNotifications(data.notifications || [])
+      const raw = data.notifications || []
+      const now = Date.now()
+      const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000
+      const valid = raw.filter((n) => {
+        if (!n.createdAt) return true
+        const t = new Date(n.createdAt).getTime()
+        if (isNaN(t)) return true
+        return (now - t) <= TWO_DAYS_MS
+      })
+      if (setUnreadCount) setUnreadCount(valid.filter((n) => !n.read).length)
+      setNotifications(valid)
     } catch {
       // fallback
     }
@@ -42,9 +50,11 @@ function NotificationBell() {
   async function handleMarkAll() {
     try {
       await markAllNotificationsRead()
+      if (setUnreadCount) setUnreadCount(0)
+      window.dispatchEvent(new CustomEvent('notifications-read'))
       load()
     } catch {
-      setUnreadCount(0)
+      if (setUnreadCount) setUnreadCount(0)
     }
   }
 
@@ -52,6 +62,8 @@ function NotificationBell() {
     if (!n.read) {
       try {
         await markNotificationRead(n.notificationId)
+        if (setUnreadCount) setUnreadCount((c) => Math.max(0, c - 1))
+        window.dispatchEvent(new CustomEvent('notifications-updated', { detail: { unreadCount: Math.max(0, unreadCount - 1) } }))
         load()
       } catch {
         // ignore
@@ -97,23 +109,14 @@ function NotificationBell() {
 
           <div className="max-h-80 overflow-y-auto divide-y divide-[#E2E8F0]">
             {notifications.length === 0 ? (
-              <div className="p-4 space-y-2.5">
-                <div className="p-3 bg-[#FFF3EB] rounded-xl border border-[#E65100]/20">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#E65100] uppercase tracking-wider">Urgent Deadline</span>
-                    <span className="text-[10px] text-slate-400">Today</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#0D2240] mt-1">PM-KISAN 17th Installment KYC</p>
-                  <p className="text-[11px] text-[#44474E] mt-0.5">e-KYC deadline closing in 12 days. Complete via biometric or OTP.</p>
+              <div className="py-8 px-4 text-center">
+                <div className="w-10 h-10 rounded-full bg-[#EBF3FC] text-[#0D2240] flex items-center justify-center mx-auto mb-2">
+                  <span className="material-symbols-outlined text-[20px]">notifications_none</span>
                 </div>
-                <div className="p-3 bg-[#EAFBF0] rounded-xl border border-[#16A34A]/20">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#138808] uppercase tracking-wider">New Benefit Match</span>
-                    <span className="text-[10px] text-slate-400">1d ago</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#0D2240] mt-1">Rajarshi Shahu Maharaj Scholarship</p>
-                  <p className="text-[11px] text-[#44474E] mt-0.5">100% Tuition fee reimbursement unlocked under Maharashtra Higher Education.</p>
-                </div>
+                <p className="text-xs font-bold text-[#0D2240]">No new notifications</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Notifications automatically expire after 2 days (48 hrs).
+                </p>
               </div>
             ) : (
               notifications.map((n) => (
@@ -162,12 +165,51 @@ export default function AppShell() {
   const [searchQuery, setSearchQuery] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [exploreNavDropdownOpen, setExploreNavDropdownOpen] = useState(false)
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0)
   const isExplorerRoute = location.pathname === '/explorer' || location.pathname.startsWith('/schemes/')
 
   const menuRef = useRef(null)
   const searchContainerRef = useRef(null)
   const searchInputRef = useRef(null)
   const exploreDropdownRef = useRef(null)
+
+  useEffect(() => {
+    function fetchUnread() {
+      getNotifications()
+        .then((data) => setUnreadNotificationsCount(data?.unreadCount ?? 0))
+        .catch(() => {})
+    }
+    fetchUnread()
+
+    function handleNotificationsRead() {
+      setUnreadNotificationsCount(0)
+    }
+
+    function handleNotificationsUpdated(e) {
+      if (typeof e.detail?.unreadCount === 'number') {
+        setUnreadNotificationsCount(e.detail.unreadCount)
+      } else {
+        fetchUnread()
+      }
+    }
+
+    window.addEventListener('notifications-read', handleNotificationsRead)
+    window.addEventListener('notifications-updated', handleNotificationsUpdated)
+    window.addEventListener('focus', fetchUnread)
+
+    return () => {
+      window.removeEventListener('notifications-read', handleNotificationsRead)
+      window.removeEventListener('notifications-updated', handleNotificationsUpdated)
+      window.removeEventListener('focus', fetchUnread)
+    }
+  }, [])
+
+  // When citizen views the notification center, automatically clear unread badge
+  useEffect(() => {
+    if (location.pathname === '/notifications') {
+      setUnreadNotificationsCount(0)
+    }
+  }, [location.pathname])
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -370,9 +412,11 @@ export default function AppShell() {
                 }
               >
                 <span>Notifications</span>
-                <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E65100] text-white">
-                  3
-                </span>
+                {unreadNotificationsCount > 0 && (
+                  <span className="inline-flex items-center justify-center min-w-[18px] px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E65100] text-white animate-in zoom-in-50 duration-200">
+                    {unreadNotificationsCount}
+                  </span>
+                )}
               </NavLink>
 
               {user?.role === 'ADMIN' && (
@@ -435,7 +479,7 @@ export default function AppShell() {
               </div>
 
               {/* Notification Bell */}
-              <NotificationBell />
+              <NotificationBell unreadCount={unreadNotificationsCount} setUnreadCount={setUnreadNotificationsCount} />
 
               {/* Citizen Profile Lockup */}
               <div className="flex items-center gap-2.5 pl-1.5 sm:pl-2 border-l border-[#E2E8F0]" ref={menuRef}>
@@ -575,9 +619,14 @@ export default function AppShell() {
             <NavLink
               to="/notifications"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
+              className="flex items-center justify-between px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
             >
-              Notifications (3)
+              <span>Notifications</span>
+              {unreadNotificationsCount > 0 && (
+                <span className="inline-flex items-center justify-center min-w-[18px] px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E65100] text-white">
+                  {unreadNotificationsCount}
+                </span>
+              )}
             </NavLink>
             <NavLink
               to="/profile"

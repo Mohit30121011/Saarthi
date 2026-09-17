@@ -328,7 +328,7 @@ export default function Checklist() {
               onClick={() => setActiveFilter('all')}
               className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
                 activeFilter === 'all'
-                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  ? 'bg-chakra-blue text-white shadow-sm'
                   : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
               }`}
             >
@@ -338,7 +338,7 @@ export default function Checklist() {
               onClick={() => setActiveFilter('not_collected')}
               className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
                 activeFilter === 'not_collected'
-                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  ? 'bg-chakra-blue text-white shadow-sm'
                   : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
               }`}
             >
@@ -348,7 +348,7 @@ export default function Checklist() {
               onClick={() => setActiveFilter('collected')}
               className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
                 activeFilter === 'collected'
-                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  ? 'bg-chakra-blue text-white shadow-sm'
                   : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
               }`}
             >
@@ -358,7 +358,7 @@ export default function Checklist() {
               onClick={() => setActiveFilter('mandatory')}
               className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
                 activeFilter === 'mandatory'
-                  ? 'bg-chakra-blue text-on-primary shadow-sm'
+                  ? 'bg-chakra-blue text-white shadow-sm'
                   : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
               }`}
             >
