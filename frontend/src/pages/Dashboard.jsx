@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useLanguage } from '../context/LanguageContext'
 import { getMyMatches, refreshMatches } from '../api/match'
 import { getProfile } from '../api/profile'
 import { getBookmarks } from '../api/bookmarks'
@@ -29,6 +30,7 @@ function formatCurrentDateTime() {
 
 export default function Dashboard() {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
 
   const [data, setData] = useState(null)
@@ -288,17 +290,17 @@ export default function Dashboard() {
           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
             <Link to="/dashboard" className="hover:text-[#0D2240] transition-colors flex items-center gap-1 font-bold text-[#0D2240] shrink-0">
               <span className="material-symbols-outlined text-[16px]">account_balance</span>
-              <span>Citizen Home</span>
+              <span>{t('citizen_home', 'Citizen Home')}</span>
             </Link>
             <span className="hidden sm:inline text-[#C4C6CE]">/</span>
-            <span className="hidden sm:inline text-[#111C2D] truncate">Eligibility Matching Engine</span>
+            <span className="hidden sm:inline text-[#111C2D] truncate">{t('eligibility_engine', 'Eligibility Matching Engine')}</span>
             <span className="hidden sm:inline text-[#C4C6CE]">/</span>
-            <span className="hidden sm:inline text-[#44474E] truncate">Verified Entitlements</span>
+            <span className="hidden sm:inline text-[#44474E] truncate">{t('verified_entitlements', 'Verified Entitlements')}</span>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 bg-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-[#E2E8F0] shadow-xs text-[10.5px] sm:text-[11px] font-bold text-[#0D2240] shrink-0">
             <span className="flex h-2 w-2 rounded-full bg-[#138808] shrink-0" />
-            <span className="whitespace-nowrap">State: {citizenState}</span>
+            <span className="whitespace-nowrap">{t('state_maharashtra', `State: ${citizenState}`)}</span>
           </div>
         </div>
 
@@ -315,21 +317,21 @@ export default function Dashboard() {
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2.5">
                 <span className="px-2.5 py-1 rounded bg-[#FFF3EB] text-[#E65100] text-[11px] font-bold tracking-wide uppercase">
-                  Official Entitlement Dossier
+                  {t('official_dossier', 'Official Entitlement Dossier')}
                 </span>
                 <span className="inline-flex items-center gap-1 text-[#138808] text-[11px] bg-[#EAFBF0] px-2.5 py-1 rounded font-bold border border-[#16A34A]/20">
                   <span className="material-symbols-outlined text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                     verified
                   </span>
-                  <span>Aadhaar &amp; Ration Card Linked</span>
+                  <span>{t('aadhaar_linked', 'Aadhaar & Ration Card Linked')}</span>
                 </span>
               </div>
 
               <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0D2240] tracking-tight">
-                Namaste, {displayName}
+                {t('namaste', 'Namaste')}, {displayName}
               </h1>
               <p className="text-xs sm:text-sm text-[#44474E] max-w-2xl leading-relaxed">
-                Evaluated your verified demographic credentials against {totalCatalogCount} Central and {citizenState} gazetted welfare schemes.
+                {t('dashboard_subtitle', `Evaluated your verified demographic credentials against ${totalCatalogCount} Central and ${citizenState} gazetted welfare schemes.`)}
               </p>
             </div>
 
@@ -337,7 +339,7 @@ export default function Dashboard() {
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EAFBF0] border border-[#16A34A]/20 text-[#138808] text-xs font-bold shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-[#138808] animate-pulse" />
-                <span>Auto-Sync Active</span>
+                <span>{t('auto_sync', 'Auto-Sync Active')}</span>
               </div>
 
               <div className="inline-flex items-center rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] shadow-xs overflow-hidden">
@@ -351,7 +353,7 @@ export default function Dashboard() {
                   <span className={`material-symbols-outlined text-[18px] text-[#E65100] ${exportingPdf ? 'animate-spin' : ''}`}>
                     {exportingPdf ? 'sync' : 'picture_as_pdf'}
                   </span>
-                  <span>{exportingPdf ? 'Generating PDF Dossier...' : 'Export Summary PDF'}</span>
+                  <span>{exportingPdf ? 'Generating PDF Dossier...' : t('export_pdf', 'Export Summary PDF')}</span>
                 </button>
                 <div className="w-[1px] h-6 bg-[#E2E8F0]" />
                 <button
@@ -370,7 +372,7 @@ export default function Dashboard() {
           <div className="pt-3 pb-6 flex flex-wrap items-center justify-between text-[#44474E] text-xs">
             <span className="flex items-center gap-1.5">
               <span className="material-symbols-outlined text-[16px] text-[#0D2240]">history</span>
-              <span>Last Verification: <strong className="text-[#111C2D]">{lastUpdated}</strong></span>
+              <span>{t('last_verification', 'Last Verification')}: <strong className="text-[#111C2D]">{lastUpdated}</strong></span>
             </span>
           </div>
 
@@ -379,7 +381,7 @@ export default function Dashboard() {
             {/* Tile 1: Schemes Matched */}
             <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
               <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">Eligible Entitlements</span>
+                <span className="text-xs font-bold text-[#44474E]">{t('eligible_entitlements', 'Eligible Entitlements')}</span>
                 <div className="w-8 h-8 rounded-lg bg-[#EBF3FC] text-[#0D2240] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[20px]">fact_check</span>
                 </div>
@@ -387,14 +389,14 @@ export default function Dashboard() {
               <div className="mt-3">
                 <div className="flex items-baseline gap-2">
                   <span className="font-display text-3xl font-extrabold text-[#0D2240]">{totalSchemesCount}</span>
-                  <span className="text-xs font-semibold text-[#44474E]">Schemes</span>
+                  <span className="text-xs font-semibold text-[#44474E]">{t('schemes', 'Schemes')}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-[#EAFBF0] text-[#138808]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#138808]" /> {strongCount} Strong
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#138808]" /> {strongCount} {t('strong_match', 'Strong')}
                   </span>
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-[#FEF3C7] text-[#D97706]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#D97706]" /> {partialCount} Partial
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D97706]" /> {partialCount} {t('partial_match', 'Partial')}
                   </span>
                 </div>
               </div>
@@ -403,7 +405,7 @@ export default function Dashboard() {
             {/* Tile 2: Total Value */}
             <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
               <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">Est. Annual Value</span>
+                <span className="text-xs font-bold text-[#44474E]">{t('est_annual_value', 'Est. Annual Value')}</span>
                 <div className="w-8 h-8 rounded-lg bg-[#EAFBF0] text-[#138808] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[20px]">currency_rupee</span>
                 </div>
@@ -421,7 +423,7 @@ export default function Dashboard() {
             {/* Tile 3: Upcoming Deadlines */}
             <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
               <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">Expiring Applications</span>
+                <span className="text-xs font-bold text-[#44474E]">{t('expiring_applications', 'Expiring Applications')}</span>
                 <div className="w-8 h-8 rounded-lg bg-[#FFF3EB] text-[#E65100] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[20px]">alarm</span>
                 </div>
@@ -430,7 +432,7 @@ export default function Dashboard() {
                 <div className="flex items-baseline gap-2">
                   <span className="font-display text-3xl font-extrabold text-[#E65100]">{expiringCount}</span>
                   <span className="text-xs font-bold text-[#E65100]">
-                    {expiringCount > 0 ? 'Deadline Listed' : 'Open Enrolment'}
+                    {expiringCount > 0 ? t('deadline_listed', 'Deadline Listed') : 'Open Enrolment'}
                   </span>
                 </div>
                 <p className="text-[11px] text-[#44474E] mt-2 line-clamp-2">
@@ -442,7 +444,7 @@ export default function Dashboard() {
             {/* Tile 4: Profile Fidelity */}
             <div className="p-4 rounded-xl bg-[#F0F3FF] border border-[#DEE8FF] shadow-xs flex flex-col justify-between">
               <div className="flex items-start justify-between">
-                <span className="text-xs font-bold text-[#44474E]">Profile Fidelity</span>
+                <span className="text-xs font-bold text-[#44474E]">{t('profile_fidelity', 'Profile Fidelity')}</span>
                 <span className="font-display text-lg font-bold text-[#0D2240]">{profileFidelity}%</span>
               </div>
               <div className="mt-2 space-y-2">

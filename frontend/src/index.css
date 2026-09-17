@@ -155,4 +155,45 @@ body {
   animation: shimmer-sweep 1.6s infinite ease-in-out;
 }
 
+/* Google Translate Silent Seamless Integration */
+.goog-te-banner-frame,
+.skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Protect Material Symbols from translation replacement */
+.material-symbols-outlined,
+.material-icons,
+[translate="no"],
+.notranslate {
+  font-family: 'Material Symbols Outlined' !important;
+  font-feature-settings: 'liga' !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+  direction: ltr !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+
 

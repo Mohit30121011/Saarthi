@@ -14,6 +14,51 @@
   </head>
   <body class="bg-[#F8FAFC] text-[#111C2D] font-sans antialiased">
     <div id="root"></div>
+    <!-- Official Multilingual Accessibility Engine (Google Translate) -->
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        if (window.google && window.google.translate) {
+          new window.google.translate.TranslateElement(
+            {
+              pageLanguage: 'en',
+              autoDisplay: false,
+            },
+            'google_translate_element'
+          );
+        }
+      }
+    </script>
+    <!-- Auto-Protect Material Symbols and Logos from Translation Corruptions -->
+    <script type="text/javascript">
+      (function() {
+        function protectIcons(root) {
+          if (!root) return;
+          if (root.nodeType === 1) {
+            if (root.classList && (root.classList.contains('material-symbols-outlined') || root.classList.contains('font-mono'))) {
+              root.classList.add('notranslate');
+              root.setAttribute('translate', 'no');
+            }
+            if (root.querySelectorAll) {
+              root.querySelectorAll('.material-symbols-outlined, .font-mono, [translate="no"]').forEach(function(el) {
+                el.classList.add('notranslate');
+                el.setAttribute('translate', 'no');
+              });
+            }
+          }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+          protectIcons(document.body);
+          var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(m) {
+              m.addedNodes.forEach(function(node) {
+                protectIcons(node);
+              });
+            });
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

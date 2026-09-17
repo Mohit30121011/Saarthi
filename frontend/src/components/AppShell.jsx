@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useLanguage } from '../context/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../api/notifications'
 import ChatWidget from './ChatWidget'
 import saarthiLogoSvg from '../assets/saarthi-portal-logo.svg'
@@ -158,6 +160,7 @@ function NotificationBell({ unreadCount = 0, setUnreadCount }) {
 
 export default function AppShell() {
   const { user, logout } = useAuth()
+  const { language, setLanguage, t } = useLanguage()
   const navigate = useNavigate()
   const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -261,32 +264,13 @@ export default function AppShell() {
             <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
               <span className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#138808] shrink-0" />
               <span className="truncate">
-                <span className="sm:hidden">GoI &amp; GoM Digital Initiative</span>
-                <span className="hidden sm:inline">Government of India &amp; Government of Maharashtra Digital Initiative</span>
+                <span className="sm:hidden">{t('gov_initiative', 'GoI & GoM Digital Initiative')}</span>
+                <span className="hidden sm:inline">{t('gov_initiative', 'Government of India & Government of Maharashtra Digital Initiative')}</span>
               </span>
               <span className="hidden md:inline text-[#C4C6CE]">|</span>
-              <span className="hidden md:inline text-[#111C2D]">Official Citizen Service Gateway</span>
+              <span className="hidden md:inline text-[#111C2D]">{t('service_gateway', 'Official Citizen Service Gateway')}</span>
             </div>
-            <div className="flex items-center gap-4 shrink-0">
-              {/* Compact language toggle on mobile */}
-              <button
-                type="button"
-                className="sm:hidden flex items-center gap-1 text-[11px] font-bold text-[#0D2240] cursor-pointer shrink-0"
-                aria-label="Change language"
-              >
-                <span className="material-symbols-outlined text-[14px]">translate</span>
-                <span>EN</span>
-              </button>
-              {/* Full language switcher on larger screens */}
-              <div className="hidden sm:flex items-center gap-1 text-[11.5px]">
-                <span className="material-symbols-outlined text-[15px] text-[#44474E]">translate</span>
-                <span className="cursor-pointer font-bold text-[#0D2240] hover:underline">English</span>
-                <span className="text-[#C4C6CE]">|</span>
-                <span className="cursor-pointer hover:text-[#0D2240] transition-colors">हिन्दी</span>
-                <span className="text-[#C4C6CE]">|</span>
-                <span className="cursor-pointer hover:text-[#0D2240] transition-colors">मराठी</span>
-              </div>
-            </div>
+            <LanguageSwitcher />
           </div>
 
           {/* Main Header Bar */}
@@ -314,7 +298,7 @@ export default function AppShell() {
                   }`
                 }
               >
-                <span>Dashboard</span>
+                <span>{t('dashboard', 'Dashboard')}</span>
               </NavLink>
 
               {/* Explore Schemes Dropdown */}
@@ -328,7 +312,7 @@ export default function AppShell() {
                       : 'text-[#44474E] hover:bg-[#F0F3FF] hover:text-[#0D2240]'
                   }`}
                 >
-                  <span>Explore Schemes</span>
+                  <span>{t('explore_schemes', 'Explore Schemes')}</span>
                   <span
                     className={`material-symbols-outlined text-[16px] transition-transform duration-200 ${
                       exploreNavDropdownOpen ? 'rotate-180' : ''
@@ -351,7 +335,7 @@ export default function AppShell() {
                     >
                       <span className="material-symbols-outlined text-[18px] text-[#138808]">verified</span>
                       <div>
-                        <p className="leading-tight font-bold">Matched Schemes</p>
+                        <p className="leading-tight font-bold">{t('official_matched_dossier', 'Matched Schemes')}</p>
                         <p className="text-[10px] text-slate-400 font-normal mt-0.5">Recommended for you</p>
                       </div>
                     </NavLink>
@@ -367,7 +351,7 @@ export default function AppShell() {
                     >
                       <span className="material-symbols-outlined text-[18px] text-[#0D2240]">grid_view</span>
                       <div>
-                        <p className="leading-tight font-bold">All Schemes</p>
+                        <p className="leading-tight font-bold">{t('all_schemes', 'All Schemes')}</p>
                         <p className="text-[10px] text-slate-400 font-normal mt-0.5">Complete statutory catalog</p>
                       </div>
                     </NavLink>
@@ -385,7 +369,7 @@ export default function AppShell() {
                   }`
                 }
               >
-                <span>Checklist</span>
+                <span>{t('checklist', 'Checklist')}</span>
               </NavLink>
 
               <NavLink
@@ -398,7 +382,7 @@ export default function AppShell() {
                   }`
                 }
               >
-                <span>Saved</span>
+                <span>{t('saved', 'Saved')}</span>
               </NavLink>
 
               <NavLink
@@ -411,7 +395,7 @@ export default function AppShell() {
                   }`
                 }
               >
-                <span>Notifications</span>
+                <span>{t('notifications', 'Notifications')}</span>
                 {unreadNotificationsCount > 0 && (
                   <span className="inline-flex items-center justify-center min-w-[18px] px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E65100] text-white animate-in zoom-in-50 duration-200">
                     {unreadNotificationsCount}
@@ -593,35 +577,35 @@ export default function AppShell() {
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
             >
-              Dashboard
+              {t('dashboard', 'Dashboard')}
             </NavLink>
             <NavLink
               to="/explorer"
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
             >
-              Explore Schemes
+              {t('explore_schemes', 'Explore Schemes')}
             </NavLink>
             <NavLink
               to="/checklist"
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
             >
-              My Checklist
+              {t('checklist', 'My Checklist')}
             </NavLink>
             <NavLink
               to="/bookmarks"
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
             >
-              Saved Schemes
+              {t('saved', 'Saved Schemes')}
             </NavLink>
             <NavLink
               to="/notifications"
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center justify-between px-3 py-2 text-xs font-bold text-[#0D2240] hover:bg-[#EBF3FC] rounded-lg"
             >
-              <span>Notifications</span>
+              <span>{t('notifications', 'Notifications')}</span>
               {unreadNotificationsCount > 0 && (
                 <span className="inline-flex items-center justify-center min-w-[18px] px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E65100] text-white">
                   {unreadNotificationsCount}
