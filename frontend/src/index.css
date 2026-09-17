@@ -181,9 +181,7 @@ body {
 
 /* Protect Material Symbols from translation replacement */
 .material-symbols-outlined,
-.material-icons,
-[translate="no"],
-.notranslate {
+.material-icons {
   font-family: 'Material Symbols Outlined' !important;
   font-feature-settings: 'liga' !important;
   -webkit-font-feature-settings: 'liga' !important;
@@ -227,6 +225,11 @@ body {
 
 .custom-dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
+}
+
+[translate="no"],
+.notranslate {
+  /* Prevent browser and Google Translate from modifying */
 }
 
 

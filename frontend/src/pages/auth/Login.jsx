@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import LanguageSwitcher from '../../components/LanguageSwitcher'
 import saarthiLogoSvg from '../../assets/saarthi-portal-logo.svg'
 
 export default function Login() {
@@ -66,7 +67,8 @@ export default function Login() {
           <div className="flex items-center gap-3">
             <img src={saarthiLogoSvg} alt="SAARTHI Official Logo" className="h-9 w-auto object-contain" />
           </div>
-          <div className="flex items-center gap-4 text-xs font-semibold text-[#44474E]">
+          <div className="flex items-center gap-3 text-xs font-semibold text-[#44474E]">
+            <LanguageSwitcher />
             <div className="hidden sm:flex items-center gap-1.5 bg-[#EBF3FC] text-[#0D2240] px-2.5 py-1 rounded-md">
               <span className="material-symbols-outlined text-[15px]">verified_user</span>
               <span>National Welfare Discovery Portal</span>

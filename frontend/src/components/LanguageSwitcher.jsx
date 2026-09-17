@@ -17,6 +17,7 @@ const INDIAN_LANGUAGES = [
   { code: 'as', name: 'Assamese', native: 'অসমীয়া' },
   { code: 'sa', name: 'Sanskrit', native: 'संस्कृतम्' },
   { code: 'ne', name: 'Nepali', native: 'नेपाली' },
+  { code: 'sd', name: 'Sindhi', native: 'سنڌي' },
 ]
 
 export default function LanguageSwitcher() {
@@ -27,7 +28,6 @@ export default function LanguageSwitcher() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
 
-  // Listen for clicks outside dropdown
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -38,171 +38,155 @@ export default function LanguageSwitcher() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Sync with Google Translate combo if available
+  // Sync active language with localStorage on mount
   useEffect(() => {
-    function checkGoogleTranslate() {
-      const select = document.querySelector('.goog-te-combo')
-      if (select && select.value && select.value !== activeLang) {
-        setActiveLang(select.value)
-      }
+    const saved = localStorage.getItem('saarthi_selected_lang')
+    if (saved && saved !== activeLang) {
+      setActiveLang(saved)
     }
+  }, [])
 
-    const interval = setInterval(checkGoogleTranslate, 1000)
-    return () => clearInterval(interval)
-  }, [activeLang])
-
-  function switchLanguage(langCode) {
+  function handleSelectLanguage(langCode) {
     setActiveLang(langCode)
     localStorage.setItem('saarthi_selected_lang', langCode)
-    setLanguage(langCode === 'hi' ? 'hi' : 'en')
+    localStorage.setItem('saarthi_language', langCode)
+    if (setLanguage) {
+      setLanguage(langCode)
+    }
     setDropdownOpen(false)
 
     try {
       const hostname = window.location.hostname
-      const targetCookie = langCode === 'en' ? '/en/en' : `/en/${langCode}`
-
-      // Set cookie for current domain and host
-      document.cookie = `googtrans=${targetCookie}; path=/;`
-      document.cookie = `googtrans=${targetCookie}; path=/; domain=${hostname}`
-
-      // Also dispatch to Google Translate select element
-      const select = document.querySelector('.goog-te-combo')
-      if (select) {
-        select.value = langCode
-        select.dispatchEvent(new Event('change'))
+      if (langCode === 'en') {
+        // Clear translation cookie for English
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname}`
+        document.cookie = 'googtrans=/en/en; path=/;'
       } else {
-        // If not initialized yet, give a brief moment or reload to apply cookie
+        const targetCookie = `/en/${langCode}`
+        document.cookie = `googtrans=${targetCookie}; path=/;`
+        if (hostname !== 'localhost') {
+          document.cookie = `googtrans=${targetCookie}; path=/; domain=.${hostname}`
+        }
+      }
+
+      // Dispatch to Google Translate select element
+      const combo = document.querySelector('.goog-te-combo')
+      if (combo) {
+        combo.value = langCode === 'en' ? '' : langCode
+        combo.dispatchEvent(new Event('change'))
+      } else {
+        // Retry if Google Translate initialized late
         setTimeout(() => {
-          const retrySelect = document.querySelector('.goog-te-combo')
-          if (retrySelect) {
-            retrySelect.value = langCode
-            retrySelect.dispatchEvent(new Event('change'))
+          const retryCombo = document.querySelector('.goog-te-combo')
+          if (retryCombo) {
+            retryCombo.value = langCode === 'en' ? '' : langCode
+            retryCombo.dispatchEvent(new Event('change'))
           }
         }, 300)
       }
-    } catch (e) {
-      console.error('Error switching language:', e)
+    } catch (err) {
+      console.error('Failed to change language:', err)
     }
   }
 
-  const currentLangObj = INDIAN_LANGUAGES.find((l) => l.code === activeLang)
-  const isCustomLang = activeLang !== 'en' && activeLang !== 'hi' && activeLang !== 'mr'
+  const currentLangObj = INDIAN_LANGUAGES.find((l) => l.code === activeLang) || INDIAN_LANGUAGES[0]
 
   return (
-    <div className="notranslate flex items-center gap-1.5 shrink-0" translate="no" ref={dropdownRef}>
-      {/* Primary Quick Toggle Segment (English | हिन्दी | मराठी) */}
-      <div
-        className="inline-flex items-center bg-[#E2E8F0]/90 p-0.5 rounded-xl border border-[#CBD5E1] shadow-2xs"
-        role="group"
-        aria-label="Quick Language Switcher"
+    <div
+      className="notranslate relative inline-flex items-center shrink-0"
+      translate="no"
+      ref={dropdownRef}
+    >
+      {/* Unified Language Translator Dropdown Button */}
+      <button
+        type="button"
+        id="language-translator-btn"
+        onClick={() => setDropdownOpen((prev) => !prev)}
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white hover:bg-[#F0F3FF] border border-[#CBD5E1] hover:border-[#0D2240] shadow-xs text-xs font-bold text-[#0D2240] transition-all cursor-pointer group"
+        aria-expanded={dropdownOpen}
+        aria-label="Language Translator Dropdown"
       >
-        <button
-          type="button"
-          onClick={() => switchLanguage('en')}
-          className={`px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
-            activeLang === 'en'
-              ? 'bg-[#0D2240] text-white shadow-xs scale-102'
-              : 'text-[#44474E] hover:text-[#0D2240] hover:bg-white/60'
+        <span className="material-symbols-outlined text-[17px] text-[#E65100] group-hover:scale-110 transition-transform">
+          translate
+        </span>
+        <span className="font-extrabold text-[11.5px] sm:text-xs">
+          Language Translator:
+        </span>
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-[#0D2240] text-white text-[11px] font-black shadow-2xs">
+          {currentLangObj.native}
+        </span>
+        <span
+          className={`material-symbols-outlined text-[16px] text-slate-400 group-hover:text-[#0D2240] transition-transform duration-200 ${
+            dropdownOpen ? 'rotate-180' : ''
           }`}
-          title="Switch portal to English"
         >
-          <span>English</span>
-        </button>
+          arrow_drop_down
+        </span>
+      </button>
 
-        <button
-          type="button"
-          onClick={() => switchLanguage('hi')}
-          className={`px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
-            activeLang === 'hi'
-              ? 'bg-[#E65100] text-white shadow-xs scale-102'
-              : 'text-[#44474E] hover:text-[#E65100] hover:bg-white/60'
-          }`}
-          title="पोर्टल को हिन्दी में बदलें"
-        >
-          <span>हिन्दी</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => switchLanguage('mr')}
-          className={`px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
-            activeLang === 'mr'
-              ? 'bg-[#138808] text-white shadow-xs scale-102'
-              : 'text-[#44474E] hover:text-[#138808] hover:bg-white/60'
-          }`}
-          title="पोर्टल मराठीत बदला"
-        >
-          <span>मराठी</span>
-        </button>
-      </div>
-
-      {/* Google Translator More Languages Dropdown */}
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setDropdownOpen((prev) => !prev)}
-          className={`px-2.5 py-1 rounded-xl text-[11px] sm:text-xs font-bold border transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs ${
-            isCustomLang
-              ? 'bg-[#0D2240] text-white border-[#0D2240]'
-              : 'bg-white hover:bg-[#F0F3FF] text-[#0D2240] border-[#CBD5E1]'
-          }`}
-          title="Google Translate: All Indian & Global Languages"
-        >
-          <span className="material-symbols-outlined text-[15px] text-[#E65100]">translate</span>
-          <span className="font-extrabold max-w-[80px] sm:max-w-none truncate">
-            {isCustomLang ? currentLangObj?.native || activeLang.toUpperCase() : 'More (अन्य)'}
-          </span>
-          <span
-            className={`material-symbols-outlined text-[14px] text-slate-400 transition-transform duration-150 ${
-              dropdownOpen ? 'rotate-180' : ''
-            }`}
-          >
-            expand_more
-          </span>
-        </button>
-
-        {dropdownOpen && (
-          <div className="absolute right-0 top-full mt-1.5 w-60 bg-white rounded-2xl shadow-2xl border border-[#CBD5E1] p-2 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-80 overflow-y-auto">
-            <div className="px-2.5 py-1.5 border-b border-[#E2E8F0] mb-1 flex items-center justify-between">
-              <span className="text-[10.5px] uppercase tracking-wider font-extrabold text-[#0D2240]">
-                Google Translator (सभी भाषाएं)
+      {/* Language Selector Popover Panel */}
+      {dropdownOpen && (
+        <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-[#CBD5E1] p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+          {/* Header */}
+          <div className="flex items-center justify-between px-2 pb-2 mb-1.5 border-b border-[#E2E8F0]">
+            <div className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[16px] text-[#0D2240]">
+                language
               </span>
-              <span className="text-[10px] text-[#138808] font-bold">22 Languages</span>
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#0D2240]">
+                Language Translator
+              </span>
             </div>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#EAFBF0] text-[#138808]">
+              {INDIAN_LANGUAGES.length} Languages
+            </span>
+          </div>
 
-            <div className="grid grid-cols-1 gap-0.5">
-              {INDIAN_LANGUAGES.map((item) => (
+          {/* Language Options List */}
+          <div className="grid grid-cols-1 gap-1 max-h-72 overflow-y-auto pr-1 scrollbar-thin">
+            {INDIAN_LANGUAGES.map((lang) => {
+              const isSelected = activeLang === lang.code
+              return (
                 <button
-                  key={item.code}
+                  key={lang.code}
+                  id={`lang-option-${lang.code}`}
                   type="button"
-                  onClick={() => switchLanguage(item.code)}
-                  className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
-                    activeLang === item.code
-                      ? 'bg-[#EBF3FC] text-[#0D2240] font-black'
-                      : 'text-[#44474E] hover:bg-[#F8FAFC] hover:text-[#0D2240]'
+                  onClick={() => handleSelectLanguage(lang.code)}
+                  className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-all flex items-center justify-between cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#0D2240] text-white font-extrabold shadow-xs'
+                      : 'hover:bg-[#F0F3FF] text-[#111C2D] font-medium'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
-                    <span className="text-sm font-semibold">{item.native}</span>
-                    <span className="text-[10px] text-slate-400 font-normal">({item.name})</span>
-                  </span>
-                  {activeLang === item.code && (
-                    <span className="material-symbols-outlined text-[15px] text-[#138808]">check</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold">{lang.native}</span>
+                    <span
+                      className={`text-[11px] ${
+                        isSelected ? 'text-white/80' : 'text-slate-400'
+                      }`}
+                    >
+                      ({lang.name})
+                    </span>
+                  </div>
+
+                  {isSelected && (
+                    <span className="material-symbols-outlined text-[16px] text-[#FF9933]">
+                      check_circle
+                    </span>
                   )}
                 </button>
-              ))}
-            </div>
-
-            {/* Native Google Translate Element Container (Headless/Styled fallback) */}
-            <div className="pt-2 mt-1 border-t border-[#E2E8F0] px-2 text-[10px] text-slate-400">
-              <span>Powered by Google Translate API</span>
-            </div>
+              )
+            })}
           </div>
-        )}
-      </div>
 
-      {/* Hidden Mount for Google Translate engine */}
-      <div id="google_translate_element" className="hidden" style={{ display: 'none' }} />
+          {/* Footer note */}
+          <div className="pt-2 mt-2 border-t border-[#E2E8F0] px-2 flex items-center justify-between text-[10px] text-slate-400">
+            <span>Powered by Google Translate</span>
+            <span className="font-semibold text-[#0D2240]">Saarthi Portal</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

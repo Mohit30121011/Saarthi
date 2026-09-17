@@ -145,14 +145,21 @@ export function LanguageProvider({ children }) {
   // Function to apply Google Translate cookie & event if available
   function applyTranslateEngine(lang) {
     try {
-      const targetLang = lang === 'hi' ? '/en/hi' : '/en/en'
-      document.cookie = `googtrans=${targetLang}; path=/; domain=${window.location.hostname}`
-      document.cookie = `googtrans=${targetLang}; path=/;`
+      if (lang === 'en') {
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        document.cookie = 'googtrans=/en/en; path=/;'
+      } else {
+        const targetLang = `/en/${lang}`
+        document.cookie = `googtrans=${targetLang}; path=/;`
+        if (window.location.hostname !== 'localhost') {
+          document.cookie = `googtrans=${targetLang}; path=/; domain=.${window.location.hostname}`
+        }
+      }
 
       // If google translate select exists, trigger it
       const select = document.querySelector('.goog-te-combo')
       if (select) {
-        select.value = lang
+        select.value = lang === 'en' ? '' : lang
         select.dispatchEvent(new Event('change'))
       }
     } catch {
@@ -161,35 +168,12 @@ export function LanguageProvider({ children }) {
   }
 
   function setLanguage(lang) {
-    const validLang = lang === 'hi' ? 'hi' : 'en'
-    setLanguageState(validLang)
-    localStorage.setItem('saarthi_language', validLang)
-    applyTranslateEngine(validLang)
+    setLanguageState(lang)
+    localStorage.setItem('saarthi_language', lang)
+    applyTranslateEngine(lang)
   }
 
   useEffect(() => {
-    // Inject google translate script dynamically once
-    if (!document.getElementById('google-translate-script')) {
-      const script = document.createElement('script')
-      script.id = 'google-translate-script'
-      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
-      script.async = true
-      document.body.appendChild(script)
-
-      window.googleTranslateElementInit = function () {
-        if (window.google?.translate?.TranslateElement) {
-          new window.google.translate.TranslateElement(
-            {
-              pageLanguage: 'en',
-              includedLanguages: 'en,hi',
-              autoDisplay: false,
-            },
-            'google_translate_element'
-          )
-        }
-      }
-    }
-
     applyTranslateEngine(language)
   }, [language])
 

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80">
+  <defs>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9933"/>
+      <stop offset="100%" stop-color="#E65100"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#138808"/>
+      <stop offset="100%" stop-color="#0E6406"/>
+    </linearGradient>
+  </defs>
+  <!-- Emblem Badge -->
+  <g transform="translate(10, 8)">
+    <!-- Chakra circle and petals -->
+    <rect width="64" height="64" rx="16" fill="#0D2240"/>
+    <!-- Circular Emblem with Chakra spokes -->
+    <circle cx="32" cy="32" r="22" stroke="white" stroke-width="2" fill="none" opacity="0.3"/>
+    <circle cx="32" cy="32" r="14" stroke="#0033A0" stroke-width="2" fill="#FFFFFF"/>
+    <!-- Chakra center dot -->
+    <circle cx="32" cy="32" r="3" fill="#0033A0"/>
+    <!-- Chakra spokes -->
+    <path d="M32 18 L32 46 M18 32 L46 32 M22 22 L42 42 M22 42 L42 22" stroke="#0033A0" stroke-width="1.5"/>
+    <path d="M26 19 L38 45 M19 26 L45 38 M19 38 L45 26 M26 45 L38 19" stroke="#0033A0" stroke-width="1"/>
+    <!-- Tiranga ribbon arcs -->
+    <path d="M4 16 Q12 6 24 8" stroke="url(#saffronGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M40 56 Q52 58 60 48" stroke="url(#greenGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+  </g>
+  <!-- Text Section -->
+  <text x="86" y="36" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-weight="900" font-size="26" fill="#0D2240" letter-spacing="1.5">SAARTHI</text>
+  <!-- Hindi subtitle / Government tagline -->
+  <text x="86" y="52" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="10.5" fill="#E65100" letter-spacing="1">सारथी • राष्ट्रीय योजना सेवा पोर्टल</text>
+  <text x="86" y="66" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="500" font-size="9" fill="#64748B">Central &amp; Maharashtra Welfare Discovery</text>
+</svg>
