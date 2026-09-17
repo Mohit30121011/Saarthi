@@ -131,13 +131,13 @@ export default function SchemeCard({
             <div className="flex items-center gap-1.5 flex-wrap">
               {trendingMeta && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-50 border border-orange-200 text-[#E65100] text-[10px] sm:text-[10.5px] font-bold">
-                  <span className="material-symbols-outlined text-[13px]">local_fire_department</span>
+                  <span className="material-symbols-outlined text-[13px]">{trendingMeta.iconName || 'trending_up'}</span>
                   <span>{trendingMeta.badgeText}</span>
                 </span>
               )}
               {seasonalMeta && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-[#138808] text-[10px] sm:text-[10.5px] font-bold">
-                  <span className="material-symbols-outlined text-[13px]">calendar_month</span>
+                  <span className="material-symbols-outlined text-[13px]">{seasonalMeta.iconName || 'event_available'}</span>
                   <span>{seasonalMeta.statusTag}</span>
                 </span>
               )}

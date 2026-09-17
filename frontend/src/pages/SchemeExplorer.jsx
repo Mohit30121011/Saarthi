@@ -361,8 +361,8 @@ export default function SchemeExplorer() {
                 : 'bg-white border border-[#E2E8F0] text-[#E65100] hover:border-[#E65100] hover:bg-orange-50/50'
             }`}
           >
-            <span className="material-symbols-outlined text-[16px]">local_fire_department</span>
-            <span>🔥 Trending Schemes</span>
+            <span className="material-symbols-outlined text-[16px]">trending_up</span>
+            <span>Trending Schemes</span>
           </button>
 
           <button
@@ -377,8 +377,8 @@ export default function SchemeExplorer() {
                 : 'bg-white border border-[#E2E8F0] text-[#138808] hover:border-[#138808] hover:bg-emerald-50/50'
             }`}
           >
-            <span className="material-symbols-outlined text-[16px]">calendar_month</span>
-            <span>🌾 Seasonal &amp; Time-Sensitive</span>
+            <span className="material-symbols-outlined text-[16px]">event_available</span>
+            <span>Seasonal &amp; Time-Sensitive</span>
           </button>
 
           <button
@@ -394,7 +394,7 @@ export default function SchemeExplorer() {
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">agriculture</span>
-            <span>🚜 Agriculture</span>
+            <span>Agriculture &amp; Farmers</span>
           </button>
 
           <button
@@ -410,7 +410,7 @@ export default function SchemeExplorer() {
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">school</span>
-            <span>🎓 Education &amp; Scholarships</span>
+            <span>Education &amp; Scholarships</span>
           </button>
 
           <button
@@ -426,7 +426,7 @@ export default function SchemeExplorer() {
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">local_hospital</span>
-            <span>🏥 Healthcare</span>
+            <span>Healthcare</span>
           </button>
 
           <button
@@ -442,7 +442,7 @@ export default function SchemeExplorer() {
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">work</span>
-            <span>💼 MSME &amp; Employment</span>
+            <span>MSME &amp; Employment</span>
           </button>
         </div>
 
@@ -454,7 +454,8 @@ export default function SchemeExplorer() {
             </span>
             {curationFilter === 'trending' && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-bold">
-                <span>🔥 Trending Schemes Only</span>
+                <span className="material-symbols-outlined text-[14px]">trending_up</span>
+                <span>Trending Schemes Only</span>
                 <button onClick={() => setCurationFilter('all')} className="hover:text-orange-950 cursor-pointer">
                   <span className="material-symbols-outlined text-[13px]">close</span>
                 </button>
@@ -462,7 +463,8 @@ export default function SchemeExplorer() {
             )}
             {curationFilter === 'seasonal' && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
-                <span>🌾 Seasonal Windows Only</span>
+                <span className="material-symbols-outlined text-[14px]">event_available</span>
+                <span>Seasonal Windows Only</span>
                 <button onClick={() => setCurationFilter('all')} className="hover:text-emerald-950 cursor-pointer">
                   <span className="material-symbols-outlined text-[13px]">close</span>
                 </button>
