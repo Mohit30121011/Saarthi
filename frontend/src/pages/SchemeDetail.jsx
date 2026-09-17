@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { SchemeDetailSkeleton } from '../components/Skeletons'
 import SchemeTrustBadge from '../components/SchemeTrustBadge'
 import SchemeReviewSection from '../components/SchemeReviewSection'
+import ReportSchemeModal from '../components/ReportSchemeModal'
 
 const ATTRIBUTE_LABELS = {
   age: 'Age Requirement',
@@ -28,8 +29,9 @@ export default function SchemeDetail() {
   const [dynamicVerifiedAt, setDynamicVerifiedAt] = useState(null)
   const [bookmarked, setBookmarked] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [error, setError] = useState(null)
   const [toastMessage, setToastMessage] = useState('')
+  const [reportModalOpen, setReportModalOpen] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -501,6 +503,32 @@ export default function SchemeDetail() {
                 </div>
               </div>
             </div>
+
+            {/* Outdated Information Report Card (Feature 14) */}
+            <div className="bg-white rounded-2xl border border-[#E2E8F0] p-5 shadow-sm space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[18px]">report</span>
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-xs font-bold text-[#0D2240] leading-tight">
+                    Is this information outdated?
+                  </h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    Noticed an expired deadline, changed criteria, or broken portal link?
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                id="report-issue-btn"
+                onClick={() => setReportModalOpen(true)}
+                className="w-full py-2 px-3 rounded-xl bg-white hover:bg-slate-50 border border-[#CBD5E1] hover:border-[#0D2240] text-xs font-bold text-[#0D2240] transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+              >
+                <span className="material-symbols-outlined text-[16px] text-amber-600">flag</span>
+                <span>Report an issue</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -513,6 +541,15 @@ export default function SchemeDetail() {
               setDynamicVerifiedAt(s.lastVerifiedAt)
             }
           }}
+        />
+
+        {/* Report Outdated Scheme Modal (Feature 14) */}
+        <ReportSchemeModal
+          schemeId={detail.schemeId}
+          schemeName={detail.name}
+          isOpen={reportModalOpen}
+          onClose={() => setReportModalOpen(false)}
+          onSuccess={(msg) => showToast(msg)}
         />
       </div>
     </div>

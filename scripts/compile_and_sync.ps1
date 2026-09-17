@@ -26,8 +26,17 @@ Write-Host "2. Finding Java sources..."
 $javaSources = (Get-ChildItem -Path "$projectRoot\backend\src" -Recurse -Filter "*.java").FullName
 Write-Host "Found $($javaSources.Count) Java source files."
 
-Write-Host "3. Compiling with javac..."
-javac -encoding UTF-8 -d "$webContent\WEB-INF\classes" -cp $cp $javaSources
+$javacCmd = "javac"
+if (Test-Path "C:\Program Files\Java\jdk-18.0.2.1\bin\javac.exe") {
+    $javacCmd = "C:\Program Files\Java\jdk-18.0.2.1\bin\javac.exe"
+} elseif (Test-Path "C:\Program Files\Java\jdk1.8.0_202\bin\javac.exe") {
+    $javacCmd = "C:\Program Files\Java\jdk1.8.0_202\bin\javac.exe"
+}
+Write-Host "3. Compiling with $javacCmd..."
+& $javacCmd -encoding UTF-8 -d "$webContent\WEB-INF\classes" -cp $cp $javaSources
+if ($LASTEXITCODE -ne 0) {
+    throw "javac failed with code $LASTEXITCODE"
+}
 Write-Host "Compilation to $webContent\WEB-INF\classes completed successfully!"
 
 Write-Host "4. Copying resources (.properties)..."

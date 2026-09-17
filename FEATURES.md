@@ -18,7 +18,8 @@
 9. [Citizen Profile, Dossier & Verification](#9-citizen-profile-dossier--verification)
 10. [Authentication, CAPTCHA & Security](#10-authentication-captcha--security)
 11. [Administrative Console & Governance Engine](#11-administrative-console--governance-engine)
-12. [Technical Architecture & Deployment](#12-technical-architecture--deployment)
+12. [Crowdsourced Outdated Scheme Reporting & Verification Desk](#12-crowdsourced-outdated-scheme-reporting--verification-desk)
+13. [Technical Architecture & Deployment](#13-technical-architecture--deployment)
 
 ---
 
@@ -155,7 +156,24 @@
 
 ---
 
-## 12. 🛠️ Technical Architecture & Deployment
+## 12. 🚨 Crowdsourced Outdated Scheme Reporting & Verification Desk
+
+* **Citizen Ground-Truth Reporting Bar**:
+  * Positioned on every scheme detail page with immediate callout: *"Is this information outdated? [Report an issue]"*.
+  * Accessible by both logged-in citizens and visiting citizens.
+* **Granular Flagging Options**:
+  1. **Deadline appears incorrect**: Application window, closing dates, or review periods have expired or shifted.
+  2. **Eligibility information changed**: Income caps, age limits, caste reservations, or state norms have been revised by an amended Government Resolution (GR).
+  3. **Application link not working**: Official department portal URL, direct application form, or GR document link is broken (404/expired).
+  4. **Other**: Free-text feedback for typographical errors, discrepancies, or missing criteria.
+* **Administrative Audit Queue (`/admin/reports`)**:
+  * Dedicated administrative review desk filtering reports by status (*All*, *Pending Review*, *Resolved*, *Dismissed*).
+  * Direct one-click links to inspect the public scheme dossier and open the scheme in the catalog editor.
+  * Audit resolution notes tracking which official Gazette GR verified or corrected the discrepancy.
+
+---
+
+## 13. 🛠️ Technical Architecture & Deployment
 
 * **Frontend**:
   * React (Vite-based modern modular architecture).

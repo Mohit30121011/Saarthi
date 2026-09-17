@@ -19,6 +19,7 @@ import AdminRoute from './components/AdminRoute'
 import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminSchemes from './pages/admin/AdminSchemes'
+import AdminReports from './pages/admin/AdminReports'
 
 export default function App() {
   return (
@@ -49,6 +50,7 @@ export default function App() {
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/schemes" element={<AdminSchemes />} />
+              <Route path="/admin/reports" element={<AdminReports />} />
             </Route>
           </Route>
 

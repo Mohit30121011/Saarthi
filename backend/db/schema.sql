@@ -414,3 +414,27 @@ ON DUPLICATE KEY UPDATE `email`=VALUES(`email`), `password_hash`=VALUES(`passwor
 INSERT IGNORE INTO `user_profiles` (`profile_id`, `user_id`, `date_of_birth`, `gender`, `state`, `district`, `annual_income`, `occupation`, `category`, `education_level`, `disability_status`, `is_bpl`, `is_minority`) VALUES
 (1, 2, '1992-05-15', 'MALE', 'Maharashtra', 'Pune', 85000.00, 'Farmer', 'OBC', '12th Pass', 0, 1, 0)
 ON DUPLICATE KEY UPDATE `state`=VALUES(`state`), `annual_income`=VALUES(`annual_income`);
+
+-- ============================================================
+-- 6.4 Crowdsourced Outdated Scheme Reports (Feature 14)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS `scheme_reports` (
+    `report_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `scheme_id` INT NOT NULL,
+    `user_id` INT NULL,
+    `reason` VARCHAR(50) NOT NULL, -- DEADLINE_INCORRECT, ELIGIBILITY_CHANGED, LINK_NOT_WORKING, OTHER
+    `reason_label` VARCHAR(100) NOT NULL,
+    `details` TEXT NULL,
+    `status` ENUM('PENDING', 'REVIEWED', 'RESOLVED', 'DISMISSED') NOT NULL DEFAULT 'PENDING',
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `reviewed_at` TIMESTAMP NULL DEFAULT NULL,
+    `reviewed_by` INT NULL,
+    `admin_notes` TEXT NULL,
+    CONSTRAINT `fk_report_scheme` FOREIGN KEY (`scheme_id`) REFERENCES `schemes`(`scheme_id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_report_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_report_reviewer` FOREIGN KEY (`reviewed_by`) REFERENCES `users`(`user_id`) ON DELETE SET NULL,
+    INDEX `idx_reports_status` (`status`),
+    INDEX `idx_reports_scheme` (`scheme_id`)
+) ENGINE=InnoDB;
+

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/schemes', label: 'Schemes' },
+  { to: '/admin/reports', label: 'Reported Schemes' },
 ]
 
 export default function AdminLayout() {
