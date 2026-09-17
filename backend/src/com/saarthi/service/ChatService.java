@@ -104,9 +104,28 @@ public class ChatService {
         }
     }
 
-    /** FR8.10 — used by ChatController's GET /api/chat/history to resume a prior conversation. */
-    public List<ChatMessage> getHistory(int userId) throws SQLException {
-        return sessionDAO.findLatestByUser(userId)
+    public static final class HistoryEntry {
+        public final String sender;
+        public final String message;
+        public final List<SchemeCard> schemes;
+        public final String createdAt;
+
+        HistoryEntry(String sender, String message, List<SchemeCard> schemes, String createdAt) {
+            this.sender = sender;
+            this.message = message;
+            this.schemes = schemes;
+            this.createdAt = createdAt;
+        }
+    }
+
+    /**
+     * FR8.10 — used by ChatController's GET /api/chat/history to resume a prior conversation.
+     * Re-resolves each BOT turn's stored scheme IDs back into full scheme cards (unverdicted,
+     * since eligibility isn't recomputed for history) so a reopened conversation looks exactly
+     * like it did when it was first shown, not like plain text.
+     */
+    public List<HistoryEntry> getHistory(int userId) throws SQLException {
+        List<ChatMessage> raw = sessionDAO.findLatestByUser(userId)
                 .map(session -> {
                     try {
                         return historyDAO.findBySession(session.getSessionId());
@@ -115,6 +134,23 @@ public class ChatService {
                     }
                 })
                 .orElseGet(List::of);
+
+        List<HistoryEntry> entries = new ArrayList<>();
+        for (ChatMessage m : raw) {
+            List<SchemeCard> schemes = new ArrayList<>();
+            if (m.getContextSchemeIds() != null && !m.getContextSchemeIds().isBlank()) {
+                for (String idStr : m.getContextSchemeIds().split(",")) {
+                    try {
+                        schemeDAO.findById(Integer.parseInt(idStr.trim())).ifPresent(s -> schemes.add(new SchemeCard(s, null)));
+                    } catch (NumberFormatException ignored) {
+                        // defensive — malformed stored id, skip rather than fail the whole history load
+                    }
+                }
+            }
+            entries.add(new HistoryEntry(m.getSender(), m.getMessage(), schemes,
+                    m.getCreatedAt() == null ? null : m.getCreatedAt().toString()));
+        }
+        return entries;
     }
 
     public Integer getLatestSessionId(int userId) throws SQLException {
@@ -185,7 +221,7 @@ public class ChatService {
 
         historyDAO.insert(session.getSessionId(), "USER", message, null, null);
         historyDAO.insert(session.getSessionId(), "BOT", parsed.reply,
-                candidateIds.isEmpty() ? null : String.join(",", candidateIds.stream().map(String::valueOf).collect(Collectors.toList())),
+                verifiedIds.isEmpty() ? null : String.join(",", verifiedIds.stream().map(String::valueOf).collect(Collectors.toList())),
                 flagged.isEmpty() ? null : String.join(",", flagged));
 
         return new ChatReply(session.getSessionId(), replyText, schemeCards, false);

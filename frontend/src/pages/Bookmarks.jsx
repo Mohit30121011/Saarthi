@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getBookmarks } from '../api/bookmarks'
 import SchemeCard from '../components/SchemeCard'
+import Pagination from '../components/Pagination'
 import { BookmarksSkeleton } from '../components/Skeletons'
 
 const CATEGORIES = [
@@ -64,6 +65,20 @@ export default function Bookmarks() {
 
     return list
   }, [schemes, activeCategory, sortBy])
+
+  // Pagination: 3 rows x 3 columns = 9 cards per page
+  const [currentPage, setCurrentPage] = useState(1)
+  const SCHEMES_PER_PAGE = 9
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [activeCategory, sortBy])
+
+  const totalPages = Math.ceil(filteredSchemes.length / SCHEMES_PER_PAGE)
+  const paginatedSchemes = useMemo(() => {
+    const start = (currentPage - 1) * SCHEMES_PER_PAGE
+    return filteredSchemes.slice(start, start + SCHEMES_PER_PAGE)
+  }, [filteredSchemes, currentPage])
 
   // Calculate annual estimated value & deadlines count
   const estimatedAnnualValue = useMemo(() => {
@@ -236,8 +251,8 @@ export default function Bookmarks() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSchemes.map((scheme) => (
+          <div id="bookmarks-grid-anchor" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 scroll-mt-24">
+            {paginatedSchemes.map((scheme) => (
               <SchemeCard
                 key={scheme.schemeId}
                 scheme={scheme}
@@ -246,6 +261,21 @@ export default function Bookmarks() {
               />
             ))}
           </div>
+        )}
+
+        {/* Custom Civic Modern Pagination */}
+        {!loading && filteredSchemes.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredSchemes.length}
+            itemsPerPage={SCHEMES_PER_PAGE}
+            onPageChange={(page) => {
+              setCurrentPage(page)
+              document.getElementById('bookmarks-grid-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }}
+            itemLabel="saved schemes"
+          />
         )}
       </div>
     </div>

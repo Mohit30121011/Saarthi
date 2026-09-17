@@ -1,7 +1,6 @@
 package com.saarthi.controller;
 
 import com.google.gson.JsonObject;
-import com.saarthi.model.ChatMessage;
 import com.saarthi.service.ChatService;
 import com.saarthi.util.JsonUtil;
 
@@ -39,7 +38,7 @@ public class ChatController extends HttpServlet {
             return;
         }
         try {
-            List<ChatMessage> history = chatService.getHistory(userId);
+            List<ChatService.HistoryEntry> history = chatService.getHistory(userId);
             Integer sessionId = chatService.getLatestSessionId(userId);
             JsonUtil.writeJson(resp, 200, new HistoryResponse(sessionId, toMessageResponses(history)));
         } catch (SQLException e) {
@@ -74,18 +73,21 @@ public class ChatController extends HttpServlet {
         }
     }
 
-    private List<MessageResponse> toMessageResponses(List<ChatMessage> messages) {
+    private List<MessageResponse> toMessageResponses(List<ChatService.HistoryEntry> messages) {
         return messages.stream()
-                .map(m -> new MessageResponse(m.getSender(), m.getMessage(), null))
+                .map(m -> new MessageResponse(m.sender, m.message, toSchemeCardResponses(m.schemes), m.createdAt))
                 .collect(Collectors.toList());
     }
 
     private MessageResult toMessageResult(ChatService.ChatReply reply) {
-        List<SchemeCardResponse> schemes = reply.schemes.stream().map(s -> new SchemeCardResponse(
+        return new MessageResult(reply.sessionId, reply.reply, toSchemeCardResponses(reply.schemes), reply.limitReached);
+    }
+
+    private List<SchemeCardResponse> toSchemeCardResponses(List<ChatService.SchemeCard> schemes) {
+        return schemes.stream().map(s -> new SchemeCardResponse(
                 s.schemeId, s.name, s.ministry, s.categoryName, s.state, s.benefitSummary,
                 s.benefitAmount, s.deadline, s.verifiedAt, s.eligibilityVerdict
         )).collect(Collectors.toList());
-        return new MessageResult(reply.sessionId, reply.reply, schemes, reply.limitReached);
     }
 
     private String getString(JsonObject obj, String key) {
@@ -114,10 +116,12 @@ public class ChatController extends HttpServlet {
         public final String sender;
         public final String message;
         public final List<SchemeCardResponse> schemes;
-        MessageResponse(String sender, String message, List<SchemeCardResponse> schemes) {
+        public final String createdAt;
+        MessageResponse(String sender, String message, List<SchemeCardResponse> schemes, String createdAt) {
             this.sender = sender;
             this.message = message;
             this.schemes = schemes;
+            this.createdAt = createdAt;
         }
     }
 

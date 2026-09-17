@@ -7,6 +7,7 @@ import { getProfile } from '../api/profile'
 import { useAuth } from '../context/AuthContext'
 import SchemeCard from '../components/SchemeCard'
 import SchemeCompareModal from '../components/SchemeCompareModal'
+import Pagination from '../components/Pagination'
 import { SchemeCardSkeleton } from '../components/Skeletons'
 
 export default function SchemeExplorer() {
@@ -112,6 +113,20 @@ export default function SchemeExplorer() {
 
     return list
   }, [catalogSchemes, level, ministry, sortBy])
+
+  // Pagination: 3 rows x 3 columns = 9 cards per page
+  const [currentPage, setCurrentPage] = useState(1)
+  const SCHEMES_PER_PAGE = 9
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [query, level, category, ministry, sortBy])
+
+  const totalPages = Math.ceil(displayedSchemes.length / SCHEMES_PER_PAGE)
+  const paginatedSchemes = useMemo(() => {
+    const start = (currentPage - 1) * SCHEMES_PER_PAGE
+    return displayedSchemes.slice(start, start + SCHEMES_PER_PAGE)
+  }, [displayedSchemes, currentPage])
 
   function clearFilters() {
     setQuery('')
@@ -278,7 +293,7 @@ export default function SchemeExplorer() {
         </div>
 
         {/* Active Filter Chips & View Mode Toggle */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-white px-4 py-3 rounded-xl border border-[#E2E8F0] shadow-xs">
+        <div id="explorer-results-anchor" className="flex flex-wrap items-center justify-between gap-4 bg-white px-4 py-3 rounded-xl border border-[#E2E8F0] shadow-xs scroll-mt-24">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[11px] uppercase tracking-wider text-[#44474E] font-bold mr-1">
               Active Filters:
@@ -358,7 +373,7 @@ export default function SchemeExplorer() {
           </div>
         ) : viewMode === 'cards' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {displayedSchemes.map((scheme) => {
+            {paginatedSchemes.map((scheme) => {
               const isMatched = matchedItems.find((m) => m.scheme?.schemeId === scheme.schemeId)
               return (
                 <SchemeCard
@@ -398,7 +413,7 @@ export default function SchemeExplorer() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E2E8F0] text-xs">
-                {displayedSchemes.map((s) => (
+                {paginatedSchemes.map((s) => (
                   <tr key={s.schemeId} className="hover:bg-[#F0F3FF]/50 transition-colors">
                     <td className="p-4">
                       <Link to={`/schemes/${s.schemeId}`} className="font-bold text-[#0D2240] hover:underline">
@@ -448,6 +463,21 @@ export default function SchemeExplorer() {
               </tbody>
             </table>
           </div>
+        )}
+
+        {/* Custom Civic Modern Pagination */}
+        {!loading && displayedSchemes.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={displayedSchemes.length}
+            itemsPerPage={SCHEMES_PER_PAGE}
+            onPageChange={(page) => {
+              setCurrentPage(page)
+              document.getElementById('explorer-results-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }}
+            itemLabel="schemes"
+          />
         )}
 
         {/* Floating Compare Schemes Dock */}

@@ -2,6 +2,8 @@
 @import "tailwindcss";
 
 @theme {
+  --breakpoint-xs: 420px;
+
   /* Tiranga Civic Modern Colors */
   --color-chakra-blue: #0D2240;
   --color-chakra-blue-subtle: #1A365D;
@@ -28,6 +30,10 @@
   --color-surface-container-lowest: #FFFFFF;
   --color-surface-variant: #D8E3FB;
   --color-outline-variant: #C4C6CE;
+  --color-outline: #79747E;
+  --color-error: #BA1A1A;
+  --color-error-soft: #FEE2E2;
+  --color-error-container: #FEE2E2;
 
   /* Legacy Saarthi Tokens (Kept for compatibility) */
   --color-saarthi-green: #138808;
@@ -58,6 +64,15 @@ body {
   background-color: var(--color-slate-surface);
   color: var(--color-on-surface);
   font-family: var(--font-sans);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 .font-display, .font-headline {

@@ -18,10 +18,8 @@ import java.util.Date;
  */
 public final class JwtUtil {
 
-    private static final byte[] KEY = new byte[32];
-    static {
-        new SecureRandom().nextBytes(KEY);
-    }
+    // Fixed persistent secret key so JWTs survive server restarts and work across both ROOT and /Saarthi contexts
+    private static final byte[] KEY = "saarthi-national-citizen-welfare-portal-secret-key-2026".getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
     private static final long EXPIRY_MILLIS = 24L * 60 * 60 * 1000; // 24 hours, per FR1.5
 

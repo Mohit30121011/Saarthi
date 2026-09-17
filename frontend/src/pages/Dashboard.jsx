@@ -7,6 +7,7 @@ import { getBookmarks } from '../api/bookmarks'
 import { getChecklist } from '../api/checklist'
 import { searchSchemes } from '../api/schemes'
 import SchemeCard from '../components/SchemeCard'
+import Pagination from '../components/Pagination'
 import { DashboardSkeleton, SchemeCardSkeleton } from '../components/Skeletons'
 import { exportSummaryPdf, generateSummaryDossierHtml } from '../utils/exportSummaryPdf'
 
@@ -206,6 +207,20 @@ export default function Dashboard() {
       return true
     })
   }, [allMatches, selectedCategory])
+
+  // Pagination: 3 rows x 3 columns = 9 cards per page
+  const [currentPage, setCurrentPage] = useState(1)
+  const SCHEMES_PER_PAGE = 9
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedCategory])
+
+  const totalPages = Math.ceil(filteredSchemes.length / SCHEMES_PER_PAGE)
+  const paginatedSchemes = useMemo(() => {
+    const start = (currentPage - 1) * SCHEMES_PER_PAGE
+    return filteredSchemes.slice(start, start + SCHEMES_PER_PAGE)
+  }, [filteredSchemes, currentPage])
 
   const displayName = user?.fullName || profile?.fullName || 'Mohit Gupta'
   const citizenState = profile?.state || user?.state || 'Maharashtra'
@@ -532,8 +547,8 @@ export default function Dashboard() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredSchemes.map((item) => (
+          <div id="dashboard-schemes-grid" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 scroll-mt-24">
+            {paginatedSchemes.map((item) => (
               <SchemeCard
                 key={item.scheme.schemeId}
                 scheme={item.scheme}
@@ -553,6 +568,21 @@ export default function Dashboard() {
               />
             ))}
           </div>
+        )}
+
+        {/* Custom Civic Modern Pagination */}
+        {!refreshing && filteredSchemes.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredSchemes.length}
+            itemsPerPage={SCHEMES_PER_PAGE}
+            onPageChange={(page) => {
+              setCurrentPage(page)
+              document.getElementById('dashboard-schemes-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }}
+            itemLabel="eligible schemes"
+          />
         )}
       </div>
 
