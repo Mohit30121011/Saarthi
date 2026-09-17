@@ -15,6 +15,24 @@
   <body class="bg-[#F8FAFC] text-[#111C2D] font-sans antialiased">
     <div id="google_translate_element" style="display:none"></div>
     <div id="root"></div>
+    <!-- Enforce Default Language: English upon project launch / initial session -->
+    <script type="text/javascript">
+      (function() {
+        try {
+          var sessionLang = sessionStorage.getItem('saarthi_language');
+          if (!sessionLang || sessionLang === 'en') {
+            sessionStorage.setItem('saarthi_language', 'en');
+            localStorage.removeItem('saarthi_language');
+            localStorage.removeItem('saarthi_selected_lang');
+            var hostname = window.location.hostname;
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + hostname;
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + hostname;
+            document.cookie = 'googtrans=/en/en; path=/;';
+          }
+        } catch (e) {}
+      })();
+    </script>
     <!-- Official Multilingual Accessibility Engine (Google Translate) -->
     <script type="text/javascript">
       function googleTranslateElementInit() {

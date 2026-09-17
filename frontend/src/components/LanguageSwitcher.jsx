@@ -23,7 +23,11 @@ const INDIAN_LANGUAGES = [
 export default function LanguageSwitcher() {
   const { setLanguage } = useLanguage()
   const [activeLang, setActiveLang] = useState(() => {
-    return localStorage.getItem('saarthi_selected_lang') || 'en'
+    try {
+      return sessionStorage.getItem('saarthi_language') || 'en'
+    } catch {
+      return 'en'
+    }
   })
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef(null)
@@ -38,18 +42,26 @@ export default function LanguageSwitcher() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Sync active language with localStorage on mount
+  // Sync active language with sessionStorage on mount and clean legacy localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('saarthi_selected_lang')
-    if (saved && saved !== activeLang) {
-      setActiveLang(saved)
-    }
+    try {
+      localStorage.removeItem('saarthi_language')
+      localStorage.removeItem('saarthi_selected_lang')
+      const saved = sessionStorage.getItem('saarthi_language') || 'en'
+      if (saved !== activeLang) {
+        setActiveLang(saved)
+      }
+    } catch {}
   }, [])
 
   function handleSelectLanguage(langCode) {
     setActiveLang(langCode)
-    localStorage.setItem('saarthi_selected_lang', langCode)
-    localStorage.setItem('saarthi_language', langCode)
+    try {
+      sessionStorage.setItem('saarthi_language', langCode)
+      sessionStorage.setItem('saarthi_selected_lang', langCode)
+      localStorage.removeItem('saarthi_language')
+      localStorage.removeItem('saarthi_selected_lang')
+    } catch {}
     if (setLanguage) {
       setLanguage(langCode)
     }
@@ -72,10 +84,10 @@ export default function LanguageSwitcher() {
         }
       }
 
-      // Dispatch to Google Translate select element
+      // Dispatch to Google Translate select element ONLY for non-English languages
       const combo = document.querySelector('.goog-te-combo')
-      if (combo) {
-        combo.value = langCode === 'en' ? '' : langCode
+      if (combo && langCode !== 'en') {
+        combo.value = langCode
         combo.dispatchEvent(new Event('change'))
       }
 

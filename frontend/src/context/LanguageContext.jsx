@@ -139,7 +139,11 @@ const LanguageContext = createContext({
 
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState(() => {
-    return localStorage.getItem('saarthi_language') || 'en'
+    try {
+      return sessionStorage.getItem('saarthi_language') || 'en'
+    } catch {
+      return 'en'
+    }
   })
 
   // Function to apply Google Translate cookie & event if available
@@ -160,10 +164,10 @@ export function LanguageProvider({ children }) {
         }
       }
 
-      // If google translate select exists, trigger it
+      // If google translate select exists, trigger it ONLY for non-English languages
       const select = document.querySelector('.goog-te-combo')
-      if (select) {
-        select.value = lang === 'en' ? '' : lang
+      if (select && lang !== 'en') {
+        select.value = lang
         select.dispatchEvent(new Event('change'))
       }
     } catch {
@@ -173,7 +177,10 @@ export function LanguageProvider({ children }) {
 
   function setLanguage(lang) {
     setLanguageState(lang)
-    localStorage.setItem('saarthi_language', lang)
+    try {
+      sessionStorage.setItem('saarthi_language', lang)
+      localStorage.removeItem('saarthi_language')
+    } catch {}
     applyTranslateEngine(lang)
   }
 
