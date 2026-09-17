@@ -20,7 +20,9 @@ import java.util.Optional;
 public class SchemeDAO {
 
     private static final String SELECT_BASE =
-            "SELECT s.*, c.category_name FROM schemes s " +
+            "SELECT s.*, c.category_name, " +
+            "COALESCE((SELECT MAX(created_at) FROM scheme_reviews sr WHERE sr.scheme_id = s.scheme_id), s.verified_at) as dynamic_verified_at " +
+            "FROM schemes s " +
             "JOIN scheme_categories c ON s.category_id = c.category_id ";
 
     /** Used by the matching engine (Section 5.1) — only active schemes are candidates. */
@@ -173,8 +175,18 @@ public class SchemeDAO {
         Date deadline = rs.getDate("deadline");
         if (deadline != null) s.setDeadline(deadline.toLocalDate());
         s.setSourceUrl(rs.getString("source_url"));
-        Date verifiedAt = rs.getDate("verified_at");
-        if (verifiedAt != null) s.setVerifiedAt(verifiedAt.toLocalDate());
+        try {
+            Timestamp dynamicVerified = rs.getTimestamp("dynamic_verified_at");
+            if (dynamicVerified != null) {
+                s.setVerifiedAt(dynamicVerified.toLocalDateTime().toLocalDate());
+            } else {
+                Date verifiedAt = rs.getDate("verified_at");
+                if (verifiedAt != null) s.setVerifiedAt(verifiedAt.toLocalDate());
+            }
+        } catch (SQLException e) {
+            Date verifiedAt = rs.getDate("verified_at");
+            if (verifiedAt != null) s.setVerifiedAt(verifiedAt.toLocalDate());
+        }
         Timestamp createdAt = rs.getTimestamp("created_at");
         if (createdAt != null) s.setCreatedAt(createdAt.toLocalDateTime());
         Timestamp updatedAt = rs.getTimestamp("updated_at");

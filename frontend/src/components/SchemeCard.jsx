@@ -193,7 +193,7 @@ export default function SchemeCard({
           {/* Scheme Trust Freshness & Citizen Rating */}
           <div className="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-[#F1F5F9]">
             <SchemeTrustBadge
-              verifiedAt={scheme.verifiedAt}
+              verifiedAt={ratingSummary?.lastVerifiedAt || scheme.verifiedAt}
               officialPortal={scheme.officialPortal}
               sourceUrl={scheme.sourceUrl}
               deadline={scheme.deadline}
@@ -201,7 +201,7 @@ export default function SchemeCard({
               variant="card"
             />
             <SchemeRatingStars
-              rating={ratingSummary?.averageRating || 4.8}
+              rating={ratingSummary?.averageRating || 0}
               totalReviews={ratingSummary?.totalReviews || 0}
               size="sm"
             />

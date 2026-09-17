@@ -5,7 +5,7 @@ import SchemeRatingStars from './SchemeRatingStars'
 import SchemeReviewModal from './SchemeReviewModal'
 import { useAuth } from '../context/AuthContext'
 
-export default function SchemeReviewSection({ schemeId, schemeName }) {
+export default function SchemeReviewSection({ schemeId, schemeName, onSummaryChange }) {
   const { isAuthenticated, user } = useAuth()
   const [reviews, setReviews] = useState([])
   const [summary, setSummary] = useState(null)
@@ -27,6 +27,9 @@ export default function SchemeReviewSection({ schemeId, schemeName }) {
       if (data) {
         setReviews(data.reviews || [])
         setSummary(data.summary || null)
+        if (data.summary && onSummaryChange) {
+          onSummaryChange(data.summary)
+        }
       }
     } catch (err) {
       console.error('Failed to load reviews:', err)
@@ -49,6 +52,7 @@ export default function SchemeReviewSection({ schemeId, schemeName }) {
     }
     if (data.summary) {
       setSummary(data.summary)
+      if (onSummaryChange) onSummaryChange(data.summary)
     } else {
       loadReviews()
     }

@@ -459,6 +459,7 @@ public class ReviewDAO {
                 "AVG(rating) as avg_rating, " +
                 "AVG(approval_time_weeks) as avg_weeks, " +
                 "SUM(CASE WHEN benefit_received = TRUE THEN 1 ELSE 0 END) as benefit_count, " +
+                "MAX(created_at) as last_verified_at, " +
                 "SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) as r5, " +
                 "SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) as r4, " +
                 "SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) as r3, " +
@@ -473,12 +474,14 @@ public class ReviewDAO {
                 if (rs.next()) {
                     int total = rs.getInt("total_count");
                     if (total == 0) {
-                        return new ReviewRatingSummary(schemeId, 4.8, 0, 2.0, 100, Map.of(5, 0, 4, 0, 3, 0, 2, 0, 1, 0));
+                        return new ReviewRatingSummary(schemeId, 0.0, 0, 0.0, 100, Map.of(5, 0, 4, 0, 3, 0, 2, 0, 1, 0), null);
                     }
                     double avgRating = Math.round(rs.getDouble("avg_rating") * 10.0) / 10.0;
                     double avgWeeks = Math.round(rs.getDouble("avg_weeks") * 10.0) / 10.0;
                     int benefitCount = rs.getInt("benefit_count");
                     int benefitPct = (int) Math.round(((double) benefitCount / total) * 100);
+                    Timestamp lva = rs.getTimestamp("last_verified_at");
+                    String lastVerified = lva != null ? lva.toInstant().toString() : null;
 
                     Map<Integer, Integer> dist = new LinkedHashMap<>();
                     dist.put(5, rs.getInt("r5"));
@@ -487,11 +490,11 @@ public class ReviewDAO {
                     dist.put(2, rs.getInt("r2"));
                     dist.put(1, rs.getInt("r1"));
 
-                    return new ReviewRatingSummary(schemeId, avgRating, total, avgWeeks, benefitPct, dist);
+                    return new ReviewRatingSummary(schemeId, avgRating, total, avgWeeks, benefitPct, dist, lastVerified);
                 }
             }
         }
-        return new ReviewRatingSummary(schemeId, 4.8, 0, 2.0, 100, Map.of(5, 0, 4, 0, 3, 0, 2, 0, 1, 0));
+        return new ReviewRatingSummary(schemeId, 0.0, 0, 0.0, 100, Map.of(5, 0, 4, 0, 3, 0, 2, 0, 1, 0), null);
     }
 
     public Map<Integer, ReviewRatingSummary> getAllSchemeSummaries() throws SQLException {
@@ -500,7 +503,8 @@ public class ReviewDAO {
                 "COUNT(*) as total_count, " +
                 "AVG(rating) as avg_rating, " +
                 "AVG(approval_time_weeks) as avg_weeks, " +
-                "SUM(CASE WHEN benefit_received = TRUE THEN 1 ELSE 0 END) as benefit_count " +
+                "SUM(CASE WHEN benefit_received = TRUE THEN 1 ELSE 0 END) as benefit_count, " +
+                "MAX(created_at) as last_verified_at " +
                 "FROM scheme_reviews GROUP BY scheme_id";
 
         Map<Integer, ReviewRatingSummary> map = new HashMap<>();
@@ -514,8 +518,10 @@ public class ReviewDAO {
                 double avgWeeks = Math.round(rs.getDouble("avg_weeks") * 10.0) / 10.0;
                 int benefitCount = rs.getInt("benefit_count");
                 int benefitPct = total > 0 ? (int) Math.round(((double) benefitCount / total) * 100) : 100;
+                Timestamp lva = rs.getTimestamp("last_verified_at");
+                String lastVerified = lva != null ? lva.toInstant().toString() : null;
 
-                map.put(sId, new ReviewRatingSummary(sId, avgRating, total, avgWeeks, benefitPct, Map.of()));
+                map.put(sId, new ReviewRatingSummary(sId, avgRating, total, avgWeeks, benefitPct, Map.of(), lastVerified));
             }
         }
         return map;

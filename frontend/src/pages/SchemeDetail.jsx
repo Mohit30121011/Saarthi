@@ -25,6 +25,7 @@ export default function SchemeDetail() {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   const [detail, setDetail] = useState(null)
+  const [dynamicVerifiedAt, setDynamicVerifiedAt] = useState(null)
   const [bookmarked, setBookmarked] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -34,7 +35,10 @@ export default function SchemeDetail() {
     setLoading(true)
     setError('')
     getSchemeDetail(schemeId)
-      .then(setDetail)
+      .then((data) => {
+        setDetail(data)
+        if (data?.verifiedAt) setDynamicVerifiedAt(data.verifiedAt)
+      })
       .catch((err) => setError(err.response?.data?.error || 'Could not load this scheme.'))
       .finally(() => setLoading(false))
 
@@ -166,9 +170,9 @@ export default function SchemeDetail() {
                 </span>
               </div>
 
-              {/* Scheme Trust & Freshness Indicator */}
+              {/* Scheme Trust & Freshness Indicator (Dynamically updated from latest citizen review) */}
               <SchemeTrustBadge
-                verifiedAt={detail.verifiedAt}
+                verifiedAt={dynamicVerifiedAt || detail.verifiedAt}
                 officialPortal={detail.officialPortal}
                 sourceUrl={detail.sourceUrl}
                 deadline={detail.deadline}
@@ -465,7 +469,15 @@ export default function SchemeDetail() {
         </div>
 
         {/* Citizen Real-World Reviews & Ratings Section */}
-        <SchemeReviewSection schemeId={detail.schemeId} schemeName={detail.name} />
+        <SchemeReviewSection
+          schemeId={detail.schemeId}
+          schemeName={detail.name}
+          onSummaryChange={(s) => {
+            if (s?.lastVerifiedAt) {
+              setDynamicVerifiedAt(s.lastVerifiedAt)
+            }
+          }}
+        />
       </div>
     </div>
   )

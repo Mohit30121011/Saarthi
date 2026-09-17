@@ -9,18 +9,26 @@ public class ReviewRatingSummary {
     private double averageApprovalWeeks;
     private int benefitReceivedPercentage;
     private Map<Integer, Integer> ratingDistribution; // 5 -> count, 4 -> count, etc.
+    private String lastVerifiedAt; // Date of latest verified citizen review
 
     public ReviewRatingSummary() {}
 
     public ReviewRatingSummary(int schemeId, double averageRating, int totalReviews,
                                double averageApprovalWeeks, int benefitReceivedPercentage,
                                Map<Integer, Integer> ratingDistribution) {
+        this(schemeId, averageRating, totalReviews, averageApprovalWeeks, benefitReceivedPercentage, ratingDistribution, null);
+    }
+
+    public ReviewRatingSummary(int schemeId, double averageRating, int totalReviews,
+                               double averageApprovalWeeks, int benefitReceivedPercentage,
+                               Map<Integer, Integer> ratingDistribution, String lastVerifiedAt) {
         this.schemeId = schemeId;
         this.averageRating = averageRating;
         this.totalReviews = totalReviews;
         this.averageApprovalWeeks = averageApprovalWeeks;
         this.benefitReceivedPercentage = benefitReceivedPercentage;
         this.ratingDistribution = ratingDistribution;
+        this.lastVerifiedAt = lastVerifiedAt;
     }
 
     public int getSchemeId() { return schemeId; }
@@ -40,4 +48,7 @@ public class ReviewRatingSummary {
 
     public Map<Integer, Integer> getRatingDistribution() { return ratingDistribution; }
     public void setRatingDistribution(Map<Integer, Integer> ratingDistribution) { this.ratingDistribution = ratingDistribution; }
+
+    public String getLastVerifiedAt() { return lastVerifiedAt; }
+    public void setLastVerifiedAt(String lastVerifiedAt) { this.lastVerifiedAt = lastVerifiedAt; }
 }
