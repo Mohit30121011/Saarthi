@@ -135,7 +135,7 @@ export default function SchemeDetail() {
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EAFBF0] text-[#138808] text-xs font-bold border border-[#16A34A]/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#138808] animate-pulse" />
-                  <span>Active FY 2024-25</span>
+                  <span>Active FY 2026-27</span>
                 </span>
               </div>
 
@@ -230,7 +230,7 @@ export default function SchemeDetail() {
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px] text-slate-400">event_available</span>
                 <span className="text-[#44474E]">Ground-Truth Verification:</span>
-                <span className="text-[#111C2D]">12 March 2025</span>
+                <span className="text-[#111C2D]">{detail.verifiedAt || '17 September 2026'}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px] text-slate-400">link</span>
@@ -415,17 +415,19 @@ export default function SchemeDetail() {
                 <span>Application Window</span>
               </div>
               <div className="p-3.5 rounded-xl bg-[#FFF3EB] border border-[#E65100]/20 space-y-1">
-                <div className="text-sm font-bold text-[#0D2240]">Closing Date: 30 April 2025</div>
-                <p className="text-xs text-[#E65100] font-semibold">14 Days Remaining to submit e-KYC</p>
+                <div className="text-sm font-bold text-[#0D2240]">
+                  Closing Date: {detail.deadline || '31 December 2027'}
+                </div>
+                <p className="text-xs text-[#E65100] font-semibold">Active Application Window &amp; e-KYC</p>
               </div>
               <div className="text-[11px] text-[#44474E] space-y-1 pt-1">
                 <div className="flex justify-between">
                   <span>Portal Opening:</span>
-                  <span className="font-bold text-[#0D2240]">01 Aug 2024</span>
+                  <span className="font-bold text-[#0D2240]">01 Aug 2026</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Scrutiny Closes:</span>
-                  <span className="font-bold text-[#0D2240]">15 May 2025</span>
+                  <span className="font-bold text-[#0D2240]">{detail.deadline || '31 Dec 2027'}</span>
                 </div>
               </div>
             </div>

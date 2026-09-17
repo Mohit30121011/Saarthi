@@ -77,7 +77,8 @@ public class SchemeController extends HttpServlet {
         return new SchemeSummary(
                 s.getSchemeId(), s.getName(), s.getMinistry(), s.getCategoryName(), s.getState(),
                 s.getBenefitSummary(), s.getBenefitAmount(),
-                s.getDeadline() == null ? null : s.getDeadline().toString()
+                s.getDeadline() == null ? null : s.getDeadline().toString(),
+                s.getVerifiedAt() == null ? null : s.getVerifiedAt().toString()
         );
     }
 
@@ -108,9 +109,10 @@ public class SchemeController extends HttpServlet {
         public final String benefitSummary;
         public final String benefitAmount;
         public final String deadline;
+        public final String verifiedAt;
 
         SchemeSummary(int schemeId, String name, String ministry, String categoryName, String state,
-                      String benefitSummary, String benefitAmount, String deadline) {
+                      String benefitSummary, String benefitAmount, String deadline, String verifiedAt) {
             this.schemeId = schemeId;
             this.name = name;
             this.ministry = ministry;
@@ -119,6 +121,7 @@ public class SchemeController extends HttpServlet {
             this.benefitSummary = benefitSummary;
             this.benefitAmount = benefitAmount;
             this.deadline = deadline;
+            this.verifiedAt = verifiedAt;
         }
     }
 

@@ -53,7 +53,7 @@ const DOC_DESCRIPTIONS = {
   'PAN Card': 'Income tax identifier required for financial subsidies and DBT processing.',
   'Income Certificate': 'Tahsildar issued certificate valid for current financial year (gross income ceiling verification).',
   'Caste Certificate': 'Issued by Sub-Divisional Officer (SDO) under Maharashtra Scheduled Castes & Backward Classes Act.',
-  'Non-Creamy Layer (NCL) Certificate': 'Valid for current FY 2024-25 / 2024-27 issued by competent revenue authority.',
+  'Non-Creamy Layer (NCL) Certificate': 'Valid for current FY 2026-27 / 2026-29 issued by competent revenue authority.',
   'Bank Account Passbook (Aadhaar-linked)': 'Nationalized bank passbook showing active Aadhaar NPCI DBT mapper.',
   'Bank Passbook (Aadhaar-seeded)': 'Passbook showing IFSC, Account Number & NPCI Aadhaar seeding.',
   'Land Ownership Records (Khatauni/7-12 extract)': 'Mahabhulekh digitally signed 7/12 & 8A land revenue extract.',

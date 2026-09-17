@@ -738,13 +738,13 @@ export default function SchemeCompareModal({
                     <div className="md:col-span-2 font-bold text-slate-500">Application Deadline</div>
                     <div className="md:col-span-5 flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded bg-[#FFF3EB] text-[#E65100] font-bold">
-                        {activeA.deadline || '30 April 2025'}
+                        {activeA.deadline || '31 Dec 2027'}
                       </span>
                       <span className="text-slate-500">Ongoing Window</span>
                     </div>
                     <div className="md:col-span-5 flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded bg-[#FFF3EB] text-[#E65100] font-bold">
-                        {activeB.deadline || '30 April 2025'}
+                        {activeB.deadline || '31 Dec 2027'}
                       </span>
                       <span className="text-slate-500">Ongoing Window</span>
                     </div>

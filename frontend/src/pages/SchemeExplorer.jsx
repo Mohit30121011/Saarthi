@@ -413,8 +413,8 @@ export default function SchemeExplorer() {
                     <td className="p-4 font-bold text-[#138808]">
                       {s.benefitAmount || 'Direct Benefit Transfer'}
                     </td>
-                    <td className="p-4 text-[#44474E]">
-                      {s.deadline || '30 Apr 2025'}
+                    <td className="p-4 text-[#44474E] text-xs font-medium">
+                      {s.deadline || 'Ongoing / Open'}
                     </td>
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-2">

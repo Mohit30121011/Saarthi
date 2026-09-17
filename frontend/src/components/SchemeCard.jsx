@@ -163,17 +163,36 @@ export default function SchemeCard({
         </div>
 
         {/* Approaching Deadline Notice Pill or Active Enrolment */}
-        {scheme?.deadline ? (
-          <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-[#FFF3EB] border border-[#E65100]/20">
-            <div className="flex items-center gap-2 text-[#E65100] text-[11.5px] sm:text-xs font-bold">
-              <span className="material-symbols-outlined text-[16px]">alarm</span>
-              <span>Deadline: {scheme.deadline}</span>
+        {scheme?.deadline ? (() => {
+          const deadlineDate = new Date(scheme.deadline)
+          const daysLeft = Math.ceil((deadlineDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+          const isClosingSoon = daysLeft > 0 && daysLeft <= 90
+          return (
+            <div className={`flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg border ${
+              isClosingSoon
+                ? 'bg-[#FFF3EB] border-[#E65100]/20'
+                : 'bg-[#F8FAFC] border-[#E2E8F0]'
+            }`}>
+              <div className={`flex items-center gap-2 text-[11.5px] sm:text-xs font-bold ${
+                isClosingSoon ? 'text-[#E65100]' : 'text-[#44474E]'
+              }`}>
+                <span className={`material-symbols-outlined text-[16px] ${
+                  isClosingSoon ? 'text-[#E65100]' : 'text-[#138808]'
+                }`}>
+                  {isClosingSoon ? 'alarm' : 'event_available'}
+                </span>
+                <span>Deadline: <strong className="text-[#0D2240] font-semibold">{scheme.deadline}</strong></span>
+              </div>
+              <span className={`text-[9.5px] sm:text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
+                isClosingSoon
+                  ? 'bg-[#E65100] text-white'
+                  : 'bg-[#EAFBF0] text-[#138808]'
+              }`}>
+                {isClosingSoon ? 'Closing Soon' : 'Active & Open'}
+              </span>
             </div>
-            <span className="text-[9.5px] sm:text-[10px] bg-[#E65100] text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">
-              Closing Soon
-            </span>
-          </div>
-        ) : (
+          )
+        })() : (
           <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]">
             <div className="flex items-center gap-1.5 text-[#44474E] text-[11.5px] sm:text-xs">
               <span className="material-symbols-outlined text-[16px] text-[#138808]">event_available</span>
@@ -219,7 +238,7 @@ export default function SchemeCard({
             </button>
           )}
           <span className="text-[11px] text-[#44474E] hidden sm:inline">
-            Verified: Dec 2024
+            Verified: {scheme.verifiedAt ? new Date(scheme.verifiedAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Sep 2026'}
           </span>
         </div>
 

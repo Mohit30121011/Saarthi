@@ -53,14 +53,14 @@ export default function Notifications() {
       'BEGIN:VEVENT',
       'SUMMARY:Rajarshi Shahu Maharaj Scholarship Filing Deadline',
       'DESCRIPTION:Online applications close under DTE Maharashtra statutory rules.',
-      'DTSTART:20250430T090000Z',
-      'DTEND:20250430T170000Z',
+      'DTSTART:20270430T090000Z',
+      'DTEND:20270430T170000Z',
       'END:VEVENT',
       'BEGIN:VEVENT',
       'SUMMARY:PM-KISAN e-KYC Verification Tranche 17',
       'DESCRIPTION:Mandatory Aadhaar linking and land title seeding.',
-      'DTSTART:20250515T090000Z',
-      'DTEND:20250515T170000Z',
+      'DTSTART:20270731T090000Z',
+      'DTEND:20270731T170000Z',
       'END:VEVENT',
       'END:VCALENDAR',
     ].join('\r\n')
@@ -423,7 +423,7 @@ export default function Notifications() {
                 <div className="mt-4 pt-3 bg-surface-container-low/60 -mx-8 -mb-6 px-8 py-2.5 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm border-t border-slate-border/40">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-kesari-saffron" />
-                    <span>Statutory Cycle FY 2024-25</span>
+                    <span>Statutory Cycle FY 2026-27</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-on-surface-variant">Authenticated Citizen Broadcast</span>
