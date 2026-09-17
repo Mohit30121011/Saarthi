@@ -97,6 +97,31 @@ export default function SchemeDetail() {
     { documentName: 'Bank Passbook seeded with NPCI', mandatory: true },
   ]
 
+  const defaultDomain = isState ? 'mahadbt.maharashtra.gov.in' : 'india.gov.in'
+  const sourceHref = (() => {
+    const raw = detail.sourceUrl || detail.officialPortal || detail.applicationUrl || `https://${defaultDomain}`
+    return raw.startsWith('http://') || raw.startsWith('https://') ? raw : `https://${raw}`
+  })()
+  const sourceLabel = (() => {
+    if (detail.sourceUrl) {
+      try {
+        const u = new URL(detail.sourceUrl.startsWith('http') ? detail.sourceUrl : `https://${detail.sourceUrl}`)
+        return u.hostname
+      } catch {
+        return defaultDomain
+      }
+    }
+    if (detail.officialPortal) {
+      try {
+        const u = new URL(detail.officialPortal.startsWith('http') ? detail.officialPortal : `https://${detail.officialPortal}`)
+        return u.hostname
+      } catch {
+        return defaultDomain
+      }
+    }
+    return defaultDomain
+  })()
+
   return (
     <div className="w-full bg-[#F8FAFC] min-h-screen font-sans text-[#111C2D]">
       {/* Toast Notification */}
@@ -251,7 +276,18 @@ export default function SchemeDetail() {
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px] text-slate-400">link</span>
                 <span className="text-[#44474E]">Source:</span>
-                <span className="text-[#0D2240] underline">{isState ? 'mahadbt.maharashtra.gov.in' : 'india.gov.in'}</span>
+                <a
+                  href={sourceHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#0D2240] hover:text-[#E65100] underline font-bold transition-colors inline-flex items-center gap-1 cursor-pointer group"
+                  title={`Open official source portal: ${sourceHref}`}
+                >
+                  <span>{sourceLabel}</span>
+                  <span className="material-symbols-outlined text-[13px] text-slate-400 group-hover:text-[#E65100] transition-transform group-hover:translate-x-0.5">
+                    open_in_new
+                  </span>
+                </a>
               </div>
             </div>
             <button
