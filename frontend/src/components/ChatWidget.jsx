@@ -554,8 +554,8 @@ export default function ChatWidget() {
                 : 'sm:bottom-22 sm:right-6 sm:w-[410px] md:w-[440px] sm:h-[620px] sm:max-h-[85vh]'
             }`}
         >
-          {/* Sleek Gradient Header */}
-          <div className="relative bg-gradient-to-r from-[#0D2240] via-[#14325C] to-[#0A1A30] text-white px-4 py-3.5 flex items-center justify-between shrink-0 shadow-md">
+          {/* Sleek Gradient Header with Curvy Bottom Edge */}
+          <div className="relative bg-gradient-to-r from-[#0D2240] via-[#14325C] to-[#0A1A30] text-white px-4 pt-3.5 pb-4.5 rounded-b-[26px] sm:rounded-b-[30px] flex items-center justify-between shrink-0 shadow-[0_12px_24px_-6px_rgba(13,34,64,0.35)] z-20">
             {/* Top Tricolor Strip */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E65100] via-white to-[#138808]" />
 
@@ -619,7 +619,7 @@ export default function ChatWidget() {
 
           {/* Clear-conversation confirmation */}
           {confirmingClear && (
-            <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-200 flex items-center justify-between gap-3 shrink-0 animate-in fade-in duration-150">
+            <div className="px-4 py-2.5 bg-amber-50 border-b border-amber-200 flex items-center justify-between gap-3 shrink-0 animate-in fade-in duration-150 z-20">
               <span className="text-xs font-bold text-amber-900 flex items-center gap-1.5 min-w-0">
                 <span className="material-symbols-outlined text-[16px] text-amber-600 shrink-0">warning</span>
                 <span className="truncate">Clear this entire conversation?</span>
@@ -644,18 +644,18 @@ export default function ChatWidget() {
           )}
 
           {isOffline && (
-            <div className="px-4 py-2 bg-rose-50 border-b border-rose-200 flex items-center gap-1.5 shrink-0 text-xs font-bold text-rose-800">
+            <div className="px-4 py-2 bg-rose-50 border-b border-rose-200 flex items-center gap-1.5 shrink-0 text-xs font-bold text-rose-800 z-20">
               <span className="material-symbols-outlined text-[15px]">wifi_off</span>
               You are offline. Messages will send once connection is restored.
             </div>
           )}
 
-          {/* Chat Stream Body */}
-          <div className="relative flex-1 min-h-0 bg-slate-50/60">
+          {/* Chat Stream Body with Curvy Top Under Header */}
+          <div className="relative flex-1 min-h-0 bg-slate-50/80 -mt-3.5 pt-5 z-10">
             <div
               ref={scrollRef}
               onScroll={handleScroll}
-              className="no-scrollbar absolute inset-0 p-4 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden"
+              className="no-scrollbar absolute inset-0 p-4 pt-5 flex flex-col gap-3.5 overflow-y-auto overflow-x-hidden"
             >
               {/* Empty State Welcome Card */}
               {messages.length === 0 && (
