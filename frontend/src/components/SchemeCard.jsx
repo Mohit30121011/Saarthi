@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { addBookmark, removeBookmark } from '../api/bookmarks'
 import { getTrendingMeta, getSeasonalMeta } from '../data/curatedSchemes'
+import SchemeTrustBadge from './SchemeTrustBadge'
+import SchemeRatingStars from './SchemeRatingStars'
 
 function getDeterministicReason(scheme, profile) {
   const state = profile?.state || 'Maharashtra'
@@ -37,6 +39,7 @@ export default function SchemeCard({
   horizonBadge = null,
   isOpportunity = false,
   simulationTag = null,
+  ratingSummary = null,
 }) {
   const navigate = useNavigate()
   const [isSaved, setIsSaved] = useState(!!initialBookmarked)
@@ -186,6 +189,23 @@ export default function SchemeCard({
           <p className="text-[10.5px] sm:text-[11px] text-[#44474E] font-mono truncate">
             SCH-{isState ? 'MH' : 'CENTRAL'}-{scheme.schemeId.toString().padStart(3, '0')} • Direct Benefit Transfer
           </p>
+
+          {/* Scheme Trust Freshness & Citizen Rating */}
+          <div className="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-[#F1F5F9]">
+            <SchemeTrustBadge
+              verifiedAt={scheme.verifiedAt}
+              officialPortal={scheme.officialPortal}
+              sourceUrl={scheme.sourceUrl}
+              deadline={scheme.deadline}
+              state={scheme.state}
+              variant="card"
+            />
+            <SchemeRatingStars
+              rating={ratingSummary?.averageRating || 4.8}
+              totalReviews={ratingSummary?.totalReviews || 0}
+              size="sm"
+            />
+          </div>
         </div>
 
         {horizonBadge && (

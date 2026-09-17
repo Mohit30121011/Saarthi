@@ -10,6 +10,14 @@ import java.io.IOException;
 public final class JsonUtil {
 
     private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(java.time.LocalDateTime.class, (com.google.gson.JsonSerializer<java.time.LocalDateTime>) 
+                (src, typeOfSrc, context) -> src == null ? com.google.gson.JsonNull.INSTANCE : new com.google.gson.JsonPrimitive(src.toString()))
+            .registerTypeAdapter(java.time.LocalDateTime.class, (com.google.gson.JsonDeserializer<java.time.LocalDateTime>) 
+                (json, typeOfT, context) -> json == null || json.isJsonNull() ? null : java.time.LocalDateTime.parse(json.getAsString()))
+            .registerTypeAdapter(java.time.LocalDate.class, (com.google.gson.JsonSerializer<java.time.LocalDate>) 
+                (src, typeOfSrc, context) -> src == null ? com.google.gson.JsonNull.INSTANCE : new com.google.gson.JsonPrimitive(src.toString()))
+            .registerTypeAdapter(java.time.LocalDate.class, (com.google.gson.JsonDeserializer<java.time.LocalDate>) 
+                (json, typeOfT, context) -> json == null || json.isJsonNull() ? null : java.time.LocalDate.parse(json.getAsString()))
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
             .create();
 

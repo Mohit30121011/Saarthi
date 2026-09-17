@@ -287,11 +287,11 @@ public class EligibilityService {
             case "disability_status": return compareBoolean(profile.getDisabilityStatus(), operator, ruleValue);
             case "is_bpl": return compareBoolean(profile.getIsBpl(), operator, ruleValue);
             case "is_minority": return compareBoolean(profile.getIsMinority(), operator, ruleValue);
-            case "gender": return compareString(profile.getGender(), operator, ruleValue);
-            case "category": return compareString(profile.getCategory(), operator, ruleValue);
-            case "state": return compareString(profile.getState(), operator, ruleValue);
-            case "occupation": return compareString(profile.getOccupation(), operator, ruleValue);
-            case "education_level": return compareString(profile.getEducationLevel(), operator, ruleValue);
+            case "gender": return compareGender(profile.getGender(), operator, ruleValue);
+            case "category": return compareCategory(profile.getCategory(), operator, ruleValue);
+            case "state": return compareState(profile.getState(), operator, ruleValue);
+            case "occupation": return compareOccupation(profile.getOccupation(), operator, ruleValue);
+            case "education_level": return compareEducation(profile.getEducationLevel(), operator, ruleValue);
             default: return RuleOutcome.UNVERIFIABLE; // unknown attribute — never silently fail a scheme over it
         }
     }
@@ -318,8 +318,106 @@ public class EligibilityService {
         return pass ? RuleOutcome.PASS : RuleOutcome.FAIL;
     }
 
+    private RuleOutcome compareGender(String actual, String operator, String ruleValue) {
+        if (actual == null || actual.trim().isEmpty()) return RuleOutcome.UNVERIFIABLE;
+        String a = actual.toUpperCase().trim();
+        String r = ruleValue.toUpperCase().trim();
+        boolean pass = "!=".equals(operator) ? !a.equals(r) : (a.equals(r) || a.startsWith(r) || r.startsWith(a));
+        return pass ? RuleOutcome.PASS : RuleOutcome.FAIL;
+    }
+
+    private RuleOutcome compareCategory(String actual, String operator, String ruleValue) {
+        if (actual == null || actual.trim().isEmpty()) return RuleOutcome.UNVERIFIABLE;
+        String normActual = normalizeCategory(actual);
+        if ("IN".equalsIgnoreCase(operator)) {
+            for (String candidate : ruleValue.split(",")) {
+                if (normActual.equalsIgnoreCase(normalizeCategory(candidate))) {
+                    return RuleOutcome.PASS;
+                }
+            }
+            return RuleOutcome.FAIL;
+        } else if ("=".equals(operator)) {
+            return normActual.equalsIgnoreCase(normalizeCategory(ruleValue)) ? RuleOutcome.PASS : RuleOutcome.FAIL;
+        } else if ("!=".equals(operator)) {
+            return !normActual.equalsIgnoreCase(normalizeCategory(ruleValue)) ? RuleOutcome.PASS : RuleOutcome.FAIL;
+        }
+        return compareString(actual, operator, ruleValue);
+    }
+
+    private String normalizeCategory(String s) {
+        if (s == null) return "";
+        String l = s.toUpperCase().trim();
+        if (l.contains("GEN") || l.contains("OPEN")) return "GENERAL";
+        if (l.contains("OBC")) return "OBC";
+        if (l.contains("SC")) return "SC";
+        if (l.contains("ST")) return "ST";
+        if (l.contains("EWS")) return "EWS";
+        return l;
+    }
+
+    private RuleOutcome compareOccupation(String actual, String operator, String ruleValue) {
+        if (actual == null || actual.trim().isEmpty()) return RuleOutcome.UNVERIFIABLE;
+        String normActual = normalizeOccupation(actual);
+        String normRule = normalizeOccupation(ruleValue);
+
+        if ("!=".equals(operator)) {
+            return normActual.equals(normRule) ? RuleOutcome.FAIL : RuleOutcome.PASS;
+        }
+        return (normActual.equals(normRule) || actual.toLowerCase().contains(normRule) || normRule.contains(normActual))
+                ? RuleOutcome.PASS
+                : RuleOutcome.FAIL;
+    }
+
+    private String normalizeOccupation(String s) {
+        if (s == null) return "";
+        String l = s.toLowerCase().trim();
+        if (l.contains("farm") || l.contains("agri") || l.contains("kisan") || l.contains("krishi")) return "farmer";
+        if (l.contains("self") || l.contains("entrepreneur") || l.contains("business") || l.contains("startup") || l.contains("artisan") || l.contains("vendor")) return "self-employed";
+        if (l.contains("salar") || l.contains("employ") || l.contains("job") || l.contains("worker")) return "salaried";
+        if (l.contains("student")) return "student";
+        if (l.contains("unemploy")) return "unemployed";
+        if (l.contains("home")) return "homemaker";
+        if (l.contains("retir")) return "retired";
+        return l;
+    }
+
+    private RuleOutcome compareEducation(String actual, String operator, String ruleValue) {
+        if (actual == null || actual.trim().isEmpty()) return RuleOutcome.UNVERIFIABLE;
+        int actualLevel = getEducationRank(actual);
+        int ruleLevel = getEducationRank(ruleValue);
+
+        if (operator.equals(">=") || operator.equals("=") || operator.equals("IN")) {
+            return actualLevel >= ruleLevel ? RuleOutcome.PASS : RuleOutcome.FAIL;
+        } else if (operator.equals("<=")) {
+            return actualLevel <= ruleLevel ? RuleOutcome.PASS : RuleOutcome.FAIL;
+        } else if (operator.equals("!=")) {
+            return actualLevel != ruleLevel ? RuleOutcome.PASS : RuleOutcome.FAIL;
+        }
+        return compareString(actual, operator, ruleValue);
+    }
+
+    private int getEducationRank(String s) {
+        if (s == null) return 0;
+        String l = s.toLowerCase().trim();
+        if (l.contains("doctor") || l.contains("phd") || l.contains("research")) return 6;
+        if (l.contains("postgrad") || l.contains("post grad") || l.contains("master") || l.contains("m.phil") || l.contains("m.sc") || l.contains("m.tech")) return 5;
+        if (l.contains("graduat") || l.contains("degree") || l.contains("bachelor") || l.contains("college") || l.contains("b.sc") || l.contains("b.a") || l.contains("b.tech")) return 4;
+        if (l.contains("diploma") || l.contains("polytechnic")) return 3;
+        if (l.contains("12th") || l.contains("hsc") || l.contains("post-matric") || l.contains("class 12") || l.contains("class 11") || l.contains("higher secondary")) return 2;
+        if (l.contains("10th") || l.contains("ssc") || l.contains("metric") || l.contains("matric") || l.contains("class 10") || l.contains("class 9") || l.contains("class 8") || l.contains("class 1-10") || l.contains("secondary")) return 1;
+        return 0;
+    }
+
+    private RuleOutcome compareState(String actual, String operator, String ruleValue) {
+        if (actual == null || actual.trim().isEmpty()) return RuleOutcome.UNVERIFIABLE;
+        if (ruleValue == null || ruleValue.trim().isEmpty() || ruleValue.equalsIgnoreCase("All India") || ruleValue.equalsIgnoreCase("National") || ruleValue.equalsIgnoreCase("Central")) {
+            return RuleOutcome.PASS;
+        }
+        return compareString(actual, operator, ruleValue);
+    }
+
     private RuleOutcome compareString(String actual, String operator, String ruleValue) {
-        if (actual == null) return RuleOutcome.UNVERIFIABLE;
+        if (actual == null || actual.trim().isEmpty()) return RuleOutcome.UNVERIFIABLE;
         boolean pass;
         switch (operator) {
             case "IN": {

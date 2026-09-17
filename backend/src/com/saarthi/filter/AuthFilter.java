@@ -39,8 +39,19 @@ public class AuthFilter implements Filter {
                 return;
             }
         }
-        // FR4.x — Scheme Explorer/Detail is browsable by Guests, not just logged-in citizens.
+        // FR4.x — Scheme Explorer/Detail/Reviews is browsable by Guests, not just logged-in citizens.
         if (path.equals("/api/schemes") || path.startsWith("/api/schemes/")) {
+            String authHeader = req.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring("Bearer ".length());
+                Claims claims = JwtUtil.parseToken(token);
+                if (claims != null && claims.getSubject() != null) {
+                    try {
+                        req.setAttribute("userId", Integer.parseInt(claims.getSubject()));
+                        req.setAttribute("role", claims.get("role"));
+                    } catch (Exception ignored) {}
+                }
+            }
             chain.doFilter(request, response);
             return;
         }
