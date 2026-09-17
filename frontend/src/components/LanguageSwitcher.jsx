@@ -66,39 +66,6 @@ export default function LanguageSwitcher() {
       setLanguage(langCode)
     }
     setDropdownOpen(false)
-
-    try {
-      const hostname = window.location.hostname
-      if (langCode === 'en') {
-        // Clear translation cookie for English completely
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname}`
-        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname}`
-        document.cookie = 'googtrans=/en/en; path=/;'
-      } else {
-        const targetCookie = `/en/${langCode}`
-        document.cookie = `googtrans=${targetCookie}; path=/;`
-        if (hostname !== 'localhost') {
-          document.cookie = `googtrans=${targetCookie}; path=/; domain=.${hostname}`
-          document.cookie = `googtrans=${targetCookie}; path=/; domain=${hostname}`
-        }
-      }
-
-      // Dispatch to Google Translate select element ONLY for non-English languages
-      const combo = document.querySelector('.goog-te-combo')
-      if (combo && langCode !== 'en') {
-        combo.value = langCode
-        combo.dispatchEvent(new Event('change'))
-      }
-
-      // Fast reload guarantees 100% pristine translation and full revert back to English
-      setTimeout(() => {
-        window.location.reload()
-      }, 100)
-    } catch (err) {
-      console.error('Failed to change language:', err)
-      window.location.reload()
-    }
   }
 
   const currentLangObj = INDIAN_LANGUAGES.find((l) => l.code === activeLang) || INDIAN_LANGUAGES[0]

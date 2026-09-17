@@ -137,6 +137,47 @@ const LanguageContext = createContext({
   t: (key, fallback) => fallback || key,
 })
 
+export function applyGoogleTranslateEngine(lang) {
+  try {
+    const hostname = window.location.hostname
+    if (lang === 'en') {
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'googtrans=/en/en; path=/;'
+      if (hostname !== 'localhost') {
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname}`
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname}`
+      }
+    } else {
+      const targetLang = `/en/${lang}`
+      document.cookie = `googtrans=${targetLang}; path=/;`
+      if (hostname !== 'localhost') {
+        document.cookie = `googtrans=${targetLang}; path=/; domain=${hostname}`
+        document.cookie = `googtrans=${targetLang}; path=/; domain=.${hostname}`
+      }
+    }
+
+    // Repeatedly check for .goog-te-combo until Google Translate script is ready
+    let attempts = 0
+    const interval = setInterval(() => {
+      attempts++
+      const select = document.querySelector('.goog-te-combo')
+      if (select) {
+        const valToSet = lang === 'en' ? '' : lang
+        if (select.value !== valToSet) {
+          select.value = valToSet
+          select.dispatchEvent(new Event('change'))
+        }
+        clearInterval(interval)
+      }
+      if (attempts >= 60) {
+        clearInterval(interval)
+      }
+    }, 100)
+  } catch (err) {
+    console.error('Google Translate dispatch error:', err)
+  }
+}
+
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState(() => {
     try {
@@ -146,46 +187,17 @@ export function LanguageProvider({ children }) {
     }
   })
 
-  // Function to apply Google Translate cookie & event if available
-  function applyTranslateEngine(lang) {
-    try {
-      if (lang === 'en') {
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        if (window.location.hostname !== 'localhost') {
-          document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`
-          document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`
-        }
-        document.cookie = 'googtrans=/en/en; path=/;'
-      } else {
-        const targetLang = `/en/${lang}`
-        document.cookie = `googtrans=${targetLang}; path=/;`
-        if (window.location.hostname !== 'localhost') {
-          document.cookie = `googtrans=${targetLang}; path=/; domain=.${window.location.hostname}`
-        }
-      }
-
-      // If google translate select exists, trigger it ONLY for non-English languages
-      const select = document.querySelector('.goog-te-combo')
-      if (select && lang !== 'en') {
-        select.value = lang
-        select.dispatchEvent(new Event('change'))
-      }
-    } catch {
-      // ignore
-    }
-  }
-
   function setLanguage(lang) {
     setLanguageState(lang)
     try {
       sessionStorage.setItem('saarthi_language', lang)
       localStorage.removeItem('saarthi_language')
     } catch {}
-    applyTranslateEngine(lang)
+    applyGoogleTranslateEngine(lang)
   }
 
   useEffect(() => {
-    applyTranslateEngine(language)
+    applyGoogleTranslateEngine(language)
   }, [language])
 
   const t = (key, fallback) => {
