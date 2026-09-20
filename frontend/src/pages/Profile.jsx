@@ -49,6 +49,13 @@ export default function Profile() {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    const startTime = Date.now()
+    let isSettled = false
+
+    const maxSafetyTimer = setTimeout(() => {
+      if (!isSettled) setLoading(false)
+    }, 1800)
+
     getProfile()
       .then((data) =>
         setForm({
@@ -80,7 +87,20 @@ export default function Profile() {
           isMinority: false,
         })
       )
-      .finally(() => setLoading(false))
+      .finally(() => {
+        const elapsed = Date.now() - startTime
+        const remainingMin = Math.max(0, 1000 - elapsed)
+        setTimeout(() => {
+          isSettled = true
+          clearTimeout(maxSafetyTimer)
+          setLoading(false)
+        }, remainingMin)
+      })
+
+    return () => {
+      isSettled = true
+      clearTimeout(maxSafetyTimer)
+    }
   }, [])
 
   function setField(field, value) {

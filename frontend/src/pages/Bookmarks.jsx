@@ -32,10 +32,25 @@ export default function Bookmarks() {
   function load() {
     setLoading(true)
     setError('')
+    const startTime = Date.now()
+    let isSettled = false
+
+    const maxSafetyTimer = setTimeout(() => {
+      if (!isSettled) setLoading(false)
+    }, 1800)
+
     getBookmarks()
       .then(setSchemes)
       .catch((err) => setError(err.response?.data?.error || 'Could not load your bookmarks.'))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        const elapsed = Date.now() - startTime
+        const remainingMin = Math.max(0, 1000 - elapsed)
+        setTimeout(() => {
+          isSettled = true
+          clearTimeout(maxSafetyTimer)
+          setLoading(false)
+        }, remainingMin)
+      })
   }
 
   useEffect(load, [])

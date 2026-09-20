@@ -36,18 +36,38 @@ export default function SchemeDetail() {
   useEffect(() => {
     setLoading(true)
     setError('')
+    const startTime = Date.now()
+    let isSettled = false
+
+    const maxSafetyTimer = setTimeout(() => {
+      if (!isSettled) setLoading(false)
+    }, 1800)
+
     getSchemeDetail(schemeId)
       .then((data) => {
         setDetail(data)
         if (data?.verifiedAt) setDynamicVerifiedAt(data.verifiedAt)
       })
       .catch((err) => setError(err.response?.data?.error || 'Could not load this scheme.'))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        const elapsed = Date.now() - startTime
+        const remainingMin = Math.max(0, 1000 - elapsed)
+        setTimeout(() => {
+          isSettled = true
+          clearTimeout(maxSafetyTimer)
+          setLoading(false)
+        }, remainingMin)
+      })
 
     if (isAuthenticated) {
       getBookmarks()
         .then((bookmarks) => setBookmarked(bookmarks.some((b) => b.schemeId === Number(schemeId))))
         .catch(() => {})
+    }
+
+    return () => {
+      isSettled = true
+      clearTimeout(maxSafetyTimer)
     }
   }, [schemeId, isAuthenticated])
 

@@ -121,6 +121,13 @@ export default function SchemeExplorer() {
 
   async function loadSchemes() {
     setLoading(true)
+    const startTime = Date.now()
+    let isSettled = false
+
+    const maxSafetyTimer = setTimeout(() => {
+      if (!isSettled) setLoading(false)
+    }, 1800)
+
     try {
       const stateParam = level === 'state' ? 'Maharashtra' : undefined
       const categoryParam = category === 'all' ? undefined : category
@@ -133,7 +140,13 @@ export default function SchemeExplorer() {
     } catch {
       setCatalogSchemes([])
     } finally {
-      setLoading(false)
+      const elapsed = Date.now() - startTime
+      const remainingMin = Math.max(0, 1000 - elapsed)
+      setTimeout(() => {
+        isSettled = true
+        clearTimeout(maxSafetyTimer)
+        setLoading(false)
+      }, remainingMin)
     }
   }
 

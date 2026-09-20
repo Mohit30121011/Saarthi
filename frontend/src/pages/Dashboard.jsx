@@ -51,6 +51,16 @@ export default function Dashboard() {
 
   async function loadDashboardData() {
     setLoading(true)
+    const startTime = Date.now()
+    let isSettled = false
+
+    // Safety timeout: Guarantee skeleton drops after at most 1.8 seconds (under 2s cap)
+    const maxSafetyTimer = setTimeout(() => {
+      if (!isSettled) {
+        setLoading(false)
+      }
+    }, 1800)
+
     try {
       const [matchesRes, profileRes, bookmarksRes, checklistRes, catalogRes, reviewsRes] = await Promise.allSettled([
         getMyMatches(),
@@ -86,7 +96,14 @@ export default function Dashboard() {
     } catch {
       // keep fallback
     } finally {
-      setLoading(false)
+      // Ensure skeleton shows for 1-2 seconds (at least 1.0s, at most 1.8s)
+      const elapsed = Date.now() - startTime
+      const remainingMin = Math.max(0, 1000 - elapsed)
+      setTimeout(() => {
+        isSettled = true
+        clearTimeout(maxSafetyTimer)
+        setLoading(false)
+      }, remainingMin)
     }
   }
 

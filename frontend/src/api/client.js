@@ -4,6 +4,7 @@ import axios from 'axios'
 // In production on Tomcat ROOT: override via VITE_API_BASE env var
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE || '/api',
+  timeout: 6000,
 })
 
 client.interceptors.request.use((config) => {

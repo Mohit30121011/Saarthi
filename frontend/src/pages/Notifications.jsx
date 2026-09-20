@@ -10,6 +10,13 @@ export default function Notifications() {
 
   function load() {
     setLoading(true)
+    const startTime = Date.now()
+    let isSettled = false
+
+    const maxSafetyTimer = setTimeout(() => {
+      if (!isSettled) setLoading(false)
+    }, 1800)
+
     getNotifications()
       .then((res) => {
         setData(res)
@@ -19,7 +26,15 @@ export default function Notifications() {
           window.dispatchEvent(new CustomEvent('notifications-read'))
         }
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        const elapsed = Date.now() - startTime
+        const remainingMin = Math.max(0, 1000 - elapsed)
+        setTimeout(() => {
+          isSettled = true
+          clearTimeout(maxSafetyTimer)
+          setLoading(false)
+        }, remainingMin)
+      })
   }
 
   useEffect(load, [])

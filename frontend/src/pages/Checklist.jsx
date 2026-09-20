@@ -90,10 +90,25 @@ export default function Checklist() {
   function load() {
     setLoading(true)
     setError('')
+    const startTime = Date.now()
+    let isSettled = false
+
+    const maxSafetyTimer = setTimeout(() => {
+      if (!isSettled) setLoading(false)
+    }, 1800)
+
     getChecklist()
       .then(setChecklist)
       .catch((err) => setError(err.response?.data?.error || 'Could not load your checklist.'))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        const elapsed = Date.now() - startTime
+        const remainingMin = Math.max(0, 1000 - elapsed)
+        setTimeout(() => {
+          isSettled = true
+          clearTimeout(maxSafetyTimer)
+          setLoading(false)
+        }, remainingMin)
+      })
   }
 
   useEffect(load, [])
