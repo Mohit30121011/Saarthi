@@ -161,7 +161,7 @@ function NotificationBell({ unreadCount = 0, setUnreadCount }) {
 }
 
 export default function AppShell() {
-  const { user, logout } = useAuth()
+  const { user, logout, isAuthenticated } = useAuth()
   const { language, setLanguage, t } = useLanguage()
   const navigate = useNavigate()
   const location = useLocation()

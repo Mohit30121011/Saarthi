@@ -59,7 +59,7 @@ export function calculateProfileFidelity(profile, user = null) {
  * @returns {string} 2-letter code e.g. 'MH', 'DL', 'UP'
  */
 export function getStateCode(stateName) {
-  if (!stateName) return 'MH'
+  if (!stateName || typeof stateName !== 'string') return 'MH'
   const STATE_CODES = {
     'maharashtra': 'MH',
     'delhi': 'DL',
