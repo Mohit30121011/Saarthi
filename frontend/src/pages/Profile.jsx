@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getProfile, updateProfile } from '../api/profile'
 import { useAuth } from '../context/AuthContext'
 import { ProfileSkeleton } from '../components/Skeletons'
+import { calculateProfileFidelity } from '../utils/profileFidelity'
 import CustomDropdown from '../components/CustomDropdown'
 import headshotImg from '../assets/indian-citizen-headshot.png'
 
@@ -107,25 +108,10 @@ export default function Profile() {
     setForm((f) => ({ ...f, [field]: value }))
   }
 
-  // Profile Completeness Score
+  // Profile Completeness Score (unified calculation)
   const profileFidelity = useMemo(() => {
-    if (!form) return 50
-    const keys = [
-      'dateOfBirth',
-      'gender',
-      'state',
-      'district',
-      'annualIncome',
-      'occupation',
-      'category',
-      'educationLevel',
-    ]
-    let filled = 0
-    keys.forEach((k) => {
-      if (form[k] !== '' && form[k] !== null && form[k] !== undefined) filled++
-    })
-    return Math.round((filled / keys.length) * 100)
-  }, [form])
+    return calculateProfileFidelity(form, user)
+  }, [form, user])
 
   async function handleSave(e) {
     e.preventDefault()
@@ -137,6 +123,7 @@ export default function Profile() {
         ...form,
         annualIncome: form.annualIncome === '' ? null : Number(form.annualIncome),
       })
+      window.dispatchEvent(new CustomEvent('profile-updated', { detail: form }))
       setMessage('Profile credentials successfully updated. Your scheme eligibility matches have been refreshed!')
       setTimeout(() => setMessage(''), 6000)
     } catch (err) {

@@ -12,6 +12,7 @@ import SchemeCard from '../components/SchemeCard'
 import WhatIfSimulator from '../components/WhatIfSimulator'
 import { DashboardSkeleton, SchemeCardSkeleton } from '../components/Skeletons'
 import { exportSummaryPdf, generateSummaryDossierHtml } from '../utils/exportSummaryPdf'
+import { calculateProfileFidelity } from '../utils/profileFidelity'
 import TrendingSeasonalBanner from '../components/TrendingSeasonalBanner'
 
 const CATEGORIES = [
@@ -199,16 +200,10 @@ export default function Dashboard() {
     }
   }, [allMatches])
 
-  // Profile fidelity calculation
+  // Profile fidelity calculation (synchronized with Profile settings & top Navbar)
   const profileFidelity = useMemo(() => {
-    if (!profile) return 85
-    let filled = 0
-    const keys = ['fullName', 'dob', 'gender', 'state', 'category', 'annualIncome', 'occupation', 'educationLevel']
-    keys.forEach((k) => {
-      if (profile[k]) filled++
-    })
-    return Math.max(50, Math.round((filled / keys.length) * 100))
-  }, [profile])
+    return calculateProfileFidelity(profile, user)
+  }, [profile, user])
 
   // Real missing fields from partial matches
   const missingFieldsList = useMemo(() => {
@@ -539,14 +534,19 @@ export default function Dashboard() {
               </div>
 
               <div className="pt-3 border-t border-slate-100 relative z-10">
-                {missingFieldsList.length > 0 ? (
+                {profileFidelity >= 100 ? (
+                  <p className="text-[11.5px] text-emerald-700 font-bold leading-relaxed flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                    100% Profile Complete • All Entitlements Unlocked
+                  </p>
+                ) : missingFieldsList.length > 0 ? (
                   <p className="text-[11.5px] text-[#E65100] font-bold leading-relaxed line-clamp-2">
                     +{missingFieldsList.length} field{missingFieldsList.length === 1 ? '' : 's'} needed: {missingFieldsList.slice(0, 2).join(' & ')} unlocks {partialMatches.length} more schemes.
                   </p>
                 ) : (
-                  <p className="text-[11.5px] text-emerald-700 font-bold leading-relaxed flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                    100% Profile Complete • All Entitlements Unlocked
+                  <p className="text-[11.5px] text-amber-700 font-bold leading-relaxed flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">info</span>
+                    Complete profile ({100 - profileFidelity}% needed) to evaluate additional state welfare schemes.
                   </p>
                 )}
               </div>

@@ -273,6 +273,7 @@ export default function OnboardingWizard() {
         ...form,
         annualIncome: form.annualIncome === '' ? null : Number(form.annualIncome),
       })
+      window.dispatchEvent(new CustomEvent('profile-updated', { detail: form }))
       navigate('/dashboard')
     } catch (err) {
       setError(err.response?.data?.error || 'Could not save your profile. Please try again.')

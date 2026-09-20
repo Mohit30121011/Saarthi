@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useLanguage } from '../context/LanguageContext'
 import LanguageSwitcher from './LanguageSwitcher'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../api/notifications'
+import { getProfile } from '../api/profile'
+import { calculateProfileFidelity, getStateCode } from '../utils/profileFidelity'
 import ChatWidget from './ChatWidget'
 import saarthiLogoSvg from '../assets/saarthi-portal-logo.svg'
 import headshotImg from '../assets/indian-citizen-headshot.png'
@@ -245,7 +247,46 @@ export default function AppShell() {
     setSearchOpen(false)
   }
 
-  const displayName = user?.fullName || 'Khushi & Mohit'
+  const [citizenProfile, setCitizenProfile] = useState(null)
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getProfile()
+        .then((p) => {
+          if (p) setCitizenProfile(p)
+        })
+        .catch(() => {})
+    }
+
+    function handleProfileUpdated(e) {
+      if (e?.detail) {
+        setCitizenProfile(e.detail)
+      } else {
+        getProfile().then((p) => { if (p) setCitizenProfile(p) }).catch(() => {})
+      }
+    }
+
+    window.addEventListener('profile-updated', handleProfileUpdated)
+    const handleFocus = () => {
+      if (isAuthenticated) {
+        getProfile().then((p) => { if (p) setCitizenProfile(p) }).catch(() => {})
+      }
+    }
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      window.removeEventListener('profile-updated', handleProfileUpdated)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [isAuthenticated])
+
+  const profileFidelity = useMemo(() => {
+    return calculateProfileFidelity(citizenProfile, user)
+  }, [citizenProfile, user])
+
+  const citizenState = citizenProfile?.state || user?.state || 'Maharashtra'
+  const citizenStateCode = getStateCode(citizenState)
+  const displayName = user?.fullName || citizenProfile?.fullName || 'Mohit Gupta'
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-[#111C2D]">
@@ -476,7 +517,7 @@ export default function AppShell() {
                   </div>
                   <div className="flex items-center justify-end gap-1 text-[11px] text-[#138808] font-bold">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#138808] animate-pulse" />
-                    <span>85% Verified • MH</span>
+                    <span>{profileFidelity}% Verified • {citizenStateCode}</span>
                   </div>
                 </div>
 
