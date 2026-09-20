@@ -26,7 +26,7 @@ function getDeterministicReason(scheme, profile) {
 
 export default function SchemeCard({
   scheme,
-  confidence = 'STRONG',
+  confidence = null,
   missingFields,
   reasons,
   profile,
@@ -77,11 +77,15 @@ export default function SchemeCard({
   const isPartial = confidence === 'PARTIAL'
   const category = scheme?.categoryName || 'Welfare'
   const isState = scheme?.state || (scheme?.name && scheme.name.includes('Maharashtra'))
-  const benefitValue = scheme?.benefitAmount || (isStrong ? 'Direct DBT Subsidy' : 'Statutory Benefit')
-  const benefitSubtext = scheme?.benefitSummary || 'Direct Benefit Transfer (DBT) to Aadhaar-seeded bank account'
+  const benefitValue = scheme?.benefitAmount || (isStrong ? 'Direct DBT Subsidy' : isPartial ? 'Conditional Entitlement' : 'Statutory Benefit')
+  const benefitSubtext = scheme?.benefitSummary || (isPartial ? 'Requires secondary document or eligibility verification' : 'Direct Benefit Transfer (DBT) to Aadhaar-seeded bank account')
   const reasonText = (reasons && reasons.length > 0)
     ? reasons.join('. ')
-    : getDeterministicReason(scheme, profile)
+    : (missingFields && missingFields.length > 0)
+    ? `Criteria for verification: ${missingFields.join('; ')}`
+    : isStrong
+    ? getDeterministicReason(scheme, profile)
+    : `Official statutory scheme under ${scheme?.ministry || 'Government guidelines'}. Review scheme guidelines to verify eligibility.`
 
   const trendingMeta = getTrendingMeta(scheme)
   const seasonalMeta = getSeasonalMeta(scheme)
@@ -238,17 +242,33 @@ export default function SchemeCard({
         <div className={`p-3 sm:p-3.5 rounded-lg border flex items-start sm:items-center justify-between gap-2.5 ${
           isDisqualified
             ? 'bg-rose-50/70 border-rose-200'
-            : 'bg-[#EAFBF0] border-[#16A34A]/20'
+            : isPartial
+            ? 'bg-amber-50/80 border-amber-200/90'
+            : isStrong
+            ? 'bg-[#EAFBF0] border-[#16A34A]/20'
+            : 'bg-slate-50 border-slate-200'
         }`}>
           <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0">
             <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-sm sm:text-lg shrink-0 shadow-xs ${
-              isDisqualified ? 'bg-rose-600 text-white' : 'bg-[#138808] text-white'
+              isDisqualified
+                ? 'bg-rose-600 text-white'
+                : isPartial
+                ? 'bg-amber-500 text-white'
+                : isStrong
+                ? 'bg-[#138808] text-white'
+                : 'bg-[#0D2240] text-white'
             }`}>
-              {isDisqualified ? '✕' : '₹'}
+              {isDisqualified ? '✕' : isPartial ? '!' : '₹'}
             </div>
             <div className="min-w-0">
               <div className={`font-display font-bold text-sm sm:text-base line-clamp-2 sm:line-clamp-1 leading-snug ${
-                isDisqualified ? 'text-rose-800' : 'text-[#138808]'
+                isDisqualified
+                  ? 'text-rose-800'
+                  : isPartial
+                  ? 'text-amber-900'
+                  : isStrong
+                  ? 'text-[#138808]'
+                  : 'text-[#0D2240]'
               }`}>
                 {isDisqualified
                   ? (simulationTag?.ceiling
@@ -257,7 +277,11 @@ export default function SchemeCard({
                   : benefitValue}
               </div>
               <div className={`text-[11px] sm:text-[11.5px] line-clamp-2 sm:line-clamp-1 mt-0.5 sm:mt-0 ${
-                isDisqualified ? 'text-rose-700 font-medium' : 'text-[#44474E]'
+                isDisqualified
+                  ? 'text-rose-700 font-medium'
+                  : isPartial
+                  ? 'text-amber-800 font-medium'
+                  : 'text-[#44474E]'
               }`}>
                 {isDisqualified
                   ? (simulationTag?.excess
@@ -268,9 +292,15 @@ export default function SchemeCard({
             </div>
           </div>
           <span className={`material-symbols-outlined text-[18px] sm:text-[22px] shrink-0 mt-0.5 sm:mt-0 ${
-            isDisqualified ? 'text-rose-600' : 'text-[#138808]'
+            isDisqualified
+              ? 'text-rose-600'
+              : isPartial
+              ? 'text-amber-600'
+              : isStrong
+              ? 'text-[#138808]'
+              : 'text-slate-400'
           }`}>
-            {isDisqualified ? 'block' : 'payments'}
+            {isDisqualified ? 'block' : isPartial ? 'pending_actions' : isStrong ? 'payments' : 'account_balance'}
           </span>
         </div>
 
@@ -278,20 +308,40 @@ export default function SchemeCard({
         <div className={`p-2.5 sm:p-3 rounded-lg border space-y-1 ${
           isDisqualified
             ? 'bg-rose-50/80 border-rose-200'
-            : 'bg-[#F0F3FF] border-[#DEE8FF]'
+            : isPartial
+            ? 'bg-amber-50/70 border-amber-200/80'
+            : isStrong
+            ? 'bg-[#F0F3FF] border-[#DEE8FF]'
+            : 'bg-[#F8FAFC] border-[#E2E8F0]'
         }`}>
           <div className="flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-bold">
             <span className={`material-symbols-outlined text-[14px] sm:text-[15px] ${
-              isDisqualified ? 'text-rose-600' : 'text-[#138808]'
+              isDisqualified
+                ? 'text-rose-600'
+                : isPartial
+                ? 'text-amber-600'
+                : isStrong
+                ? 'text-[#138808]'
+                : 'text-[#0D2240]'
             }`}>
-              {isDisqualified ? 'cancel' : 'verified_user'}
+              {isDisqualified ? 'cancel' : isPartial ? 'help' : isStrong ? 'verified_user' : 'info'}
             </span>
-            <span className={isDisqualified ? 'text-rose-800' : 'text-[#0D2240]'}>
-              {isDisqualified ? 'Disqualification Context:' : 'Eligibility Context:'}
+            <span className={isDisqualified ? 'text-rose-800' : isPartial ? 'text-amber-800' : 'text-[#0D2240]'}>
+              {isDisqualified
+                ? 'Disqualification Context:'
+                : isPartial
+                ? 'Verification Needed to Qualify:'
+                : isStrong
+                ? 'Eligibility Context:'
+                : 'Eligibility Context:'}
             </span>
           </div>
           <p className={`text-[11.5px] sm:text-xs line-clamp-2 leading-relaxed ${
-            isDisqualified ? 'text-rose-700' : 'text-[#44474E]'
+            isDisqualified
+              ? 'text-rose-700'
+              : isPartial
+              ? 'text-amber-950 font-medium'
+              : 'text-[#44474E]'
           }`}>
             {isDisqualified
               ? (simulationTag?.reason || reasonText)

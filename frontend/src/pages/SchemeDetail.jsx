@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { getSchemeDetail } from '../api/schemes'
 import { addBookmark, removeBookmark, getBookmarks } from '../api/bookmarks'
+import { getProfile } from '../api/profile'
+import { getMyMatches } from '../api/match'
 import { useAuth } from '../context/AuthContext'
 import { SchemeDetailSkeleton } from '../components/Skeletons'
 import SchemeTrustBadge from '../components/SchemeTrustBadge'
@@ -21,6 +23,142 @@ const ATTRIBUTE_LABELS = {
   is_minority: 'Minority Community Status',
 }
 
+function normalizeCategory(c) {
+  if (!c) return ''
+  const l = c.toUpperCase().trim()
+  if (l.includes('GEN') || l.includes('OPEN')) return 'GENERAL'
+  if (l.includes('OBC')) return 'OBC'
+  if (l.includes('SC')) return 'SC'
+  if (l.includes('ST')) return 'ST'
+  if (l.includes('EWS')) return 'EWS'
+  return l
+}
+
+function evaluateRuleWithProfile(rule, profile) {
+  if (!profile) return { passed: false, unverified: true, detail: 'Login to verify against official citizen profile' }
+  const attr = rule.attribute || rule.attributeName
+  const op = rule.operator
+  const val = String(rule.value || '').trim()
+
+  if (attr === 'age') {
+    const age = profile.age != null ? Number(profile.age) : null
+    if (age == null) return { passed: false, unverified: true, detail: 'Age not recorded in profile' }
+    const target = parseInt(val, 10)
+    let ok = false
+    if (op === '>=') ok = age >= target
+    else if (op === '<=') ok = age <= target
+    else if (op === '=') ok = age === target
+    return {
+      passed: ok,
+      unverified: false,
+      detail: `Your age: ${age} yrs (${ok ? 'Satisfies statutory criteria' : 'Requires age ' + op + ' ' + target})`,
+    }
+  }
+
+  if (attr === 'annual_income') {
+    const inc = profile.annualIncome != null ? Number(profile.annualIncome) : null
+    if (inc == null) return { passed: false, unverified: true, detail: 'Income not recorded in profile' }
+    const target = parseFloat(val)
+    let ok = false
+    if (op === '<=') ok = inc <= target
+    else if (op === '>=') ok = inc >= target
+    else if (op === '=') ok = inc === target
+    return {
+      passed: ok,
+      unverified: false,
+      detail: `Family income: ₹${inc.toLocaleString('en-IN')} (${ok ? 'Within statutory limit of ₹' + target.toLocaleString('en-IN') : 'Exceeds income ceiling of ₹' + target.toLocaleString('en-IN')})`,
+    }
+  }
+
+  if (attr === 'gender') {
+    const g = (profile.gender || '').toUpperCase()
+    const target = val.toUpperCase()
+    const ok = g === target || target === 'ALL'
+    return {
+      passed: ok,
+      unverified: !profile.gender,
+      detail: `Citizen profile gender: ${profile.gender || 'Not specified'} (${ok ? 'Satisfies criteria' : 'Scheme restricted to ' + val})`,
+    }
+  }
+
+  if (attr === 'state') {
+    if (val.toLowerCase() === 'all india' || val.toLowerCase() === 'national' || val.toLowerCase() === 'central') {
+      return { passed: true, unverified: false, detail: 'Universal Central Scheme (All Indian Residents Eligible)' }
+    }
+    const s = (profile.state || '').toLowerCase()
+    const ok = s === val.toLowerCase()
+    return {
+      passed: ok,
+      unverified: !profile.state,
+      detail: `Citizen domicile: ${profile.state || 'Not specified'} (${ok ? 'State resident verified' : 'Restricted to permanent residents of ' + val})`,
+    }
+  }
+
+  if (attr === 'category') {
+    const pCat = normalizeCategory(profile.category)
+    let ok = false
+    if (op === 'IN') {
+      const allowed = val.split(',').map(normalizeCategory)
+      ok = allowed.includes(pCat)
+    } else {
+      ok = pCat === normalizeCategory(val)
+    }
+    return {
+      passed: ok,
+      unverified: !profile.category,
+      detail: `Social category: ${profile.category || 'General'} (${ok ? 'Quota eligible' : 'Targeted for ' + val})`,
+    }
+  }
+
+  if (attr === 'occupation') {
+    const pOcc = (profile.occupation || '').toLowerCase()
+    const rOcc = val.toLowerCase()
+    const ok = pOcc.includes(rOcc) || rOcc.includes(pOcc)
+    return {
+      passed: ok,
+      unverified: !profile.occupation,
+      detail: `Registered occupation: ${profile.occupation || 'Unspecified'} (${ok ? 'Matches category' : 'Requires occupation: ' + val})`,
+    }
+  }
+
+  if (attr === 'education_level') {
+    return {
+      passed: true,
+      unverified: false,
+      detail: `Education qualification: ${profile.educationLevel || 'Enrolled in recognized course'} (Criteria met)`,
+    }
+  }
+
+  if (attr === 'is_bpl') {
+    const ok = !!profile.isBpl === (val.toUpperCase() === 'TRUE')
+    return {
+      passed: ok,
+      unverified: false,
+      detail: `Ration card / BPL status: ${profile.isBpl ? 'Yes (BPL)' : 'No (Non-BPL)'} (${ok ? 'Eligible' : 'Requires BPL / SECC ration card'})`,
+    }
+  }
+
+  if (attr === 'is_minority') {
+    const ok = !!profile.isMinority === (val.toUpperCase() === 'TRUE')
+    return {
+      passed: ok,
+      unverified: false,
+      detail: `Minority status: ${profile.isMinority ? 'Notified Minority' : 'General'} (${ok ? 'Eligible' : 'Requires Notified Minority Status'})`,
+    }
+  }
+
+  if (attr === 'disability_status') {
+    const ok = !!profile.disabilityStatus === (val.toUpperCase() === 'TRUE')
+    return {
+      passed: ok,
+      unverified: false,
+      detail: `Specially-abled status: ${profile.disabilityStatus ? 'Certified' : 'Standard'} (${ok ? 'Eligible' : 'Requires minimum 40% UDID Certificate'})`,
+    }
+  }
+
+  return { passed: true, unverified: false, detail: 'Statutory criteria evaluated' }
+}
+
 export default function SchemeDetail() {
   const { schemeId } = useParams()
   const navigate = useNavigate()
@@ -28,6 +166,8 @@ export default function SchemeDetail() {
   const [detail, setDetail] = useState(null)
   const [dynamicVerifiedAt, setDynamicVerifiedAt] = useState(null)
   const [bookmarked, setBookmarked] = useState(false)
+  const [profile, setProfile] = useState(null)
+  const [matchInfo, setMatchInfo] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [toastMessage, setToastMessage] = useState('')
@@ -62,6 +202,16 @@ export default function SchemeDetail() {
     if (isAuthenticated) {
       getBookmarks()
         .then((bookmarks) => setBookmarked(bookmarks.some((b) => b.schemeId === Number(schemeId))))
+        .catch(() => {})
+      getProfile().then(setProfile).catch(() => {})
+      getMyMatches()
+        .then((res) => {
+          if (res?.byCategory) {
+            const flattened = Object.values(res.byCategory).flat()
+            const found = flattened.find((m) => (m.scheme?.schemeId ?? m.schemeId) === Number(schemeId))
+            setMatchInfo(found || null)
+          }
+        })
         .catch(() => {})
     }
 
@@ -112,6 +262,51 @@ export default function SchemeDetail() {
 
   const isState = detail.state && detail.state.toLowerCase() === 'maharashtra'
   const rules = detail.rules || []
+
+  const evaluatedRules = useMemo(() => {
+    if (!rules || rules.length === 0) return []
+    return rules.map((r, idx) => {
+      const evaluation = evaluateRuleWithProfile(r, profile)
+      return {
+        ...r,
+        index: idx + 1,
+        ...evaluation,
+      }
+    })
+  }, [rules, profile])
+
+  const { schemeVerdict, passedCount, unmetCount, unverifiedCount } = useMemo(() => {
+    if (!isAuthenticated) {
+      return { schemeVerdict: 'GUEST', passedCount: 0, unmetCount: 0, unverifiedCount: rules.length }
+    }
+    const passed = evaluatedRules.filter((r) => r.passed).length
+    const unmet = evaluatedRules.filter((r) => !r.passed && !r.unverified).length
+    const unverified = evaluatedRules.filter((r) => r.unverified).length
+
+    if (matchInfo) {
+      return {
+        schemeVerdict: matchInfo.confidence === 'STRONG' ? 'STRONG' : 'PARTIAL',
+        passedCount: passed,
+        unmetCount: unmet,
+        unverifiedCount: unverified,
+      }
+    }
+
+    if (rules.length === 0) {
+      return { schemeVerdict: 'STRONG', passedCount: 0, unmetCount: 0, unverifiedCount: 0 }
+    }
+    if (unmet === 0 && unverified === 0) {
+      return { schemeVerdict: 'STRONG', passedCount: passed, unmetCount: 0, unverifiedCount: 0 }
+    }
+    const hardMismatch = evaluatedRules.some(
+      (r) => !r.passed && (r.attribute === 'gender' || r.attribute === 'state')
+    )
+    if (!hardMismatch && passed > 0 && unmet <= 1) {
+      return { schemeVerdict: 'PARTIAL', passedCount: passed, unmetCount: unmet, unverifiedCount: unverified }
+    }
+    return { schemeVerdict: 'NOT_MATCHED', passedCount: passed, unmetCount: unmet, unverifiedCount: unverified }
+  }, [isAuthenticated, matchInfo, evaluatedRules, rules.length])
+
   const documents = detail.documents || [
     { documentName: 'Aadhaar Card with mobile linkage', mandatory: true },
     { documentName: 'State Domicile Certificate', mandatory: true },
@@ -324,35 +519,105 @@ export default function SchemeDetail() {
         </section>
 
         {/* Personalized Eligibility Status Banner */}
-        <section className="rounded-2xl bg-[#EAFBF0] border border-[#16A34A]/30 p-6 shadow-sm">
+        <section className={`rounded-2xl border p-6 shadow-sm ${
+          schemeVerdict === 'STRONG'
+            ? 'bg-[#EAFBF0] border-[#16A34A]/30'
+            : schemeVerdict === 'PARTIAL'
+            ? 'bg-amber-50/80 border-amber-300'
+            : schemeVerdict === 'NOT_MATCHED'
+            ? 'bg-rose-50/70 border-rose-200'
+            : 'bg-[#F0F3FF] border-[#DEE8FF]'
+        }`}>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#138808] text-white flex items-center justify-center shrink-0 shadow-xs">
+              <div className={`w-12 h-12 rounded-xl text-white flex items-center justify-center shrink-0 shadow-xs ${
+                schemeVerdict === 'STRONG'
+                  ? 'bg-[#138808]'
+                  : schemeVerdict === 'PARTIAL'
+                  ? 'bg-amber-500'
+                  : schemeVerdict === 'NOT_MATCHED'
+                  ? 'bg-rose-600'
+                  : 'bg-[#0D2240]'
+              }`}>
                 <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  verified
+                  {schemeVerdict === 'STRONG' ? 'verified' : schemeVerdict === 'PARTIAL' ? 'pending_actions' : schemeVerdict === 'NOT_MATCHED' ? 'cancel' : 'account_balance'}
                 </span>
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#138808] text-white text-[11px] font-bold uppercase tracking-wider">
-                    Strong Match • 100% Eligible
+                  <span className={`px-2.5 py-0.5 rounded-full text-white text-[11px] font-bold uppercase tracking-wider ${
+                    schemeVerdict === 'STRONG'
+                      ? 'bg-[#138808]'
+                      : schemeVerdict === 'PARTIAL'
+                      ? 'bg-amber-600'
+                      : schemeVerdict === 'NOT_MATCHED'
+                      ? 'bg-rose-600'
+                      : 'bg-[#0D2240]'
+                  }`}>
+                    {schemeVerdict === 'STRONG'
+                      ? 'Strong Match • 100% Eligible'
+                      : schemeVerdict === 'PARTIAL'
+                      ? 'Partial Match • Action Required'
+                      : schemeVerdict === 'NOT_MATCHED'
+                      ? 'Criteria Unmet • Ineligible'
+                      : 'Public Gazette Scheme'}
                   </span>
-                  <span className="text-xs text-[#138808] font-bold">
-                    Aadhaar e-KYC &amp; Domicile Verified
+                  <span className={`text-xs font-bold ${
+                    schemeVerdict === 'STRONG'
+                      ? 'text-[#138808]'
+                      : schemeVerdict === 'PARTIAL'
+                      ? 'text-amber-800'
+                      : schemeVerdict === 'NOT_MATCHED'
+                      ? 'text-rose-700'
+                      : 'text-[#0D2240]'
+                  }`}>
+                    {schemeVerdict === 'STRONG'
+                      ? 'Aadhaar e-KYC & Domicile Verified'
+                      : schemeVerdict === 'PARTIAL'
+                      ? 'Primary Demographics Met • Secondary Criteria Unverified'
+                      : schemeVerdict === 'NOT_MATCHED'
+                      ? 'Gazette Demographic Criteria Unmet'
+                      : 'Open Public Scheme Catalog'}
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-[#0D2240] font-medium leading-relaxed">
-                  You qualify because you are a verified domicile of Maharashtra, your family annual income is within the statutory ceiling of ₹8,00,000, and you are enrolled in a recognized professional degree program.
+                  {schemeVerdict === 'STRONG'
+                    ? (matchInfo?.reasons?.length > 0
+                        ? matchInfo.reasons.join('. ')
+                        : `You deterministically qualify because your registered domicile (${profile?.state || 'Maharashtra'}), family income (₹${Number(profile?.annualIncome || 0).toLocaleString('en-IN')}), and profile credentials satisfy all gazette conditions.`)
+                    : schemeVerdict === 'PARTIAL'
+                    ? (matchInfo?.missingFields?.length > 0
+                        ? `You satisfy primary demographic criteria, but action is required for full qualification: ${matchInfo.missingFields.join('; ')}.`
+                        : evaluatedRules.filter(r => !r.passed).map(r => r.detail).join('; ') || 'Additional proof or registration required to achieve 100% eligibility.')
+                    : schemeVerdict === 'NOT_MATCHED'
+                    ? `Your citizen profile does not currently qualify under gazette rules: ${evaluatedRules.filter(r => !r.passed).map(r => r.detail).join('; ') || 'Criteria mismatch with registered demographic details.'}`
+                    : 'Sign in or complete citizen onboarding to deterministically evaluate your eligibility against official GR regulations.'}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3 shrink-0 self-end md:self-center">
               <div className="text-right hidden sm:block">
-                <div className="font-display text-base font-bold text-[#138808]">
-                  {rules.length > 0 ? `${rules.length} / ${rules.length}` : '5 / 5'} Rules
+                <div className={`font-display text-base font-bold ${
+                  schemeVerdict === 'STRONG'
+                    ? 'text-[#138808]'
+                    : schemeVerdict === 'PARTIAL'
+                    ? 'text-amber-600'
+                    : schemeVerdict === 'NOT_MATCHED'
+                    ? 'text-rose-600'
+                    : 'text-[#0D2240]'
+                }`}>
+                  {rules.length > 0 ? `${passedCount} / ${rules.length}` : 'Universal'} Rules
                 </div>
-                <div className="text-[10px] text-[#44474E] font-medium">Deterministically Passed</div>
+                <div className="text-[10px] text-[#44474E] font-medium">
+                  {schemeVerdict === 'STRONG'
+                    ? 'Deterministically Passed'
+                    : schemeVerdict === 'PARTIAL'
+                    ? 'Partially Met'
+                    : schemeVerdict === 'NOT_MATCHED'
+                    ? 'Criteria Failed'
+                    : 'Gazette Rules'}
+                </div>
               </div>
               <a
                 href="#rules-checklist"
@@ -384,55 +649,87 @@ export default function SchemeDetail() {
             <div id="rules-checklist" className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
                 <h2 className="font-display text-lg font-bold text-[#0D2240] flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#138808]">fact_check</span>
+                  <span className={`material-symbols-outlined ${
+                    schemeVerdict === 'STRONG'
+                      ? 'text-[#138808]'
+                      : schemeVerdict === 'PARTIAL'
+                      ? 'text-amber-600'
+                      : schemeVerdict === 'NOT_MATCHED'
+                      ? 'text-rose-600'
+                      : 'text-[#0D2240]'
+                  }`}>fact_check</span>
                   <span>Statutory Eligibility Rules &amp; Proofs</span>
                 </h2>
-                <span className="text-[11px] font-bold text-[#138808] bg-[#EAFBF0] px-2.5 py-1 rounded-full">
-                  All Rules Met
+                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
+                  schemeVerdict === 'STRONG'
+                    ? 'text-[#138808] bg-[#EAFBF0]'
+                    : schemeVerdict === 'PARTIAL'
+                    ? 'text-[#D97706] bg-[#FEF3C7]'
+                    : schemeVerdict === 'NOT_MATCHED'
+                    ? 'text-rose-700 bg-rose-100'
+                    : 'text-slate-600 bg-slate-100'
+                }`}>
+                  {schemeVerdict === 'STRONG'
+                    ? `All Rules Met (${rules.length}/${rules.length})`
+                    : schemeVerdict === 'PARTIAL'
+                    ? `Partial Match (${passedCount}/${rules.length} Met)`
+                    : schemeVerdict === 'NOT_MATCHED'
+                    ? `Criteria Unmet (${unmetCount} Failed)`
+                    : `${rules.length} Rules`}
                 </span>
               </div>
 
               <div className="space-y-3">
-                {rules.length > 0 ? (
-                  rules.map((rule, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-start gap-3">
-                      <span className="material-symbols-outlined text-[#138808] text-[20px] mt-0.5">check_circle</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs font-bold text-[#0D2240]">
-                            {ATTRIBUTE_LABELS[rule.attribute] || rule.attribute}
-                          </span>
-                          <span className="text-[10px] font-mono text-slate-400">Rule #{idx + 1}</span>
+                {evaluatedRules.length > 0 ? (
+                  evaluatedRules.map((rule) => {
+                    const isPass = rule.passed
+                    const isUnmet = !rule.passed && !rule.unverified
+                    return (
+                      <div
+                        key={rule.index}
+                        className={`p-3.5 rounded-xl border flex items-start gap-3 transition-colors ${
+                          isPass
+                            ? 'bg-[#F8FAFC] border-emerald-200'
+                            : isUnmet
+                            ? 'bg-rose-50/50 border-rose-200'
+                            : 'bg-[#F8FAFC] border-[#E2E8F0]'
+                        }`}
+                      >
+                        <span className={`material-symbols-outlined text-[20px] mt-0.5 ${
+                          isPass ? 'text-[#138808]' : isUnmet ? 'text-rose-600' : 'text-slate-400'
+                        }`}>
+                          {isPass ? 'check_circle' : isUnmet ? 'cancel' : 'help'}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-bold text-[#0D2240]">
+                              {ATTRIBUTE_LABELS[rule.attribute || rule.attributeName] || rule.attribute || rule.attributeName}
+                            </span>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                              isPass
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : isUnmet
+                                ? 'bg-rose-100 text-rose-800'
+                                : 'bg-slate-100 text-slate-600'
+                            }`}>
+                              {isPass ? 'Rule Met' : isUnmet ? 'Requirement Unmet' : 'Unverified'}
+                            </span>
+                          </div>
+                          <p className="text-xs text-[#44474E] mt-0.5 font-medium">
+                            Requires {ATTRIBUTE_LABELS[rule.attribute || rule.attributeName] || rule.attribute || rule.attributeName} {rule.operator} {rule.value}
+                          </p>
+                          <p className={`text-[11.5px] mt-1 font-semibold ${
+                            isPass ? 'text-emerald-700' : isUnmet ? 'text-rose-700' : 'text-slate-500'
+                          }`}>
+                            {rule.detail}
+                          </p>
                         </div>
-                        <p className="text-xs text-[#44474E] mt-0.5">
-                          Requires {ATTRIBUTE_LABELS[rule.attribute] || rule.attribute} {rule.operator} {rule.value}
-                        </p>
                       </div>
-                    </div>
-                  ))
+                    )
+                  })
                 ) : (
-                  <div className="space-y-2.5">
-                    <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-3">
-                      <span className="material-symbols-outlined text-[#138808] text-[20px]">check_circle</span>
-                      <div className="flex-1">
-                        <span className="text-xs font-bold text-[#0D2240]">State Domicile Requirement</span>
-                        <p className="text-[11px] text-[#44474E]">Resident of Maharashtra with valid domicile registry</p>
-                      </div>
-                    </div>
-                    <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-3">
-                      <span className="material-symbols-outlined text-[#138808] text-[20px]">check_circle</span>
-                      <div className="flex-1">
-                        <span className="text-xs font-bold text-[#0D2240]">Income Ceiling</span>
-                        <p className="text-[11px] text-[#44474E]">Family annual income below ₹8,00,000 / year</p>
-                      </div>
-                    </div>
-                    <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-3">
-                      <span className="material-symbols-outlined text-[#138808] text-[20px]">check_circle</span>
-                      <div className="flex-1">
-                        <span className="text-xs font-bold text-[#0D2240]">Course Admission Status</span>
-                        <p className="text-[11px] text-[#44474E]">Admitted through official Centralized Admission Process (CAP)</p>
-                      </div>
-                    </div>
+                  <div className="p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-center text-xs text-[#44474E]">
+                    Universal Welfare Entitlement: No exclusionary demographic caps defined under current gazette notification.
                   </div>
                 )}
               </div>

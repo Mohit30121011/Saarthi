@@ -606,7 +606,7 @@ export default function SchemeExplorer() {
                   <SchemeCard
                     key={scheme.schemeId}
                     scheme={scheme}
-                    confidence={isMatched ? isMatched.confidence : undefined}
+                    confidence={isMatched ? isMatched.confidence : null}
                     missingFields={isMatched?.missingFields}
                     reasons={isMatched?.reasons}
                     profile={profile}

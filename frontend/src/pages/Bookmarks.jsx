@@ -275,6 +275,7 @@ export default function Bookmarks() {
               <SchemeCard
                 key={scheme.schemeId}
                 scheme={scheme}
+                confidence={scheme.eligibilityVerdict === 'STRONG' ? 'STRONG' : scheme.eligibilityVerdict === 'PARTIAL' ? 'PARTIAL' : null}
                 bookmarked={true}
                 onBookmarkChange={handleBookmarkChange}
               />

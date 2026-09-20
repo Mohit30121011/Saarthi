@@ -236,25 +236,65 @@ public class EligibilityService {
      * (FR8.5/FR8.6), so eligibility logic is never duplicated per FR8.12.
      */
     public EligibilityResult evaluate(Scheme scheme, UserProfile profile, List<EligibilityRule> rules) {
-        boolean anyFailed = false;
+        if (rules == null || rules.isEmpty()) {
+            return new EligibilityResult(scheme, Verdict.STRONG, List.of());
+        }
+
+        int passCount = 0;
+        int failCount = 0;
+        int unverifiableCount = 0;
+        boolean hardDisqualified = false;
         Set<String> missingFields = new LinkedHashSet<>();
 
         for (EligibilityRule rule : rules) {
             RuleOutcome outcome = evaluateRule(profile, rule);
+            String attr = rule.getAttributeName();
+
             if (outcome == RuleOutcome.FAIL) {
-                anyFailed = true;
+                failCount++;
+                // Hard disqualifiers: Gender mismatch or State mismatch
+                if ("gender".equals(attr) || "state".equals(attr)) {
+                    hardDisqualified = true;
+                }
+                // Severe age mismatch (e.g. child <= 10 for adult citizen, or senior >= 60 for youth)
+                if ("age".equals(attr)) {
+                    Integer userAge = profile.getAge();
+                    if (userAge != null) {
+                        try {
+                            int ruleAge = Integer.parseInt(rule.getValue().trim());
+                            if ("<=".equals(rule.getOperator()) && userAge > ruleAge + 5) {
+                                hardDisqualified = true;
+                            } else if (">=".equals(rule.getOperator()) && userAge < ruleAge - 5) {
+                                hardDisqualified = true;
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                }
+                missingFields.add(rule.getRuleDescription() != null && !rule.getRuleDescription().isEmpty()
+                        ? rule.getRuleDescription()
+                        : ATTRIBUTE_TO_PROFILE_FIELD.getOrDefault(attr, attr));
             } else if (outcome == RuleOutcome.UNVERIFIABLE) {
-                missingFields.add(ATTRIBUTE_TO_PROFILE_FIELD.getOrDefault(rule.getAttributeName(), rule.getAttributeName()));
+                unverifiableCount++;
+                missingFields.add(ATTRIBUTE_TO_PROFILE_FIELD.getOrDefault(attr, attr));
+            } else if (outcome == RuleOutcome.PASS) {
+                passCount++;
             }
         }
 
-        if (anyFailed) {
+        if (hardDisqualified || (rules.size() == 1 && failCount > 0) || failCount > 1) {
             return new EligibilityResult(scheme, Verdict.NOT_MATCHED, List.of());
         }
-        if (!missingFields.isEmpty()) {
+
+        if (failCount == 0 && unverifiableCount == 0) {
+            return new EligibilityResult(scheme, Verdict.STRONG, List.of());
+        }
+
+        // 1 conditional requirement or unverifiable criteria with primary demographic criteria passing
+        if (passCount > 0 && (failCount <= 1 || unverifiableCount > 0)) {
             return new EligibilityResult(scheme, Verdict.PARTIAL, new ArrayList<>(missingFields));
         }
-        return new EligibilityResult(scheme, Verdict.STRONG, List.of());
+
+        return new EligibilityResult(scheme, Verdict.NOT_MATCHED, List.of());
     }
 
     /** Convenience wrapper for ChatService — evaluates a small candidate set (not the full catalog) against one profile, fetching each scheme's rules via the existing DAO (Section 5.6 Step 2). */
