@@ -14,6 +14,7 @@ import { DashboardSkeleton, SchemeCardSkeleton } from '../components/Skeletons'
 import { exportSummaryPdf, generateSummaryDossierHtml } from '../utils/exportSummaryPdf'
 import { calculateProfileFidelity } from '../utils/profileFidelity'
 import TrendingSeasonalBanner from '../components/TrendingSeasonalBanner'
+import { getFallbackMatches, DEMO_PROFILE } from '../data/fallbackData'
 
 const CATEGORIES = [
   { id: 'all', label: 'All Schemes', icon: 'tune' },
@@ -35,8 +36,20 @@ export default function Dashboard() {
   const { t } = useLanguage()
   const navigate = useNavigate()
 
-  const [data, setData] = useState(null)
-  const [profile, setProfile] = useState(null)
+  const [data, setData] = useState(() => {
+    try {
+      const cached = localStorage.getItem('saarthi_dashboard_matches')
+      if (cached) return JSON.parse(cached)
+    } catch {}
+    return getFallbackMatches(DEMO_PROFILE)
+  })
+  const [profile, setProfile] = useState(() => {
+    try {
+      const cached = localStorage.getItem('saarthi_profile')
+      if (cached) return JSON.parse(cached)
+    } catch {}
+    return DEMO_PROFILE
+  })
   const [bookmarks, setBookmarks] = useState([])
   const [checklist, setChecklist] = useState({})
   const [bookmarkedIds, setBookmarkedIds] = useState(new Set())
@@ -72,11 +85,15 @@ export default function Dashboard() {
         getRatingSummaries(),
       ])
 
-      if (matchesRes.status === 'fulfilled') {
+      if (matchesRes.status === 'fulfilled' && matchesRes.value && typeof matchesRes.value === 'object' && matchesRes.value.byCategory) {
         setData(matchesRes.value)
+      } else {
+        setData(getFallbackMatches(profile || DEMO_PROFILE))
       }
-      if (profileRes.status === 'fulfilled') {
+      if (profileRes.status === 'fulfilled' && profileRes.value && typeof profileRes.value === 'object' && profileRes.value.gender) {
         setProfile(profileRes.value)
+      } else {
+        setProfile(DEMO_PROFILE)
       }
       if (bookmarksRes.status === 'fulfilled') {
         const bMarks = bookmarksRes.value || []
@@ -115,7 +132,7 @@ export default function Dashboard() {
     function handleWindowFocus() {
       refreshMatches()
         .then((updatedMatches) => {
-          if (updatedMatches) {
+          if (updatedMatches && updatedMatches.byCategory) {
             setData(updatedMatches)
             setLastUpdated(`${formatCurrentDateTime()} IST`)
           }
@@ -129,16 +146,17 @@ export default function Dashboard() {
 
   // Parse matches from backend response (either grouped byCategory or flat array)
   const allMatches = useMemo(() => {
-    if (!data) return []
-    if (data.byCategory && typeof data.byCategory === 'object') {
-      return Object.values(data.byCategory).flat()
+    const source = data && data.byCategory ? data : getFallbackMatches(profile || DEMO_PROFILE)
+    if (!source) return []
+    if (source.byCategory && typeof source.byCategory === 'object') {
+      return Object.values(source.byCategory).flat()
     }
-    if (Array.isArray(data)) return data
-    if (Array.isArray(data.matches)) return data.matches
-    const strong = (data.strongMatches || []).map((m) => ({ ...m, confidence: 'STRONG' }))
-    const partial = (data.partialMatches || []).map((m) => ({ ...m, confidence: 'PARTIAL' }))
+    if (Array.isArray(source)) return source
+    if (Array.isArray(source.matches)) return source.matches
+    const strong = (source.strongMatches || []).map((m) => ({ ...m, confidence: 'STRONG' }))
+    const partial = (source.partialMatches || []).map((m) => ({ ...m, confidence: 'PARTIAL' }))
     return [...strong, ...partial]
-  }, [data])
+  }, [data, profile])
 
   const strongMatches = useMemo(
     () => allMatches.filter((m) => m.confidence === 'STRONG'),

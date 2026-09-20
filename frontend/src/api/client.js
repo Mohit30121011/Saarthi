@@ -16,7 +16,21 @@ client.interceptors.request.use((config) => {
 })
 
 client.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // When deployed on SPA hosts like Vercel, requests to unhandled /api endpoints
+    // return HTTP 200 with index.html. Detect this and reject so fallbacks trigger.
+    if (
+      typeof response.data === 'string' &&
+      (response.data.trim().startsWith('<!doctype html') ||
+        response.data.trim().startsWith('<html') ||
+        response.data.includes('<div id="root">'))
+    ) {
+      const err = new Error('Backend API returned HTML instead of JSON')
+      err.isHtmlRewrite = true
+      return Promise.reject(err)
+    }
+    return response
+  },
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('saarthi_token')

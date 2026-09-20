@@ -6,6 +6,7 @@ import LanguageSwitcher from './LanguageSwitcher'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../api/notifications'
 import { getProfile } from '../api/profile'
 import { calculateProfileFidelity, getStateCode } from '../utils/profileFidelity'
+import { DEMO_PROFILE } from '../data/fallbackData'
 import ChatWidget from './ChatWidget'
 import saarthiLogoSvg from '../assets/saarthi-portal-logo.svg'
 import headshotImg from '../assets/indian-citizen-headshot.png'
@@ -247,13 +248,19 @@ export default function AppShell() {
     setSearchOpen(false)
   }
 
-  const [citizenProfile, setCitizenProfile] = useState(null)
+  const [citizenProfile, setCitizenProfile] = useState(() => {
+    try {
+      const cached = localStorage.getItem('saarthi_profile')
+      if (cached) return JSON.parse(cached)
+    } catch {}
+    return DEMO_PROFILE
+  })
 
   useEffect(() => {
     if (isAuthenticated) {
       getProfile()
         .then((p) => {
-          if (p) setCitizenProfile(p)
+          if (p && typeof p === 'object' && p.gender) setCitizenProfile(p)
         })
         .catch(() => {})
     }
@@ -262,14 +269,14 @@ export default function AppShell() {
       if (e?.detail) {
         setCitizenProfile(e.detail)
       } else {
-        getProfile().then((p) => { if (p) setCitizenProfile(p) }).catch(() => {})
+        getProfile().then((p) => { if (p && typeof p === 'object') setCitizenProfile(p) }).catch(() => {})
       }
     }
 
     window.addEventListener('profile-updated', handleProfileUpdated)
     const handleFocus = () => {
       if (isAuthenticated) {
-        getProfile().then((p) => { if (p) setCitizenProfile(p) }).catch(() => {})
+        getProfile().then((p) => { if (p && typeof p === 'object') setCitizenProfile(p) }).catch(() => {})
       }
     }
     window.addEventListener('focus', handleFocus)
@@ -281,7 +288,7 @@ export default function AppShell() {
   }, [isAuthenticated])
 
   const profileFidelity = useMemo(() => {
-    return calculateProfileFidelity(citizenProfile, user)
+    return calculateProfileFidelity(citizenProfile || DEMO_PROFILE, user)
   }, [citizenProfile, user])
 
   const citizenState = citizenProfile?.state || user?.state || 'Maharashtra'
