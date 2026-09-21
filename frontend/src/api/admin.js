@@ -1,11 +1,18 @@
 import client from './client'
+import { ALL_SCHEMES } from '../data/fallbackData'
 
 export function listSchemes() {
-  return client.get('/admin/schemes').then((r) => r.data)
+  return client
+    .get('/admin/schemes')
+    .then((r) => r.data)
+    .catch(() => ALL_SCHEMES)
 }
 
 export function getSchemeDetail(schemeId) {
-  return client.get(`/admin/schemes/${schemeId}`).then((r) => r.data)
+  return client
+    .get(`/admin/schemes/${schemeId}`)
+    .then((r) => r.data)
+    .catch(() => ALL_SCHEMES.find((s) => String(s.schemeId) === String(schemeId)) || ALL_SCHEMES[0])
 }
 
 export function createScheme(scheme) {
